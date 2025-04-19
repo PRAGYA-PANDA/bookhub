@@ -12,7 +12,7 @@
 
 
 
-                            
+
                             <a href="{{ url('admin/add-edit-section') }}" style="max-width: 150px; float: right; display: inline-block" class="btn btn-block btn-primary">Add Section</a>
 
                             {{-- Displaying The Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors AND https://laravel.com/docs/9.x/blade#validation-errors --}}
@@ -40,9 +40,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($sections as $section)
+                                        @foreach ($sections as $key=>$section)
                                             <tr>
-                                                <td>{{ $section['id'] }}</td>
+                                                <td>{{ __($key+1)}}</td>
                                                 <td>{{ $section['name'] }}</td>
                                                 <td>
                                                     @if ($section['status'] == 1)

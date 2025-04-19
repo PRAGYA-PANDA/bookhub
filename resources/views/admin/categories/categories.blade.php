@@ -12,7 +12,7 @@
 
 
 
-                            
+
                             <a href="{{ url('admin/add-edit-category') }}" style="max-width: 150px; float: right; display: inline-block" class="btn btn-block btn-primary">Add Category</a>
 
                             {{-- Displaying The Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors AND https://laravel.com/docs/9.x/blade#validation-errors --}}
@@ -43,7 +43,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($categories as $category)
+                                        @foreach ($categories as $key=>$category)
                                             {{-- @php echo '<pre>', var_dump($category['parent_category']), '</pre>'; @endphp --}}
                                             @if (isset($category['parent_category']['category_name']) && !empty($category['parent_category']['category_name']))
                                                 @php $parent_category = $category['parent_category']['category_name']; @endphp
@@ -51,7 +51,7 @@
                                                 @php $parent_category = 'Root'; @endphp
                                             @endif
                                             <tr>
-                                                <td>{{ $category['id'] }}</td>
+                                                <td>{{ __($key+1)}}</td>
                                                 <td>{{ $category['category_name'] }}</td>
                                                 <td>{{ $parent_category }}</td> {{-- Through the relationship --}}
                                                 <td>{{ $category['section']['name'] }}</td> {{-- Through the relationship --}}

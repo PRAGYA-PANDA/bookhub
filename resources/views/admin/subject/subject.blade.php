@@ -40,9 +40,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($subjects as $subject)
+                                        @foreach ($subjects as $key=>$subject)
                                             <tr>
-                                                <td>{{ $subject['id'] }}</td>
+                                                <td>{{ __($key+1)}}</td>
                                                 <td>{{ $subject['name'] }}</td>
                                                 <td>
                                                     @if ($subject['status'] == 1)

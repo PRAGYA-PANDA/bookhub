@@ -40,9 +40,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($authors as $author)
+                                        @foreach ($authors as $key=> $author)
                                             <tr>
-                                                <td>{{ $author['id'] }}</td>
+                                                <td>{{ __($key+1)}}</td>
                                                 <td>{{ $author['name'] }}</td>
                                                 <td>
                                                     @if ($author['status'] == 1)

@@ -11,7 +11,7 @@ class AuthorController extends Controller
 {
     public function index()
     {
-        $authors = Author::all();
+        $authors = Author::orderBy('id','desc')->get();
         Session::put('page', 'authors');
         return view('admin.authors.author', compact('authors'));
     }

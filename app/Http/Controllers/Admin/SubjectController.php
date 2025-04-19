@@ -12,7 +12,7 @@ class SubjectController extends Controller
 
     public function index()
     {
-        $subjects = Subject::all();
+        $subjects = Subject::orderBy('id','desc')->get();
         Session::put('page', 'subjects');
         return view('admin.subject.subject', compact('subjects'));
     }

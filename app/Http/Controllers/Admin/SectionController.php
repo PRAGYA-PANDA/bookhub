@@ -16,13 +16,14 @@ class SectionController extends Controller
 
 
         // $sections = Section::get(); // Eloquent Collection
-        $sections = Section::get()->toArray(); // Plain PHP array
+
+        $sections = Section::orderBy('id','desc')->get()->toArray(); // Plain PHP array
         // dd($sections);
 
         return view('admin.sections.sections')->with(compact('sections'));
     }
 
-    public function updateSectionStatus(Request $request) { // Update Section Status using AJAX in sections.blade.php    
+    public function updateSectionStatus(Request $request) { // Update Section Status using AJAX in sections.blade.php
         if ($request->ajax()) { // if the request is coming via an AJAX call
             $data = $request->all(); // Getting the name/value pairs array that are sent from the AJAX request (AJAX call)
             // dd($data);
@@ -44,15 +45,15 @@ class SectionController extends Controller
         }
     }
 
-    public function deleteSection($id) { 
+    public function deleteSection($id) {
         Section::where('id', $id)->delete();
-        
+
         $message = 'Section has been deleted successfully!';
-        
+
         return redirect()->back()->with('success_message', $message);
     }
 
-    public function addEditSection(Request $request, $id = null) { // If the $id is not passed, this means Add a Section, if not, this means Edit the Section    
+    public function addEditSection(Request $request, $id = null) { // If the $id is not passed, this means Add a Section, if not, this means Edit the Section
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'sections');
 
@@ -73,7 +74,7 @@ class SectionController extends Controller
             $data = $request->all();
             // dd($data);
 
-            // Laravel's Validation    // Customizing Laravel's Validation Error Messages: https://laravel.com/docs/9.x/validation#customizing-the-error-messages    // Customizing Validation Rules: https://laravel.com/docs/9.x/validation#custom-validation-rules    
+            // Laravel's Validation    // Customizing Laravel's Validation Error Messages: https://laravel.com/docs/9.x/validation#customizing-the-error-messages    // Customizing Validation Rules: https://laravel.com/docs/9.x/validation#custom-validation-rules
             $rules = [
                 'section_name' => 'required|regex:/^[\pL\s\-]+$/u', // only alphabetical characters and spaces
             ];
@@ -85,7 +86,7 @@ class SectionController extends Controller
 
             $this->validate($request, $rules, $customMessages);
 
-            
+
             // Saving inserted/updated data    // Inserting & Updating Models: https://laravel.com/docs/9.x/eloquent#inserts AND https://laravel.com/docs/9.x/eloquent#updates
             $section->name   = $data['section_name']; // WHETHER ADDING or UPDATING
             $section->status = 1;  // WHETHER ADDING or UPDATING

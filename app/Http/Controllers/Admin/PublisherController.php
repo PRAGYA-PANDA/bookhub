@@ -16,7 +16,8 @@ class PublisherController extends Controller
         Session::put('page', 'publisher');
 
 
-        $publishers = Publisher::get()->toArray(); // Plain PHP array
+        $publishers = Publisher::orderBy('id', 'desc')->get()->toArray();
+ // Plain PHP array
         // dd($publisher);
 
         return view('admin.publisher.publisher')->with(compact('publishers'));

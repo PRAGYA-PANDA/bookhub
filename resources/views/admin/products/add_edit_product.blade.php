@@ -155,12 +155,11 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="author_id">Select Author</label>
-                                    <select name="author_id" id="author_id" class="form-control text-dark">
-                                        <option value="">Select Author</option>
+                                    <label for="author_id">Select Authors</label>
+                                    <select name="author_id[]" id="author_id" class="form-control text-dark" multiple>
                                         @foreach ($authors as $author)
                                             <option value="{{ $author['id'] }}"
-                                                @if (!empty($product['author_id']) && $product['author_id'] == $author['id']) selected @endif>
+                                                @if (!empty($product['author_id']) && is_array($product['author_id']) && in_array($author['id'], $product['author_id'])) selected @endif>
                                                 {{ $author['name'] }}
                                             </option>
                                         @endforeach
