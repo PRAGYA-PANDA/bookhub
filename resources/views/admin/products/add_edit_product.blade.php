@@ -179,7 +179,7 @@
                                     <input type="text" class="form-control" id="product_code" placeholder="Enter Code"
                                         name="product_code"
                                         @if (!empty($product['product_code'])) value="{{ $product['product_code'] }}" @else value="{{ old('product_code') }}" @endif>
-                                    {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
+                                    {{-- Repopulating  Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
                                 </div>
                                 <div class="form-group">
                                     <label for="product_color">Product Color</label>
