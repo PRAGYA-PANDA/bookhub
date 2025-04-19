@@ -190,7 +190,7 @@ class ProductsController extends Controller
             $product->section_id  = $categoryDetails['section_id'];
             $product->category_id = $data['category_id'];
             $product->publisher_id    = $data['publisher_id'];
-            $product->author_id  = $data['author_id'];
+            //$product->authors()->sync($data['author_id']);
             $product->subject_id    = $data['subject_id'];
             $product->group_code  = $data['group_code']; // Managing Product Colors (in front/products/detail.blade.php)
 
@@ -274,6 +274,7 @@ class ProductsController extends Controller
 
             $product->save(); // Save all data in the database
 
+            $product->authors()->sync($data['author_id']);
             return redirect('admin/products')->with('success_message', $message);
         }
 

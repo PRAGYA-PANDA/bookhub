@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Category;
+use App\Models\Author;
+
 
 class Product extends Model
 {
@@ -31,9 +33,12 @@ class Product extends Model
         return $this->belongsTo(Subject::class,'subject_id');
     }
 
-    public function author(){
-        return $this->belongsTo(Author::class,'author_id');
-    }
+    public function authors()
+{
+    return $this->belongsToMany(Author::class);
+}
+
+
 
     // Every product has many attributes
     public function attributes() {

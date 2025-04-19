@@ -155,15 +155,15 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="author_id">Select Authors</label>
-                                    <select name="author_id[]" id="author_id" class="form-control text-dark" multiple>
-                                        @foreach ($authors as $author)
-                                            <option value="{{ $author['id'] }}"
-                                                @if (!empty($product['author_id']) && is_array($product['author_id']) && in_array($author['id'], $product['author_id'])) selected @endif>
-                                                {{ $author['name'] }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                <label for="author_id">Select Authors</label>
+                                <select name="author_id[]" multiple class="form-control">
+                                    @foreach ($authors as $author)
+                                        <option value="{{ $author['id'] }}"
+                                            @if (!empty($product->authors) && in_array($author['id'], $product->authors->pluck('id')->toArray())) selected @endif>
+                                            {{ $author['name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
                                 </div>
 
                                 <div class="form-group">
