@@ -33,7 +33,7 @@ $sections = \App\Models\Section::sections();
 
 
                         <a>
-                            {{-- If the user is authenticated/logged in, show 'My Account', if not, show 'Login/Register' --}} 
+                            {{-- If the user is authenticated/logged in, show 'My Account', if not, show 'Login/Register' --}}
                             @if (\Illuminate\Support\Facades\Auth::check()) {{-- Determining If The Current User Is Authenticated: https://laravel.com/docs/9.x/authentication#determining-if-the-current-user-is-authenticated --}}
                                 My Account
                             @else
@@ -56,32 +56,32 @@ $sections = \App\Models\Section::sections();
 
 
 
-                            {{-- If the user is authenticated/logged in, show 'My Account' and 'Logout', if not, show 'Customer Login' and 'Vendor Login' --}} 
+                            {{-- If the user is authenticated/logged in, show 'My Account' and 'Logout', if not, show 'Customer Login' and 'Vendor Login' --}}
                             @if (\Illuminate\Support\Facades\Auth::check()) {{-- Determining If The Current User Is Authenticated: https://laravel.com/docs/9.x/authentication#determining-if-the-current-user-is-authenticated --}}
                                 <li>
-                                    <a href="{{ url('user/account') }}"> 
+                                    <a href="{{ url('user/account') }}">
                                         <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
                                         My Account
                                     </a>
                                 </li>
 
-                                
+
                                 <li>
-                                    <a href="{{ url('user/orders') }}"> 
+                                    <a href="{{ url('user/orders') }}">
                                         <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
                                         My Orders
                                     </a>
                                 </li>
 
                                 <li>
-                                    <a href="{{ url('user/logout') }}"> 
+                                    <a href="{{ url('user/logout') }}">
                                         <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
                                         Logout
                                     </a>
                                 </li>
                             @else
                                 <li>
-                                    <a href="{{ url('user/login-register') }}"> 
+                                    <a href="{{ url('user/login-register') }}">
                                         <i class="fas fa-sign-in-alt u-s-m-r-9"></i>
                                         Customer Login
                                     </a>
@@ -98,7 +98,7 @@ $sections = \App\Models\Section::sections();
 
                         </ul>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a>EGP
                         <i class="fas fa-chevron-down u-s-m-l-9"></i>
                         </a>
@@ -110,7 +110,7 @@ $sections = \App\Models\Section::sections();
                                 <a href="#">($) USD</a>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
                     <li>
                         <a>ENG
                         <i class="fas fa-chevron-down u-s-m-l-9"></i>
@@ -147,7 +147,7 @@ $sections = \App\Models\Section::sections();
 
 
 
-                    {{-- Website Search Form (to search for all website products) --}} 
+                    {{-- Website Search Form (to search for all website products) --}}
                     <form class="form-searchbox" action="{{ url('/search-products') }}" method="get">
                         <label class="sr-only" for="search-landscape">Search</label>
                         <input id="search-landscape" type="text" class="text-field" placeholder="Search everything" name="search" @if (isset($_REQUEST['search']) && !empty($_REQUEST['search'])) value="{{ $_REQUEST['search'] }}" @endif> {{-- We use the "name" HTML attribute as a key/name for the "value" HTML attribute for submitting the Search Form. Check the "value" HTML attribute too inside the <option> HTML tag down below! --}} {{-- if the user uses the Search Form --}}
@@ -256,7 +256,7 @@ $sections = \App\Models\Section::sections();
                                                                         <ul>
 
 
- 
+
                                                                             @foreach ($category['sub_categories'] as $subcategory) {{-- Show the section child categories child Subcategories --}}
                                                                             <li>
                                                                                 <a href="{{ url($subcategory['url']) }}">{{ $subcategory['category_name'] }}</a>
@@ -285,21 +285,21 @@ $sections = \App\Models\Section::sections();
                 <div class="col-lg-9">
                     <ul class="bottom-nav g-nav u-d-none-lg">
                         <li>
-                            <a href="{{ url('search-products?search=new-arrivals') }}">New Arrivals 
+                            <a href="{{ url('search-products?search=new-arrivals') }}">New Arrivals
                             <span class="superscript-label-new">NEW</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url('search-products?search=best-sellers') }}">Best Seller 
+                            <a href="{{ url('search-products?search=best-sellers') }}">Best Seller
                             <span class="superscript-label-hot">HOT</span>
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url('search-products?search=featured') }}">Featured 
+                            <a href="{{ url('search-products?search=featured') }}">Featured
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url('search-products?search=discounted') }}">Discounted 
+                            <a href="{{ url('search-products?search=discounted') }}">Discounted
                             <span class="superscript-label-discount">>10%</span>
                             </a>
                         </li>

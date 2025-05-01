@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthorController;
+use App\Http\Controllers\Admin\ProductsController;
 use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\SubjectController;
 use Illuminate\Support\Facades\Route;
@@ -83,6 +84,7 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         Route::get('delete/{id}', [SubjectController::class, 'delete'])->name('delete.subject');
 
         // Products
+        Route::get('products/getauthors', [ProductsController::class, 'getAuthor']);
         Route::get('products', 'ProductsController@products'); // render products.blade.php in the Admin Panel
         Route::post('update-product-status', 'ProductsController@updateProductStatus'); // Update Products Status using AJAX in products.blade.php
         Route::get('delete-product/{id}', 'ProductsController@deleteProduct'); // Delete a product in products.blade.php

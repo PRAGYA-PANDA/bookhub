@@ -30,7 +30,7 @@ class AuthorController extends Controller
         $store = Author::create([
             'name' => $request->name,
         ]);
-        return redirect()->route('author')->with('success', 'Author name inserted successfully');
+        return redirect()->route('author')->with('success', 'Author name inserted successfully!!');
     }
 
     public function edit($id)
@@ -47,7 +47,7 @@ class AuthorController extends Controller
         $update->update([
             'name'=> $request->name,
         ]);
-        return redirect()->route('author')->with('success', 'Author name updated successfully');
+        return redirect()->route('author')->with('success', 'Author name updated successfully!!');
     }
 
     public function delete($id){

@@ -9,7 +9,7 @@
 
 
 
-        {{-- X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token --}} 
+        {{-- X-CSRF-TOKEN: https://laravel.com/docs/9.x/csrf#csrf-x-csrf-token --}}
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
@@ -35,7 +35,7 @@
             @else
                 Laravel Multi Vendor E-commerce Template - By Multi-vendor E-commerce Application Channel
             @endif
-            
+
         </title>
         <!-- Standard Favicon -->
         <link href="favicon.ico" rel="shortcut icon">
@@ -68,7 +68,7 @@
 
 
 
-        {{-- My Preloader/Loader/Loading Page/Preloading Screen --}} 
+        {{-- My Preloader/Loader/Loading Page/Preloading Screen --}}
         <link rel="stylesheet" href="{{ url('front/css/custom.css') }}">
 
 
@@ -77,7 +77,7 @@
     <body>
 
 
-        {{-- My Preloader/Loader/Loading Page/Preloading Screen --}} 
+        {{-- My Preloader/Loader/Loading Page/Preloading Screen --}}
         <div class="loader">
             <img src="{{ asset('front/images/loaders/loader.gif') }}" alt="loading..." />
          </div>
@@ -115,7 +115,7 @@
         </div>
         <style> #app {
             display: none;
-            } 
+            }
         </style>
         <![endif]-->
         <!-- NoScript -->
@@ -176,7 +176,7 @@
 
 
 
-        <!-- Our front/js/custom.js file --> 
+        <!-- Our front/js/custom.js file -->
         <script type="text/javascript" src="{{ url('front/js/custom.js') }}"></script>
 
 
@@ -187,25 +187,25 @@
         <script>
             // Instantiate EasyZoom instances
             var $easyzoom = $('.easyzoom').easyZoom();
-    
+
             // Setup thumbnails example
             var api1 = $easyzoom.filter('.easyzoom--with-thumbnails').data('easyZoom');
-    
+
             $('.thumbnails').on('click', 'a', function(e) {
                 var $this = $(this);
-    
+
                 e.preventDefault();
-    
+
                 // Use EasyZoom's `swap` method
                 api1.swap($this.data('standard'), $this.attr('href'));
             });
-    
+
             // Setup toggles example
             var api2 = $easyzoom.filter('.easyzoom--with-toggle').data('easyZoom');
-    
+
             $('.toggle').on('click', function() {
                 var $this = $(this);
-    
+
                 if ($this.data("active") === true) {
                     $this.text("Switch on").data("active", false);
                     api2.teardown();
@@ -218,7 +218,7 @@
 
 
 
-        {{-- To enable us to write PHP code within JavaScript code (to operate the Dynamic Filters dynamically (the second way)) --}} 
+        {{-- To enable us to write PHP code within JavaScript code (to operate the Dynamic Filters dynamically (the second way)) --}}
         @include('front.layout.scripts') {{-- scripts.blade.php --}}
 
 

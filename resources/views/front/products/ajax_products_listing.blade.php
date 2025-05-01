@@ -31,17 +31,9 @@
                 <div class="item-content">
                     <div class="what-product-is">
                         <ul class="bread-crumb">
-                            <li class="has-separator">
-                                <a href="shop-v1-root-category.html">{{ $product['product_code'] }}</a>
-                            </li>
-                            <li class="has-separator">
 
-
-
-                                <a href="listing.html">{{ $product['product_color'] }}</a>
-                            </li>
                             <li>
-                                <a href="listing.html">{{ $product['brand']['name'] }}</a>
+                                <a href="listing.html">{{ $product['name'] }}</a>
                             </li>
                         </ul>
                         <h6 class="item-title">
@@ -66,16 +58,16 @@
                     @if ($getDiscountPrice > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
                         <div class="price-template">
                             <div class="item-new-price">
-                                EGP{{ $getDiscountPrice }}
+                                ₹{{ $getDiscountPrice }}
                             </div>
                             <div class="item-old-price">
-                                EGP{{ $product['product_price'] }}
+                                ₹{{ $product['product_price'] }}
                             </div>
                         </div>
                     @else {{-- if there's no discount on the price, show the original price --}}
                         <div class="price-template">
                             <div class="item-new-price">
-                                EGP{{ $product['product_price'] }}
+                                ₹{{ $product['product_price'] }}
                             </div>
                         </div>
                     @endif
@@ -86,7 +78,7 @@
 
 
 
-                
+
                 @php
                     $isProductNew = \App\Models\Product::isProductNew($product['id'])
                 @endphp
@@ -97,7 +89,7 @@
                 @endif
 
 
-                
+
             </div>
         </div>
     @endforeach

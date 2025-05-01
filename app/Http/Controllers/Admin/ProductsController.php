@@ -79,7 +79,7 @@ class ProductsController extends Controller
     public function deleteProduct($id) {
         Product::where('id', $id)->delete();
 
-        $message = 'Product has been deleted successfully!';
+        $message = 'Book has been deleted successfully!';
 
         return redirect()->back()->with('success_message', $message);
     }
@@ -90,15 +90,15 @@ class ProductsController extends Controller
 
 
         if ($id == '') { // if there's no $id is passed in the route/URL parameters, this means 'Add a new product'
-            $title = 'Add Product';
+            $title = 'Add Book';
             $product = new \App\Models\Product();
             // dd($product);
-            $message = 'Product added successfully!';
+            $message = 'Book added successfully!';
         } else { // if the $id is passed in the route/URL parameters, this means Edit the Product
-            $title = 'Edit Product';
+            $title = 'Edit Book';
             $product = Product::find($id);
             // dd($product);
-            $message = 'Product updated successfully!';
+            $message = 'Book updated successfully!';
         }
 
         if ($request->isMethod('post')) { // WHETHER 'Add a Product' or 'Update a Product' <form> is submitted (THE SAME <form>)!!
@@ -109,22 +109,22 @@ class ProductsController extends Controller
             // Laravel's Validation    // Customizing Laravel's Validation Error Messages: https://laravel.com/docs/9.x/validation#customizing-the-error-messages    // Customizing Validation Rules: https://laravel.com/docs/9.x/validation#custom-validation-rules
             $rules = [
                 'category_id'   => 'required',
+                'condition' => 'required|in:new,old',
                 'product_name'  => 'required', // only alphabetical characters and spaces
-                'product_code'  => 'required|regex:/^\w+$/', // alphanumeric regular expression
+                'product_isbn'  => 'required', // alphanumeric regular expression
                 'product_price' => 'required|numeric',
-                'product_color' => 'required|regex:/^[\pL\s\-]+$/u', // only alphabetical characters and spaces
+
             ];
 
             $customMessages = [ // Specifying A Custom Message For A Given Attribute: https://laravel.com/docs/9.x/validation#specifying-a-custom-message-for-a-given-attribute
                 'category_id.required'   => 'Category is required',
-                'product_name.required'  => 'Product Name is required',
-                'product_name.regex'     => 'Valid Product Name is required',
-                'product_code.required'  => 'Product Code is required',
-                'product_code.regex'     => 'Valid Product Code is required',
-                'product_price.required' => 'Product Price is required',
-                'product_price.numeric'  => 'Valid Product Price is required',
-                'product_color.required' => 'Product Color is required',
-                'product_color.regex'    => 'Valid Product Color is required',
+                'condition.required'   => 'You have to select the Book type',
+                'product_name.required'  => 'Book Name is required',
+                'product_name.regex'     => 'Valid Book Name is required',
+                'product_isbn.required'  => 'Book ISBN is required',
+                'product_price.required' => 'Book Price is required',
+                'product_price.numeric'  => 'Valid Book Price is required',
+
 
             ];
 
@@ -158,29 +158,8 @@ class ProductsController extends Controller
                 }
             }
 
-
-            // Upload Product Video
             // Important Note: Default php.ini file upload Maximum file size is 2MB (If you upload a file with a larger size, it won't be uploaded!). Check upload_max_filesize using phpinfo() method.
-            if ($request->hasFile('product_video')) {
-                $video_tmp = $request->file('product_video');
 
-                if ($video_tmp->isValid()) { // Validating Successful Uploads: https://laravel.com/docs/9.x/requests#validating-successful-uploads
-                    // Upload video
-                    $extension  = $video_tmp->getClientOriginalExtension();
-
-                    // Generate a new random name for the uploaded video (to avoid that the video might get overwritten if its name is repeated)
-                    $videoName = rand() . '.' . $extension; // e.g.    75935.mp4
-
-                    // Assigning the uploaded videos path inside the 'public' folder
-                    $videoPath = 'front/videos/product_videos/';
-
-                    // Move the video from the temporary path (which is assigned by the web server) to our assigned path inside the 'public' folder    // Copying & Moving Files: https://laravel.com/docs/9.x/filesystem#copying-moving-files
-                    $video_tmp->move($videoPath, $videoName);
-
-                    // Insert the video name in the database table
-                    $product->product_video = $videoName;
-                }
-            }
 
 
             // Saving BOTH inserted ('Add a product' <form>) AND updated ('Update a Product' <form>) data in `products` database table    // Inserting & Updating Models: https://laravel.com/docs/9.x/eloquent#inserts AND https://laravel.com/docs/9.x/eloquent#updates
@@ -192,7 +171,6 @@ class ProductsController extends Controller
             $product->publisher_id    = $data['publisher_id'];
             //$product->authors()->sync($data['author_id']);
             $product->subject_id    = $data['subject_id'];
-            $product->group_code  = $data['group_code']; // Managing Product Colors (in front/products/detail.blade.php)
 
 
             // Saving the seleted filter for a product
@@ -238,12 +216,12 @@ class ProductsController extends Controller
             }
 
 
+            $product->condition     = $data['condition'];
             $product->product_name     = $data['product_name'];
-            $product->product_code     = $data['product_code'];
-            $product->product_color    = $data['product_color'];
+            $product->product_isbn     = "ISBN-".$data['product_isbn'];
             $product->product_price    = $data['product_price'];
             $product->product_discount = $data['product_discount'];
-            $product->product_weight   = $data['product_weight'];
+            $product->product_weight   = $data['product_weight'] . "Kg";
             $product->description      = $data['description'];
             $product->meta_title       = $data['meta_title'];
             $product->meta_description = $data['meta_description'];
@@ -273,8 +251,9 @@ class ProductsController extends Controller
 
 
             $product->save(); // Save all data in the database
-
-            $product->authors()->sync($data['author_id']);
+            // \Log::info('Syncing authors: ', $request->author_id);
+            $product->authors()->sync($request->author_id ?? []);
+            // dd($request->author_id);
             return redirect('admin/products')->with('success_message', $message);
         }
 
@@ -286,13 +265,24 @@ class ProductsController extends Controller
         // Get all publishers
         $publishers = \App\Models\Publisher::where('status', 1)->get()->toArray();
         // dd($publishers);
-        $authors = Author::where('status', 1)->get()->toArray();
+       $authors = Author::where('status', 1)->get();
+
+            //dd($authors);
         $subjects = Subject::where('status', 1)->get()->toArray();
         // dd($subjects);
 
 
         // return view('admin.products.add_edit_product')->with(compact('title', 'product'));
         return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories', 'publishers','authors','subjects'));
+    }
+
+    public function getAuthor(Request $request){
+        $q = $request->input('q');
+
+        return Author::where('name', 'like', "%{$q}%")
+            ->select('id', 'name')
+            ->limit(20)
+            ->get();
     }
 
     public function deleteProductImage($id) { // AJAX call from admin/js/custom.js    // Delete the product image from BOTH SERVER (FILESYSTEM) & DATABASE    // $id is passed as a Route Parameter
@@ -325,37 +315,18 @@ class ProductsController extends Controller
         // Delete the product image name (record) from the `products` database table (Note: We won't use delete() method because we're not deleting a complete record (entry) (we're just deleting a one column `product_image` value), we will just use update() method to update the `product_image` name to an empty string value '')
         Product::where('id', $id)->update(['product_image' => '']);
 
-        $message = 'Product Image has been deleted successfully!';
+        $message = 'Book Image has been deleted successfully!';
 
 
         return redirect()->back()->with('success_message', $message);
     }
 
-    public function deleteProductVideo($id) { // AJAX call from admin/js/custom.js    // Delete the product video from BOTH SERVER (FILESYSTEM) & DATABASE    // $id is passed as a Route Parameter
-        // Get the product video record stored in the database
-        $productVideo = Product::select('product_video')->where('id', $id)->first();
-        // dd($productVideo);
 
-        // Get the product video path on the server (filesystem)
-        $product_video_path = 'front/videos/product_videos/';
-
-        // Delete the product videos on server (filesystem) (from the the 'product_videos' folder)
-        if (file_exists($product_video_path . $productVideo->product_video)) {
-            unlink($product_video_path . $productVideo->product_video);
-        }
-
-        // Delete the product video name (record) from the `products` database table (Note: We won't use delete() method because we're not deleting a complete record (entry) (we're just deleting a one column `product_video` value), we will just use update() method to update the `product_video` name to an empty string value '')
-        Product::where('id', $id)->update(['product_video' => '']);
-
-        $message = 'Product Video has been deleted successfully!';
-
-        return redirect()->back()->with('success_message', $message);
-    }
 
     public function addAttributes(Request $request, $id) { // Add/Edit Attributes function
         Session::put('page', 'products');
 
-        $product = Product::select('id', 'product_name', 'product_code', 'product_color', 'product_price', 'product_image')->with('attributes')->find($id); // with('attributes') is the relationship method name in the Product.php model
+        $product = Product::select('id', 'product_name', 'product_isbn', 'product_price', 'product_image')->with('attributes')->find($id); // with('attributes') is the relationship method name in the Product.php model
 
         if ($request->isMethod('post')) { // When the <form> is submitted
             $data = $request->all();
@@ -392,7 +363,7 @@ class ProductsController extends Controller
                     $attribute->save();
                 }
             }
-            return redirect()->back()->with('success_message', 'Product Attributes have been addded successfully!');
+            return redirect()->back()->with('success_message', 'Book Attributes have been addded successfully!');
         }
 
 
@@ -438,14 +409,14 @@ class ProductsController extends Controller
                 }
             }
 
-            return redirect()->back()->with('success_message', 'Product Attributes have been updated successfully!');
+            return redirect()->back()->with('success_message', 'Book Attributes have been updated successfully!');
         }
     }
 
     public function addImages(Request $request, $id) { // $id is the URL Paramter (slug) passed from the URL
         Session::put('page', 'products');
 
-        $product = Product::select('id', 'product_name', 'product_code', 'product_color', 'product_price', 'product_image')->with('images')->find($id); // with('images') is the relationship method name in the Product.php model
+        $product = Product::select('id', 'product_name', 'product_isbn', 'product_price', 'product_image')->with('images')->find($id); // with('images') is the relationship method name in the Product.php model
 
 
         if ($request->isMethod('post')) { // if the <form> is submitted
@@ -493,7 +464,7 @@ class ProductsController extends Controller
                 }
             }
 
-            return redirect()->back()->with('success_message', 'Product Images have been added successfully!');
+            return redirect()->back()->with('success_message', 'Book Images have been added successfully!');
         }
 
 
@@ -551,7 +522,7 @@ class ProductsController extends Controller
         // Delete the product image name (record) from the `products_images` database table
         ProductsImage::where('id', $id)->delete();
 
-        $message = 'Product Image has been deleted successfully!';
+        $message = 'Book Image has been deleted successfully!';
 
         return redirect()->back()->with('success_message', $message);
     }

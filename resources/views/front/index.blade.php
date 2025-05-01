@@ -7,7 +7,7 @@
     <div class="default-height ph-item">
         <div class="slider-main owl-carousel">
 
-            {{-- Show the banner dynamically depending on the Admin Panel choice --}} 
+            {{-- Show the banner dynamically depending on the Admin Panel choice --}}
             @foreach ($sliderBanners as $banner)
                 <div class="bg-image">
                     <div class="slide-content">
@@ -26,7 +26,7 @@
 
 
 
-    
+
     @if (isset($fixBanners[1]['image']))
         <!-- Banner-Layer -->
         <div class="banner-layer">
@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <!-- Banner-Layer /- -->    
+        <!-- Banner-Layer /- -->
     @endif
 
 
@@ -70,7 +70,7 @@
                             <div class="slider-fouc">
                                 <div class="products-slider owl-carousel" data-item="4">
 
-                                    {{-- Show 'New Arrivals'. Show the LATEST 8 products ONLY. Check the index() method in IndexController.php --}} 
+                                    {{-- Show 'New Arrivals'. Show the LATEST 8 products ONLY. Check the index() method in IndexController.php --}}
                                     @foreach ($newProducts as $product)
                                         @php
                                             $product_image_path = 'front/images/product_images/small/' . $product['product_image'];
@@ -101,11 +101,7 @@
                                             </div>
                                             <div class="item-content">
                                                 <div class="what-product-is">
-                                                    <ul class="bread-crumb">
-                                                        <li>
-                                                            <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_code'] }}</a>
-                                                        </li>
-                                                    </ul>
+
                                                     <h6 class="item-title">
                                                         <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
                                                     </h6>
@@ -158,7 +154,7 @@
                                 <div class="products-slider owl-carousel" data-item="4">
 
 
-                                    {{-- Show the 'Best Seller' products. Check the index() method in IndexController.php --}} 
+                                    {{-- Show the 'Best Seller' products. Check the index() method in IndexController.php --}}
                                     @foreach ($bestSellers as $product)
                                         @php
                                             $product_image_path = 'front/images/product_images/small/' . $product['product_image'];
@@ -189,11 +185,7 @@
                                             </div>
                                             <div class="item-content">
                                                 <div class="what-product-is">
-                                                    <ul class="bread-crumb">
-                                                        <li>
-                                                            <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_code'] }}</a>
-                                                        </li>
-                                                    </ul>
+
                                                     <h6 class="item-title">
                                                         <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
                                                     </h6>
@@ -239,7 +231,7 @@
                                 <div class="products-slider owl-carousel" data-item="4">
 
 
-                                    {{-- Show the 'Best Seller' products. Check the index() method in IndexController.php --}} 
+                                    {{-- Show the 'Best Seller' products. Check the index() method in IndexController.php --}}
                                     @foreach ($discountedProducts as $product)
                                         @php
                                             $product_image_path = 'front/images/product_images/small/' . $product['product_image'];
@@ -270,11 +262,7 @@
                                             </div>
                                             <div class="item-content">
                                                 <div class="what-product-is">
-                                                    <ul class="bread-crumb">
-                                                        <li>
-                                                            <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_code'] }}</a>
-                                                        </li>
-                                                    </ul>
+
                                                     <h6 class="item-title">
                                                         <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
                                                     </h6>
@@ -320,7 +308,7 @@
                                 <div class="products-slider owl-carousel" data-item="4">
 
 
-                                    {{-- Show the 'Best Seller' products. Check the index() method in IndexController.php --}} 
+                                    {{-- Show the 'Best Seller' products. Check the index() method in IndexController.php --}}
                                     @foreach ($featuredProducts as $product)
                                         @php
                                             $product_image_path = 'front/images/product_images/small/' . $product['product_image'];
@@ -351,11 +339,7 @@
                                             </div>
                                             <div class="item-content">
                                                 <div class="what-product-is">
-                                                    <ul class="bread-crumb">
-                                                        <li>
-                                                            <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_code'] }}</a>
-                                                        </li>
-                                                    </ul>
+                                                    
                                                     <h6 class="item-title">
                                                         <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
                                                     </h6>
@@ -405,7 +389,7 @@
 
 
 
-    
+
     @if (isset($fixBanners[1]['image']))
         <!-- Banner-Layer -->
         <div class="banner-layer">
@@ -417,7 +401,7 @@
                 </div>
             </div>
         </div>
-        <!-- Banner-Layer /- -->    
+        <!-- Banner-Layer /- -->
     @endif
 
 

@@ -1,6 +1,6 @@
 {{-- This is the filters sidebar which is included by 'listing.blade.php' --}}
 @php
-    
+
     $productFilters = \App\Models\ProductsFilter::productFilters(); // Get all the (enabled/active) Filters
     // dd($productFilters);
 @endphp
@@ -55,14 +55,14 @@
 
 
 
-    {{-- If the Search Form is not used for searching in front/layout/header.blade.php. Note that Filters will be hidden and won't work in case of using the Search Form --}} 
+    {{-- If the Search Form is not used for searching in front/layout/header.blade.php. Note that Filters will be hidden and won't work in case of using the Search Form --}}
     @if (!isset($_REQUEST['search']))
 
         <!-- Filters -->
         <!-- Filter-Size -->
 
-        
-        {{-- Size, price, color, brand, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'brand' Filter from `brands` table --}}
+
+        {{-- Size, price, color, Publisher, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'Publisher' Filter from `Publishers` table --}}
         {{-- First: the 'size' filter (from `products_attributes` database table). Show the correct relevant product 'size' filter values (e.g. for the 'men' category (small, medium, large, XL, ...) BUT for the mobiles category (64GB-4GB, 128GB-6GB, ...)) depending on the URL --}}
         @php
             $getSizes = \App\Models\ProductsFilter::getSizes($url); // get product sizes depending on the URL (to show the proper relevant 'size' filter values (whether small, medium, ... OR 64GB-4GB, 128GB-6GB, ...))    // $url is passed from the Front/ProductsController.php
@@ -77,8 +77,8 @@
 
 
 
-                    
-                    {{-- Size, price, color, brand, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'brand' Filter from `brands` table --}}
+
+                    {{-- Size, price, color, Publisher, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'Publisher' Filter from `Publishers` table --}}
                     {{-- First: the 'size' filter (from `products_attributes` database table). Show the correct relevant product 'size' filter values (e.g. for the 'men' category (small, medium, large, XL, ...) BUT for the mobiles category (64GB-4GB, 128GB-6GB, ...)) depending on the URL --}}
                     @foreach ($getSizes as $key => $size) {{-- show the correct relevant product 'size' filter values (e.g. for the 'men' category (small, medium, large, XL, ...) BUT for the mobiles category (64GB-4GB, 128GB-6GB, ...)) depending on the URL --}}
                         <input type="checkbox" class="check-box size" id="size{{ $key }}" name="size[]" value="{{ $size }}"> {{-- Note!!: PLEASE NOTE THE SQUARE BRACKETS [] OF THE "name" ATTRIBUTE!! --}} {{-- echo the $size as a 'CSS class' to be able to use it in jQuery for filtering --}} {{-- the checked checkboxes <input> fields of the size filter values (like Small, medium, large, XL, ...) will be submitted as an ARRAY because we used SQUARE BRACKETS [] with the "name" HTML attribute in the checkbox <input> field in filters.blade.php, or else, AJAX is used to send the <input> values WITHOUT submitting the <form> at all --}}
@@ -99,29 +99,29 @@
 
         <!-- Filter-Color -->
 
-        
-        {{-- Size, price, color, brand, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'brand' Filter from `brands` table --}}
+
+        {{-- Size, price, color, Publisher, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'Publisher' Filter from `Publishers` table --}}
         {{-- Second: the 'color' filter (from `products` database table). Show the correct relevant product 'color' filter values (e.g. for the 'men' category (red, blue, ...) BUT for the mobiles category (grey, black, ...)) depending on the URL --}}
-        @php
-            $getColors = \App\Models\ProductsFilter::getColors($url); // get product colors depending on the URL (to show the proper relevant 'color' filter values (whether small, medium, ... OR 64GB-4GB, 128GB-6GB, ...))    // $url is passed from the Front/ProductsController.php
-            // dd($getColors);
-        @endphp
+        {{-- @php
+            $getColors = \App\Models\ProductsFilter::getColors($url); // get product colors depending on the URL (to show the proper relevant 'color' filter values (whether small, medium, ... OR 64GB-4GB, 128GB-6GB, ...))    // $url is passed from the Front/ProductsController.php --}}
+            {{-- // dd($getColors); --}}
+        {{-- @endphp --}}
         <div class="facet-filter-associates">
-            <h3 class="title-name">Color</h3>
+
             <form class="facet-form" action="#" method="post">
                 <div class="associate-wrapper">
 
 
 
-                    
-                    {{-- Size, price, color, brand, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'brand' Filter from `brands` table --}}
+
+                    {{-- Size, price, color, Publisher, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'Publisher' Filter from `Publishers` table --}}
                     {{-- Second: the 'color' filter (from `products` database table). Show the correct relevant product 'color' filter values (e.g. for the 'men' category (red, blue, ...) BUT for the mobiles category (grey, black, ...)) depending on the URL --}}
-                    @foreach ($getColors as $key => $color) {{-- show the correct relevant product 'color' filter values (e.g. for the 'men' category (red, blue, ...) BUT for the mobiles category (grey, black, ...)) depending on the URL --}}
-                        <input type="checkbox" class="check-box color" id="color{{ $key }}" name="color[]" value="{{ $color }}"> {{-- Note!!: PLEASE NOTE THE SQUARE BRACKETS [] OF THE "name" ATTRIBUTE!! --}} {{-- echo the $color as a 'CSS class' to be able to use it in jQuery for filtering --}} {{-- the checked checkboxes <input> fields of the color filter values (like red, blue, ...) will be submitted as an ARRAY because we used SQUARE BRACKETS [] with the "name" HTML attribute in the checkbox <input> field in filters.blade.php, or else, AJAX is used to send the <input> values WITHOUT submitting the <form> at all --}}
-                        <label class="label-text" for="color{{ $key }}">{{ $color }}
+                    {{-- @foreach ($getColors as $key => $color) show the correct relevant product 'color' filter values (e.g. for the 'men' category (red, blue, ...) BUT for the mobiles category (grey, black, ...)) depending on the URL --}}
+                        {{-- <input type="checkbox" class="check-box color" id="color{{ $key }}" name="color[]" value="{{ $color }}"> Note!!: PLEASE NOTE THE SQUARE BRACKETS [] OF THE "name" ATTRIBUTE!! echo the $color as a 'CSS class' to be able to use it in jQuery for filtering the checked checkboxes <input> fields of the color filter values (like red, blue, ...) will be submitted as an ARRAY because we used SQUARE BRACKETS [] with the "name" HTML attribute in the checkbox <input> field in filters.blade.php, or else, AJAX is used to send the <input> values WITHOUT submitting the <form> at all --}}
+                        {{-- <label class="label-text" for="color{{ $key }}">{{ $color }} --}}
                             {{-- <span class="total-fetch-items">(1)</span> --}}
-                        </label>
-                    @endforeach
+                        {{-- </label>
+                    @endforeach --}}
 
 
 
@@ -131,42 +131,42 @@
         <!-- Filter-Color /- -->
 
 
-        <!-- Filter-Brand -->
+        <!-- Filter-Publisher -->
 
-        
-        {{-- Size, price, color, brand, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'brand' Filter from `brands` table --}}
-        {{-- Fourth: the 'brand' filter (from `products` and `brands` database table). Show the correct relevant product 'price' filter values (e.g. for the 'men' category (LC Waikiki, Concrete, ...) BUT for the mobiles category (iPhone, Xiaomi, ...)) depending on the URL --}}
+
+        {{-- Size, price, color, Publisher, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'Publisher' Filter from `Publishers` table --}}
+        {{-- Fourth: the 'Publisher' filter (from `products` and `Publishers` database table). Show the correct relevant product 'price' filter values (e.g. for the 'men' category (LC Waikiki, Concrete, ...) BUT for the mobiles category (iPhone, Xiaomi, ...)) depending on the URL --}}
         @php
-            $getBrands = \App\Models\ProductsFilter::getBrands($url); // get product brands depending on the URL (to show the proper relevant 'brand' filter values (whether LC Waikiki, Concrete, ... OR iPhone, Xiaomi, ...))    // $url is passed from the Front/ProductsController.php
+            $getPublishers = \App\Models\ProductsFilter::getPublishers($url); // get product Publishers depending on the URL (to show the proper relevant 'Publisher' filter values (whether LC Waikiki, Concrete, ... OR iPhone, Xiaomi, ...))    // $url is passed from the Front/ProductsController.php
             // dd($getColors);
         @endphp
         <div class="facet-filter-associates">
-            <h3 class="title-name">Brand</h3>
+            <h3 class="title-name">Publisher</h3>
             <form class="facet-form" action="#" method="post">
                 <div class="associate-wrapper">
 
 
 
-                    
-                    {{-- Size, price, color, brand, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'brand' Filter from `brands` table --}}
-                    {{-- Fourth: the 'brand' filter (from `products` and `brands` database table). Show the correct relevant product 'price' filter values (e.g. for the 'men' category (LC Waikiki, Concrete, ...) BUT for the mobiles category (iPhone, Xiaomi, ...)) depending on the URL --}}
-                    @foreach ($getBrands as $key => $brand) {{-- show the correct relevant product 'brand' filter values (e.g. for the 'men' category (LC Waikiki, Concrete, ...) BUT for the mobiles category (iPhone, Xiaomi, ...)) depending on the URL --}}
-                        <input type="checkbox" class="check-box brand" id="brand{{ $key }}" name="brand[]" value="{{ $brand['id'] }}"> {{-- Note!!: PLEASE NOTE THE SQUARE BRACKETS [] OF THE "name" ATTRIBUTE!! --}} {{-- echo the $brand as a 'CSS class' to be able to use it in jQuery for filtering --}} {{-- the checked checkboxes <input> fields of the brand filter values (like Concrete, Zara, ...) will be submitted as an ARRAY because we used SQUARE BRACKETS [] with the "name" HTML attribute in the checkbox <input> field in filters.blade.php, or else, AJAX is used to send the <input> values WITHOUT submitting the <form> at all --}}
-                            <label class="label-text" for="brand{{ $key }}">{{ $brand['name'] }}
+
+                    {{-- Size, price, color, Publisher, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'Publisher' Filter from `Publishers` table --}}
+                    {{-- Fourth: the 'Publisher' filter (from `products` and `Publishers` database table). Show the correct relevant product 'price' filter values (e.g. for the 'men' category (LC Waikiki, Concrete, ...) BUT for the mobiles category (iPhone, Xiaomi, ...)) depending on the URL --}}
+                    @foreach ($getPublishers as $key => $publisher) {{-- show the correct relevant product 'Publisher' filter values (e.g. for the 'men' category (LC Waikiki, Concrete, ...) BUT for the mobiles category (iPhone, Xiaomi, ...)) depending on the URL --}}
+                        <input type="checkbox" class="check-box publisher" id="publisher{{ $key }}" name="publisher[]" value="{{ $publisher['id'] }}"> {{-- Note!!: PLEASE NOTE THE SQUARE BRACKETS [] OF THE "name" ATTRIBUTE!! --}} {{-- echo the $publisher as a 'CSS class' to be able to use it in jQuery for filtering --}} {{-- the checked checkboxes <input> fields of the Publisher filter values (like Concrete, Zara, ...) will be submitted as an ARRAY because we used SQUARE BRACKETS [] with the "name" HTML attribute in the checkbox <input> field in filters.blade.php, or else, AJAX is used to send the <input> values WITHOUT submitting the <form> at all --}}
+                            <label class="label-text" for="publisher{{ $key }}">{{ $publisher['name'] }}
                                 {{-- <span class="total-fetch-items">(0)</span> --}}
                         </label>
                     @endforeach
                 </div>
             </form>
         </div>
-        <!-- Filter-Brand /- -->
+        <!-- Filter-Publisher /- -->
 
 
 
         <!-- Filter-Price -->
 
-        
-        {{-- Size, price, color, brand, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'brand' Filter from `brands` table --}}
+
+        {{-- Size, price, color, Publisher, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'publisher' Filter from `publishers` table --}}
         {{-- Third: the 'price' filter (from `products` database table). Show the correct relevant product 'price' filter values (e.g. for the 'men' category (red, blue, ...) BUT for the mobiles category (grey, black, ...)) depending on the URL --}}
         <div class="facet-filter-associates">
             <h3 class="title-name">Price</h3>
@@ -174,7 +174,7 @@
                 <div class="associate-wrapper">
 
 
-                    {{-- Third: the 'price' filter --}} 
+                    {{-- Third: the 'price' filter --}}
                     @php
                         // our desired array of price ranges
                         $prices = array('0-1000', '1000-2000', '2000-5000', '5000-10000', '10000-100000');
@@ -182,7 +182,7 @@
 
                     @foreach ($prices as $key => $price)
                         <input type="checkbox" class="check-box price" id="price{{ $key }}" name="price[]" value="{{ $price }}"> {{-- Note!!: PLEASE NOTE THE SQUARE BRACKETS [] OF THE "name" ATTRIBUTE!! --}} {{-- echo the $price as a 'CSS class' to be able to use it in jQuery for filtering --}} {{-- the checked checkboxes <input> fields of the price filter values (like '1000-2000', '2000-5000', ...) will be submitted as an ARRAY because we used SQUARE BRACKETS [] with the "name" HTML attribute in the checkbox <input> field in filters.blade.php, or else, AJAX is used to send the <input> values WITHOUT submitting the <form> at all --}}
-                        <label class="label-text" for="price{{ $key }}">EGP {{ $price }}
+                        <label class="label-text" for="price{{ $key }}">₹ {{ $price }}
                         </label>
                     @endforeach
                 </div>
@@ -192,7 +192,7 @@
 
 
 
-        
+
         {{-- Dynamic Filters --}}
         <!-- Filter -->
         @foreach ($productFilters as $filter) {{-- $productFilters comes from the far top of this file --}}

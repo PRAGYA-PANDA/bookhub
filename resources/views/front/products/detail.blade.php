@@ -32,11 +32,11 @@
             content: '★ ';
         }
         .rate > input:checked ~ label {
-            color: #ffc700;    
+            color: #ffc700;
         }
         .rate:not(:checked) > label:hover,
         .rate:not(:checked) > label:hover ~ label {
-            color: #deb217;  
+            color: #deb217;
         }
         .rate > input:checked + label:hover,
         .rate > input:checked + label:hover ~ label,
@@ -48,7 +48,7 @@
     </style>
 
 
-    
+
     <!-- Page Introduction Wrapper -->
     <div class="page-style-a">
         <div class="container">
@@ -123,7 +123,7 @@
                         @endif
 
 
-                        {{-- Displaying Laravel Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors --}}    
+                        {{-- Displaying Laravel Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors --}}
                         @if ($errors->any())
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
 
@@ -200,72 +200,68 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="section-2-short-description u-s-p-y-14">
-                            <h6 class="information-heading u-s-m-b-8">Description:</h6>
-                            <p>{{ $productDetails['description'] }}</p>
+
+                        <div class="section-4-sku-information u-s-p-y-14">
+                            <h6 class="information-heading u-s-m-b-8">Publisher: <b>{{ $productDetails->publisher->name ?? 'N/A' }}</b>
+                            </h6>
+                            <div class="availability">
+                                <h6 class="information-heading u-s-m-b-8">Authors {{ $productDetails->authors->count() > 1 ? '' : '' }}:
+                                    <b>{{ $productDetails->authors->pluck('name')->join(', ') ?: 'N/A' }}</b></h6>
+                                    <h6 class="information-heading u-s-m-b-8">ISBN Information: <b>{{ $productDetails['product_isbn'] }}</b></h6>
+                            </div>
                         </div>
-                        <div class="section-3-price-original-discount u-s-p-y-14">
 
-                        
+                        <div class="section-3-price-original-discount u-s-p-y-1">
+                            @php
+                                $originalPrice = $productDetails['product_price'];
+                                $discountedPrice = \App\Models\Product::getDiscountPrice($productDetails['id']);
+                                $savings = $originalPrice - $discountedPrice;
+                                $savingsPercentage = ($originalPrice > 0 && $savings > 0)
+                                    ? ($savings / $originalPrice) * 100
+                                    : 0;
+                            @endphp
 
-                            @php $getDiscountPrice = \App\Models\Product::getDiscountPrice($productDetails['id']) @endphp
-
-                            <span class="getAttributePrice">{{-- this <span> will be used by jQuery for getting the respective `price` and `stock` depending on the selected `size` in the <select> box (through the AJAX call). Check front/js/custom.js --}}
-
-                                @if ($getDiscountPrice > 0) {{-- if there's a discount on the product price --}}
+                            <span class="getAttributePrice">
+                                @if ($discountedPrice > 0)
+                                    {{-- Discounted Price --}}
                                     <div class="price">
-                                        <h4>EGP{{ $getDiscountPrice }}</h4>
+                                        <h4>₹{{ $discountedPrice }}</h4>
                                     </div>
                                     <div class="original-price">
-                                        <span>Original Price:</span>
-                                        <span>EGP{{ $productDetails['product_price'] }}</span> {{-- the product original price (without discount) --}}
+                                        <span>M.R.P.:</span>
+                                        <span style="color: red"><strike>₹{{ $originalPrice }}</strike></span>
                                     </div>
-                                @else {{-- if there's no discount on the product price --}}
+                                    <div class="you-save" style="color: green;">
+                                        You Save: {{ number_format($savingsPercentage, 1) }}%
+                                    </div>
+                                @else
+                                    {{-- Regular Price --}}
                                     <div class="price">
-                                        <h4>EGP{{ $productDetails['product_price'] }}</h4> {{-- the product original price (without discount) --}}
+                                        <h4>₹{{ $originalPrice }}</h4>
                                     </div>
                                 @endif
-
-                            </span> 
-
-
-
+                            </span>
                         </div>
+
                         <div class="section-4-sku-information u-s-p-y-14">
-                            <h6 class="information-heading u-s-m-b-8">Sku Information:</h6>
-                            <div class="left">
-                                <span>Product Code:</span>
-                                <span>{{ $productDetails['product_code'] }}</span>
-                            </div>
-                            <div class="left">
-                                <span>Product Color:</span>
-                                <span>{{ $productDetails['product_color'] }}</span>
-                            </div>
                             <div class="availability">
                                 <span>Availability:</span>
-
-
                                 @if ($totalStock > 0)
                                     <span>In Stock</span>
                                 @else
                                     <span style="color: red">Out of Stock (Sold-out)</span>
                                 @endif
-
-
-
                             </div>
-
-
-
                             @if ($totalStock > 0)
                                 <div class="left">
                                     <span>Only:</span>
                                     <span>{{ $totalStock }} left</span>
                                 </div>
                             @endif
-
-
-
+                        </div>
+                        <div class="section-2-short-description u-s-p-y-14">
+                            <h6 class="information-heading u-s-m-b-8">Description:</h6>
+                            <p>{{ $productDetails['description'] }}</p>
                         </div>
 
 
@@ -282,19 +278,19 @@
 
 
 
-                        {{-- Add to Cart <form> --}} 
+                        {{-- Add to Cart <form> --}}
                         <form action="{{ url('cart/add') }}" method="Post" class="post-form">
                             @csrf {{-- Preventing CSRF Requests: https://laravel.com/docs/9.x/csrf#preventing-csrf-requests --}}
 
 
-                            <input type="hidden" name="product_id" value="{{ $productDetails['id'] }}"> {{-- Add to Cart <form> --}} 
+                            <input type="hidden" name="product_id" value="{{ $productDetails['id'] }}"> {{-- Add to Cart <form> --}}
 
 
                             <div class="section-5-product-variants u-s-p-y-14">
 
 
 
-                                {{-- Managing Product Colors (using the `group_code` column in `products` table) --}} 
+                                {{-- Managing Product Colors (using the `group_code` column in `products` table) --}}
                                 @if (count($groupProducts) > 0) {{-- if there's a value for the `group_code` column (in `products` table) for the currently viewed product --}}
                                     <div>
                                         <div><strong>Product Colors</strong></div>
@@ -310,14 +306,14 @@
 
 
 
-                                <div class="sizes u-s-m-b-11" style="margin-top: 20px">
+                                {{-- <div class="sizes u-s-m-b-11" style="margin-top: 20px">
                                     <span>Available Size:</span>
                                     <div class="size-variant select-box-wrapper">
                                         <select class="select-box product-size" id="getPrice" product-id="{{ $productDetails['id'] }}" name="size" required> {{-- Check front/js/custom.js file --}}
 
 
 
-                                            <option value="">Select Size</option>
+                                            {{-- <option value="">Select Size</option>
                                             @foreach ($productDetails['attributes'] as $attribute)
                                                 <option value="{{ $attribute['size'] }}">{{ $attribute['size'] }}</option>
                                             @endforeach
@@ -326,11 +322,12 @@
 
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
+
                             </div>
                             <div class="section-6-social-media-quantity-actions u-s-p-y-14">
 
-                                
+
                                 <div class="quantity-wrapper u-s-m-b-22">
                                     <span>Quantity:</span>
                                     <div class="quantity">
@@ -349,7 +346,7 @@
                         </form>
 
 
-                        {{-- PIN code Availability Check: check if the PIN code of the user's Delivery Address exists in our database (in both `cod_pincodes` and `prepaid_pincodes`) or not via AJAX. Check front/js/custom.js --}} 
+                        {{-- PIN code Availability Check: check if the PIN code of the user's Delivery Address exists in our database (in both `cod_pincodes` and `prepaid_pincodes`) or not via AJAX. Check front/js/custom.js --}}
                         <br><br><b>Delivery</b>
                         <input type="text" id="pincode" placeholder="Check Pincode" required>
                         <button type="button" id="checkPincode">Go</button> {{-- We'll use that checkPincode HTML id attribute in front/js/custom.js as a handle for jQuery --}}
@@ -366,11 +363,9 @@
                     <div class="detail-tabs-wrapper u-s-p-t-80">
                         <div class="detail-nav-wrapper u-s-m-b-30">
                             <ul class="nav single-product-nav justify-content-center">
+
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#video">Product Video</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#detail">Product Details</a>
+                                    <a class="nav-link active" data-toggle="tab" href="#detail">Product Details</a>
                                 </li>
                                 <li class="nav-item">
                                     {{-- <a class="nav-link" data-toggle="tab" href="#review">Reviews (15)</a> --}}
@@ -378,25 +373,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="tab-content">
-                            <!-- Description-Tab -->
-                            <div class="tab-pane fade active show" id="video">
-                                <div class="description-whole-container">
 
-
-
-                                    @if ($productDetails['product_video'])
-                                        <video controls>
-                                            <source src="{{ url('front/videos/product_videos/' . $productDetails['product_video']) }}" type="video/mp4">
-                                        </video>
-                                    @else
-                                        Product Video does not exist    
-                                    @endif
-
-
-
-                                </div>
-                            </div>
                             <!-- Description-Tab /- -->
                             <!-- Details-Tab -->
                             <div class="tab-pane fade" id="detail">
@@ -632,7 +609,7 @@
 
 
 
-                                {{-- Show similar products (or related products) (functionality) by getting other products from THE SAME CATEGORY --}}    
+                                {{-- Show similar products (or related products) (functionality) by getting other products from THE SAME CATEGORY --}}
                                 @foreach ($similarProducts as $product)
                                     <div class="item">
                                         <div class="image-container">
@@ -643,7 +620,7 @@
                                                 @php
                                                     $product_image_path = 'front/images/product_images/small/' . $product['product_image'];
                                                 @endphp
-                        
+
                                                 @if (!empty($product['product_image']) && file_exists($product_image_path)) {{-- if the product image exists in BOTH database table AND filesystem (on server) --}}
                                                     <img class="img-fluid" src="{{ asset($product_image_path) }}" alt="Product">
                                                 @else {{-- show the dummy image --}}
@@ -663,19 +640,9 @@
                                         <div class="item-content">
                                             <div class="what-product-is">
                                                 <ul class="bread-crumb">
-                                                    <li class="has-separator">
 
-
-
-                                                        <a href="shop-v1-root-category.html">{{ $product['product_code'] }}</a>
-                                                    </li>
-                                                    <li class="has-separator">
-                                                        <a href="listing.html">{{ $product['product_color'] }}</a>
-                                                    </li>
                                                     <li>
-                                                        <a href="listing.html">{{ $product['brand']['name'] }}</a>
-
-
+                                                        <a href="listing.html">{{ $product->name ?? '' }}</a>
 
                                                     </li>
                                                 </ul>
@@ -695,16 +662,16 @@
                                             @if ($getDiscountPrice > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
                                                 <div class="price-template">
                                                     <div class="item-new-price">
-                                                        EGP{{ $getDiscountPrice }} 
+                                                        ₹{{ $getDiscountPrice }}
                                                     </div>
                                                     <div class="item-old-price">
-                                                        EGP{{ $product['product_price'] }}
+                                                        ₹{{ $product['product_price'] }}
                                                     </div>
                                                 </div>
                                             @else {{-- if there's no discount on the price, show the original price --}}
                                                 <div class="price-template">
                                                     <div class="item-new-price">
-                                                        EGP{{ $product['product_price'] }}
+                                                        ₹{{ $product['product_price'] }}
                                                     </div>
                                                 </div>
                                             @endif
@@ -748,7 +715,7 @@
                                                 @php
                                                     $product_image_path = 'front/images/product_images/small/' . $product['product_image'];
                                                 @endphp
-                        
+
                                                 @if (!empty($product['product_image']) && file_exists($product_image_path)) {{-- if the product image exists in BOTH database table AND filesystem (on server) --}}
                                                     <img class="img-fluid" src="{{ asset($product_image_path) }}" alt="Product">
                                                 @else {{-- show the dummy image --}}
@@ -768,19 +735,9 @@
                                         <div class="item-content">
                                             <div class="what-product-is">
                                                 <ul class="bread-crumb">
-                                                    <li class="has-separator">
 
-
-
-                                                        <a href="shop-v1-root-category.html">{{ $product['product_code'] }}</a>
-                                                    </li>
-                                                    <li class="has-separator">
-                                                        <a href="listing.html">{{ $product['product_color'] }}</a>
-                                                    </li>
                                                     <li>
-                                                        <a href="listing.html">{{ $product['brand']['name'] }}</a>
-
-
+                                                        <a href="listing.html">{{ $product->name ?? '' }}</a>
 
                                                     </li>
                                                 </ul>
@@ -799,16 +756,16 @@
                                             @if ($getDiscountPrice > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
                                                 <div class="price-template">
                                                     <div class="item-new-price">
-                                                        EGP{{ $getDiscountPrice }} 
+                                                        ₹{{ $getDiscountPrice }}
                                                     </div>
                                                     <div class="item-old-price">
-                                                        EGP{{ $product['product_price'] }}
+                                                        ₹{{ $product['product_price'] }}
                                                     </div>
                                                 </div>
                                             @else {{-- if there's no discount on the price, show the original price --}}
                                                 <div class="price-template">
                                                     <div class="item-new-price">
-                                                        EGP{{ $product['product_price'] }}
+                                                        ₹{{ $product['product_price'] }}
                                                     </div>
                                                 </div>
                                             @endif
@@ -834,4 +791,6 @@
         </div>
     </div>
     <!-- Single-Product-Full-Width-Page /- -->
+
+
 @endsection

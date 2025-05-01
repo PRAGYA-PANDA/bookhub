@@ -1,6 +1,4 @@
 @extends('admin.layout.layout')
-
-
 @section('content')
     <div class="main-panel">
         <div class="content-wrapper">
@@ -8,14 +6,14 @@
                 <div class="col-lg-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Products</h4>
+                            <h4 class="card-title">Books</h4>
 
 
 
 
                             <a href="{{ url('admin/add-edit-product') }}"
                                 style="max-width: 150px; float: right; display: inline-block"
-                                class="btn btn-block btn-primary">Add Product</a>
+                                class="btn btn-block btn-primary">Add Book</a>
 
                             {{-- Displaying The Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors AND https://laravel.com/docs/9.x/blade#validation-errors --}}
                             {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
@@ -37,10 +35,9 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Product Name</th>
-                                            <th>Product Code</th>
-                                            <th>Product Color</th>
-                                            <th>Product Image</th>
+                                            <th>Book Name</th>
+                                            <th>ISBN</th>
+                                            <th>Image</th>
                                             <th>Category</th> {{-- Through the relationship --}}
                                             <th>Section</th> {{-- Through the relationship --}}
                                             <th>Added by</th> {{-- Through the relationship --}}
@@ -53,8 +50,8 @@
                                             <tr>
                                                 <td>{{ __($key + 1) }}</td>
                                                 <td>{{ $product['product_name'] }}</td>
-                                                <td>{{ $product['product_code'] }}</td>
-                                                <td>{{ $product['product_color'] }}</td>
+                                                <td>{{ $product['product_isbn'] }}</td>
+
                                                 <td>
                                                     @if (!empty($product['product_image']))
                                                         <img style="width:120px; height:100px"
@@ -95,7 +92,7 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a title="Edit Product"
+                                                    <a title="Edit Book"
                                                         href="{{ url('admin/add-edit-product/' . $product['id']) }}">
                                                         <i style="font-size: 25px" class="mdi mdi-pencil-box"></i>
                                                         {{-- Icons from Skydash Admin Panel Template --}}

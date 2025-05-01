@@ -46,11 +46,11 @@
                     </tr>
                     <tr>
                         <td>Order Total</td>
-                        <td>EGP{{ $orderDetails['grand_total'] }}</td>
+                        <td>₹{{ $orderDetails['grand_total'] }}</td>
                     </tr>
                     <tr>
                         <td>Shipping Charges</td>
-                        <td>EGP{{ $orderDetails['shipping_charges'] }}</td>
+                        <td>₹{{ $orderDetails['shipping_charges'] }}</td>
                     </tr>
 
                     @if ($orderDetails['coupon_code'] != '')
@@ -60,11 +60,11 @@
                         </tr>
                         <tr>
                             <td>Coupon Amount</td>
-                            <td>EGP{{ $orderDetails['coupon_amount'] }}</td>
+                            <td>₹{{ $orderDetails['coupon_amount'] }}</td>
                         </tr>
                     @endif
 
-                    
+
                     @if ($orderDetails['courier_name'] != '')
                         <tr>
                             <td>Courier Name</td>
@@ -110,7 +110,7 @@
                             <td>{{ $product['product_qty'] }}</td>
                         </tr>
 
-                        
+
                         @if ($product['courier_name'] != '')
                             <tr>
                                 <td colspan="6">Courier Name: {{ $product['courier_name'] }}, Tracking Number: {{ $product['tracking_number'] }}</td>

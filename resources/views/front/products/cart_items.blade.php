@@ -31,9 +31,9 @@
                             <a href="{{ url('product/' . $item['product_id']) }}">
                                 <img src="{{ asset('front/images/product_images/small/' . $item['product']['product_image']) }}" alt="Product">
                                 <h6>
-                                    {{ $item['product']['product_name'] }} ({{ $item['product']['product_code'] }}) - {{ $item['size'] }}
+                                    {{ $item['product']['product_name'] }}  - {{ $item['size'] }}
                                     <br>
-                                    Color: {{ $item['product']['product_color'] }}
+
                                 </h6>
                             </a>
                         </div>
@@ -46,16 +46,16 @@
                             @if ($getDiscountAttributePrice['discount'] > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
                                 <div class="price-template">
                                     <div class="item-new-price">
-                                        EGP{{ $getDiscountAttributePrice['final_price'] }}
+                                        ₹{{ $getDiscountAttributePrice['final_price'] }}
                                     </div>
                                     <div class="item-old-price" style="margin-left: -40px">
-                                        EGP{{ $getDiscountAttributePrice['product_price'] }}
+                                        ₹{{ $getDiscountAttributePrice['product_price'] }}
                                     </div>
                                 </div>
                             @else {{-- if there's no discount on the price, show the original price --}}
                                 <div class="price-template">
                                     <div class="item-new-price">
-                                        EGP{{ $getDiscountAttributePrice['final_price'] }}
+                                        ₹{{ $getDiscountAttributePrice['final_price'] }}
                                     </div>
                                 </div>
                             @endif
@@ -75,13 +75,13 @@
                     </td>
                     <td>
                         <div class="cart-price">
-                            EGP{{ $getDiscountAttributePrice['final_price'] * $item['quantity'] }} {{-- price of all products (after discount (if any)) (= price (after discoutn) * no. of products) --}}
+                            ₹{{ $getDiscountAttributePrice['final_price'] * $item['quantity'] }} {{-- price of all products (after discount (if any)) (= price (after discoutn) * no. of products) --}}
                         </div>
                     </td>
                     <td>
                         <div class="action-wrapper">
                             {{-- <button class="button button-outline-secondary fas fa-sync"></button> --}}
-                            <button class="button button-outline-secondary fas fa-trash deleteCartItem" data-cartid="{{ $item['id'] }}"></button>{{-- .deleteCartItem CSS class and the Custom HTML attribute data-cartid is used to make the AJAX call in front/js/custom.js --}} 
+                            <button class="button button-outline-secondary fas fa-trash deleteCartItem" data-cartid="{{ $item['id'] }}"></button>{{-- .deleteCartItem CSS class and the Custom HTML attribute data-cartid is used to make the AJAX call in front/js/custom.js --}}
                         </div>
                     </td>
                 </tr>
@@ -123,7 +123,7 @@
                         <h3 class="calc-h3 u-s-m-b-0">Sub Total</h3> {{-- Total Price before any Coupon discounts --}}
                     </td>
                     <td>
-                        <span class="calc-text">EGP{{ $total_price }}</span>
+                        <span class="calc-text">₹{{ $total_price }}</span>
                     </td>
                 </tr>
                 <tr>
@@ -132,11 +132,11 @@
                     </td>
                     <td>
                         <span class="calc-text couponAmount"> {{-- We create the 'couponAmount' CSS class to use it as a handle for AJAX inside    $('#applyCoupon').submit();    function in front/js/custom.js --}}
-                            
+
                             @if (\Illuminate\Support\Facades\Session::has('couponAmount')) {{-- We stored the 'couponAmount' in a Session Variable inside the applyCoupon() method in Front/ProductsController.php --}}
-                                EGP{{ \Illuminate\Support\Facades\Session::get('couponAmount') }}
+                                ₹0{{ \Illuminate\Support\Facades\Session::get('couponAmount') }}
                             @else
-                                EGP0
+                                ₹0
                             @endif
                         </span>
                     </td>
@@ -146,7 +146,7 @@
                         <h3 class="calc-h3 u-s-m-b-0">Grand Total</h3> {{-- Total Price after Coupon discounts (if any) --}}
                     </td>
                     <td>
-                        <span class="calc-text grand_total">EGP{{ $total_price - \Illuminate\Support\Facades\Session::get('couponAmount') }}</span> {{-- We create the 'grand_total' CSS class to use it as a handle for AJAX inside    $('#applyCoupon').submit();    function in front/js/custom.js --}} {{-- We stored the 'couponAmount' a Session Variable inside the applyCoupon() method in Front/ProductsController.php --}}
+                        <span class="calc-text grand_total">₹{{ $total_price - \Illuminate\Support\Facades\Session::get('couponAmount') }}</span> {{-- We create the 'grand_total' CSS class to use it as a handle for AJAX inside    $('#applyCoupon').submit();    function in front/js/custom.js --}} {{-- We stored the 'couponAmount' a Session Variable inside the applyCoupon() method in Front/ProductsController.php --}}
                     </td>
                 </tr>
             </tbody>
