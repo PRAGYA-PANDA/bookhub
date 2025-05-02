@@ -136,11 +136,12 @@ $sections = \App\Models\Section::sections();
                         </a>
                         <ul class="g-dropdown" style="width:70px">
                             <li>
-                                <a href="{{ url('/?condition=new') }}" class="u-c-brand">New</a>
+                                <a href="javaScript:void(0);" onclick="setCondition('new')" class="u-c-brand">New</a>
                             </li>
                             <li>
-                                <a href="{{ url('/?condition=old') }}">Old</a>
+                                <a href="javaScript:void(0);" class="u-c-brand" onclick="setCondition('old')">Old</a>
                             </li>
+                            
                         </ul>
                     </li>
 

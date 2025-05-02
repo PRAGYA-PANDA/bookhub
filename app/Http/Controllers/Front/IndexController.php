@@ -15,11 +15,12 @@ class IndexController extends Controller
         $sliderBanners = Banner::where('type', 'Slider')->where('status', 1)->get()->toArray();
         $fixBanners    = Banner::where('type', 'Fix')->where('status', 1)->get()->toArray();
 
-        // Get 'condition' from query string (default to 'new' if not set or invalid)
-        $condition = $request->query('condition');
-        if (!in_array($condition, ['new', 'old'])) {
-            $condition = 'new';
-        }
+        // // Get 'condition' from query string (default to 'new' if not set or invalid)
+        // $condition = $request->query('condition');
+        // if (!in_array($condition, ['new', 'old'])) {
+        //     $condition = 'new';
+        // }
+        $condition = session('condition', 'new');
 
         $newProducts = Product::orderBy('id', 'Desc')
             ->where('condition', $condition)
@@ -32,13 +33,13 @@ class IndexController extends Controller
             'is_bestseller' => 'Yes',
             'status' => 1
         ])
-        ->where('condition', $condition)
+            ->where('condition', $condition)
             ->inRandomOrder()
             ->get()
             ->toArray();
 
         $discountedProducts = Product::where('product_discount', '>', 0)
-        ->where('condition', $condition)
+            ->where('condition', $condition)
             ->where('status', 1)
             ->limit(6)
             ->inRandomOrder()
@@ -49,7 +50,7 @@ class IndexController extends Controller
             'is_featured' => 'Yes',
             'status' => 1
         ])
-        ->where('condition', $condition)
+            ->where('condition', $condition)
             ->limit(6)
             ->get()
             ->toArray();
@@ -70,5 +71,11 @@ class IndexController extends Controller
             'meta_keywords',
             'condition'
         ));
+    }
+
+    public function setCondition(Request $request)
+    {
+        session(['condition' => $request->condition]);
+        return response()->json(['success' => true]);
     }
 }

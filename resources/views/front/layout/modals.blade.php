@@ -233,11 +233,13 @@
 
 <!-- Auto Show Modal (First Time Only) -->
 <!-- Improved Auto Show Modal (First Time Only) -->
-<div class="modal fade" id="firstVisitModal" tabindex="-1" role="dialog" aria-labelledby="firstVisitModalLabel" aria-hidden="true">
+<div class="modal fade" id="firstVisitModal" tabindex="-1" role="dialog" aria-labelledby="firstVisitModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content shadow-lg rounded">
             <div class="modal-header bg-info text-white">
-                <h5 class="modal-title font-weight-bold text-white " id="firstVisitModalLabel">Welcome to Our Store</h5>
+                <h5 class="modal-title font-weight-bold text-white " id="firstVisitModalLabel">Welcome to Our Store
+                </h5>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" style="font-size: 1.5rem;">&times;</span>
                 </button>
@@ -245,12 +247,9 @@
             <div class="modal-body text-center py-4">
                 <p class="mb-4 lead">Please choose your preference to explore our products:</p>
                 <div class="d-flex justify-content-center gap-3">
-                    <div class="mx-2">
-                        <a href="{{ url('/?condition=new') }}" class="btn btn-lg btn-outline-success px-4">NEW</a>
-                    </div>
-                    <div class="mx-2">
-                        <a href="{{ url('/?condition=old') }}" class="btn btn-lg btn-outline-secondary px-4">OLD</a>
-                    </div>
+                    <button class="btn btn-info" onclick="setCondition('new')">NEW</button>
+                    <button class="btn btn-info" onclick="setCondition('old')">OLD</button>
+
                 </div>
             </div>
         </div>
@@ -271,6 +270,3 @@
         }
     });
 </script>
-
-
-
