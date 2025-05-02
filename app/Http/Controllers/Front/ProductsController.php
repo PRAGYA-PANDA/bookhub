@@ -30,6 +30,10 @@ class ProductsController extends Controller
     public function listing(Request $request)
     { // using the Dynamic Routes with the foreach loop
         // Sorting Filter WITH AJAX in listing.blade.php. Load (and check) ajax_products_listing.blade.php
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
         if ($request->ajax()) {
             $data = $request->all();
 
@@ -47,15 +51,8 @@ class ProductsController extends Controller
                 // Get the entered URL in the browser address bar category details
                 $categoryDetails = Category::categoryDetails($url); // get the categories of the opened $url (get categories depending on the $url)
 
-                $categoryProducts = Product::with('publisher')->whereIn('category_id', $categoryDetails['catIds'])->where('status', 1); // moving the paginate() method after checking for the sorting filter <form>    // Paginating Eloquent Results: https://laravel.com/docs/9.x/pagination#paginating-eloquent-results    // Displaying Pagination Results Using Bootstrap: https://laravel.com/docs/9.x/pagination#using-bootstrap        // https://laravel.com/docs/9.x/queries#additional-where-clauses    // using the publisher() relationship method in Product.php
+                $categoryProducts = Product::with('publisher')->whereIn('category_id', $categoryDetails['catIds'])->where('status', 1); // moving the paginate() method after checking for the sorting filter
 
-
-
-                // We used TWO ways to OPERATE the Dynamic Filters (on the left side of the listing.blade.php page): statically for every filter using jQuery and dynamically from Admin Panel. Here we use the first way (for the 'fabric' filter only):    // Check front/js/custom.js
-                // Note: the checked checkboxes <input> fields will be submitted as an ARRAY because we used SQUARE BRACKETS [] with the "name" HTML attribute in the checkbox <input> field in filters.blade.php e.g.    'fabric' => ['cotton', 'polyester']    , or else, AJAX is used to send the <input> values WITHOUT submitting the <form> at all    // Sidenote: There are TWO ways to submit a <form> to the backed: firstly, the regular one using the <button type="submit">, secondly, using AJAX by sending the "value" attributes of the <input> fields
-
-                // The second way to operate the Dynamic Filters
-                // Note: the checked checkboxes <input> fields will be submitted as an ARRAY because we used SQUARE BRACKETS [] with the "name" HTML attribute in the checkbox <input> field in filters.blade.php e.g.    'fabric' => ['cotton', 'polyester']    , or else, AJAX is used to send the <input> values WITHOUT submitting the <form> at all    // Sidenote: There are TWO ways to submit a <form> to the backed: firstly, the regular one using the <button type="submit">, secondly, using AJAX by sending the "value" attributes of the <input> fields
                 $productFilters = ProductsFilter::productFilters(); // Get all the (enabled/active) Filters    // (Another way to go is using an AJAX call to get the $productFilters!)
                 foreach ($productFilters as $key => $filter) {
                     if (isset($filter['filter_column']) && isset($data[$filter['filter_column']]) && !empty($filter['filter_column']) && !empty($data[$filter['filter_column']])) {
@@ -92,17 +89,7 @@ class ProductsController extends Controller
                 }
 
 
-                // Size, price, color, publisher, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'publisher' Filter from `publishers` table
-                // Second: the 'color' filter (from `products` database table)
-                // if (isset($data['color']) && !empty($data['color'])) { // coming from the AJAX call in front/js/custom.js    // example:    $data['color'] = 'Large'
-                //     $productIds = Product::select('id')->whereIn('product_color', $data['color'])->pluck('id')->toArray(); // fetch the products ids of the $data['color'] from the `products` table
 
-                //     $categoryProducts->whereIn('products.id', $productIds); // `products.id` means that `products` is the table name (means grab the `id` column of the `products` table)
-                // }
-
-                // Size, price, color, publisher, … are also Dynamic Filters, but won't be managed like the other Dynamic Filters, but we will manage every filter of them from the suitable respective database table, like the 'size' Filter from the `products_attributes` database table, 'color' Filter and `price` Filter from `products` table, 'publisher' Filter from `publishers` table
-                // Third: the 'price' filter (from `products` database table)
-                // checking for Price
                 $productIds = array();
 
                 if (isset($data['price']) && !empty($data['price'])) {
@@ -355,7 +342,7 @@ class ProductsController extends Controller
                     $meta_keywords    = $categoryDetails['categoryDetails']['meta_keywords'];
 
 
-                    return view('front.products.listing')->with(compact('categoryDetails', 'categoryProducts', 'url', 'meta_title', 'meta_description', 'meta_keywords'));
+                    return view('front.products.listing')->with(compact('categoryDetails', 'categoryProducts', 'url', 'meta_title', 'meta_description', 'meta_keywords','condition'));
                 } else {
                     abort(404); // we will create the 404 page later on    // https://laravel.com/docs/9.x/helpers#method-abort
                 }
@@ -366,8 +353,12 @@ class ProductsController extends Controller
 
 
     // Render Single Product Detail Page in front/products/detail.blade.php
-    public function detail($id)
+    public function detail($id, Request $request)
     { // Required Parameters: https://laravel.com/docs/9.x/routing#required-parameters
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
         $productDetails = Product::with([
             'section',
             'category',
@@ -501,7 +492,7 @@ class ProductsController extends Controller
         $meta_keywords    = $productDetails['meta_keywords'];
 
 
-        return view('front.products.detail')->with(compact('productDetails', 'categoryDetails', 'totalStock', 'similarProducts', 'recentlyViewedProducts', 'groupProducts', 'meta_title', 'meta_description', 'meta_keywords', 'ratings', 'avgRating', 'avgStarRating', 'ratingOneStarCount', 'ratingTwoStarCount', 'ratingThreeStarCount', 'ratingFourStarCount', 'ratingFiveStarCount'));
+        return view('front.products.detail')->with(compact('productDetails', 'categoryDetails', 'totalStock', 'similarProducts', 'recentlyViewedProducts', 'groupProducts', 'meta_title', 'meta_description', 'meta_keywords', 'ratings', 'avgRating', 'avgStarRating', 'ratingOneStarCount', 'ratingTwoStarCount', 'ratingThreeStarCount', 'ratingFourStarCount', 'ratingFiveStarCount','condition'));
     }
 
 
@@ -522,9 +513,14 @@ class ProductsController extends Controller
 
 
     // Show all Vendor products in front/products/vendor_listing.blade.php    // This route is accessed from the <a> HTML element in front/products/vendor_listing.blade.php
-    public function vendorListing($vendorid)
+    public function vendorListing($vendorid, Request $request)
     { // Required Parameters: https://laravel.com/docs/9.x/routing#required-parameters
         // Get vendor shop name
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
+
         $getVendorShop = Vendor::getVendorShop($vendorid);
 
         // Get all vendor products
@@ -534,7 +530,7 @@ class ProductsController extends Controller
         $vendorProducts = $vendorProducts->paginate(30); // Paginating Eloquent Results: https://laravel.com/docs/9.x/pagination#paginating-eloquent-results
 
 
-        return view('front.products.vendor_listing')->with(compact('getVendorShop', 'vendorProducts'));
+        return view('front.products.vendor_listing')->with(compact('getVendorShop', 'vendorProducts','condition'));
     }
 
 
@@ -542,6 +538,11 @@ class ProductsController extends Controller
     // Add to Cart <form> submission in front/products/detail.blade.php
     public function cartAdd(Request $request)
     {
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
+
         if ($request->isMethod('post')) { // if the Add to Cart <form> is submitted
             $data = $request->all();
 
@@ -625,8 +626,12 @@ class ProductsController extends Controller
     }
 
     // Render Cart page (front/products/cart.blade.php)
-    public function cart()
+    public function cart(Request $request)
     {
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
         // Get the Cart Items of a cerain user (using their `user_id` if they're authenticated/logged in or their `session_id` if they're not authenticated/not logged in (guest))
         $getCartItems = Cart::getCartItems();
 
@@ -635,12 +640,16 @@ class ProductsController extends Controller
         $meta_keywords    = 'shopping cart, multi vendor';
 
 
-        return view('front.products.cart')->with(compact('getCartItems', 'meta_title', /* 'meta_description', */ 'meta_keywords'));
+        return view('front.products.cart')->with(compact('getCartItems', 'meta_title', /* 'meta_description', */ 'meta_keywords','condition'));
     }
 
     // Update Cart Item Quantity AJAX call in front/products/cart_items.blade.php. Check front/js/custom.js
     public function cartUpdate(Request $request)
     {
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
         if ($request->ajax()) { // if the request is coming via an AJAX call
             $data = $request->all(); // Getting the name/value pairs array that are sent from the AJAX request (AJAX call)
 
@@ -723,8 +732,8 @@ class ProductsController extends Controller
                 'status'         => true,
                 'totalCartItems' => $totalCartItems, // totalCartItems() function is in our custom Helpers/Helper.php file that we have registered in 'composer.json' file    // We created the CSS class 'totalCartItems' in front/layout/header.blade.php to use it in front/js/custom.js to update the total cart items via AJAX, because in pages that we originally use AJAX to update the cart items (such as when we delete a cart item in http://127.0.0.1:8000/cart using AJAX), the number doesn't change in the header automatically because AJAX is already used and no page reload/refresh has occurred
                 // We'll use that array key 'view' as a JavaScript 'response' property to render the view (    $('#appendCartItems').html(resp.view);    ). Check front/js/custom.js
-                'view'           => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems')), // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
-                'headerview' => (string) \Illuminate\Support\Facades\View::make('front.layout.header_cart_items')->with(compact('getCartItems')) // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
+                'view'           => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems','condition')), // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
+                'headerview' => (string) \Illuminate\Support\Facades\View::make('front.layout.header_cart_items')->with(compact('getCartItems','condition')) // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
             ]);
         }
     }
@@ -732,6 +741,10 @@ class ProductsController extends Controller
     // Delete a Cart Item AJAX call in front/products/cart_items.blade.php. Check front/js/custom.js
     public function cartDelete(Request $request)
     {
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
         if ($request->ajax()) { // if the request is coming via an AJAX call
             // We need to remove/empty (forget) the 'couponAmount' and 'couponCode' Session Variables (reset the whole process of Applying the Coupon) whenever a user applies a new coupon, or updates Cart items (changes items quantity for example) or deletes items from the Cart or even Adds new items in the Cart
             Session::forget('couponAmount'); // Deleting Data: https://laravel.com/docs/9.x/session#deleting-data
@@ -755,7 +768,7 @@ class ProductsController extends Controller
                 'totalCartItems' => $totalCartItems, // totalCartItems() function is in our custom Helpers/Helper.php file that we have registered in 'composer.json' file    // We created the CSS class 'totalCartItems' in front/layout/header.blade.php to use it in front/js/custom.js to update the total cart items via AJAX, because in pages that we originally use AJAX to update the cart items (such as when we delete a cart item in http://127.0.0.1:8000/cart using AJAX), the number doesn't change in the header automatically because AJAX is already used and no page reload/refresh has occurred
                 // We'll use that array key 'view' as a JavaScript 'response' property to render the view (    $('#appendCartItems').html(resp.view);    ). Check front/js/custom.js
                 'view'   => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems')), // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
-                'headerview' => (string) \Illuminate\Support\Facades\View::make('front.layout.header_cart_items')->with(compact('getCartItems')) // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
+                'headerview' => (string) \Illuminate\Support\Facades\View::make('front.layout.header_cart_items')->with(compact('getCartItems','condition')) // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
             ]);
         }
     }
@@ -919,7 +932,7 @@ class ProductsController extends Controller
                         'message'        => $message,
                         // We'll use that array key 'view' as a JavaScript 'response' property to render the view (    $('#appendCartItems').html(resp.view);    ). Check front/js/custom.js
                         'view'           => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems')), // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
-                        'headerview'     => (string) \Illuminate\Support\Facades\View::make('front.layout.header_cart_items')->with(compact('getCartItems')) // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
+                        'headerview'     => (string) \Illuminate\Support\Facades\View::make('front.layout.header_cart_items')->with(compact('getCartItems','condition')) // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
                     ]);
                 }
             }
@@ -931,6 +944,10 @@ class ProductsController extends Controller
     // Checkout page (using match() method for the 'GET' request for rendering the front/products/checkout.blade.php page or the 'POST' request for the HTML Form submission in the same page) (for submitting the user's Delivery Address and Payment Method))
     public function checkout(Request $request)
     {
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
         // Fetch all of the world countries from the database table `countries`
         $countries = Country::where('status', 1)->get()->toArray(); // get the countries which have status = 1 (to ignore the blacklisted countries, in case)
 
@@ -1228,7 +1245,7 @@ class ProductsController extends Controller
         }
 
 
-        return view('front.products.checkout')->with(compact('deliveryAddresses', 'countries', 'getCartItems', 'total_price'));
+        return view('front.products.checkout')->with(compact('deliveryAddresses', 'countries', 'getCartItems', 'total_price','condition'));
     }
 
 

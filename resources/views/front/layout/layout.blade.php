@@ -144,6 +144,13 @@
             ga('create', 'UA-XXXXX-Y', 'auto');
             ga('send', 'pageview')
         </script>
+       <script>
+        function tclear() {
+            localStorage.removeItem('firstVisitShown');
+            alert("Local storage cleared! Refresh the page to see the modal again.");
+        }
+    </script>
+
         <script src="https://www.google-analytics.com/analytics.js" async defer></script>
         <!-- Modernizr-JS -->
         <script type="text/javascript" src="{{ url('front/js/vendor/modernizr-custom.min.js') }}"></script>

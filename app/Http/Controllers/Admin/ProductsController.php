@@ -281,7 +281,6 @@ class ProductsController extends Controller
 
         return Author::where('name', 'like', "%{$q}%")
             ->select('id', 'name')
-            ->limit(20)
             ->get();
     }
 

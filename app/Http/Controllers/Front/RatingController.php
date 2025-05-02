@@ -11,8 +11,12 @@ use App\Models\Rating;
 
 class RatingController extends Controller
 {
-    // Add Rating & Review on a product in front/products/detail.blade.php    
+    // Add Rating & Review on a product in front/products/detail.blade.php
     public function addRating(Request $request) {
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
         // Make sure the user is logged in to be able to rate the product
         if (!Auth::check()) { // If the current user is not authenticated / logged-out / guest / visitor    // Determining If The Current User Is Authenticated: https://laravel.com/docs/9.x/authentication#determining-if-the-current-user-is-authenticated
             $message = 'Log in to rate this product';

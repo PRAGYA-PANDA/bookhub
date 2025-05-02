@@ -7,14 +7,15 @@ use Illuminate\Http\Request;
 
 class CmsController extends Controller
 {
-    // Render the Contact Us page (front/pages/contact.blade.php) using GET HTTP Requests, or the HTML Form Submission using POST HTTP Requests    
+
     public function contact(Request $request) {
-        // If the HTML Form in front/pages/contact.blade.php is submitted (HTML Form Submission)
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
+
         if ($request->isMethod('post')) {
             $data = $request->all();
-
-
-            // Validation    // Manually Creating Validators: https://laravel.com/docs/9.x/validation#manually-creating-validators    
             $rules = [
                 // Fields/Column Names
                 'name'    => 'required|string|max:100',
@@ -23,7 +24,7 @@ class CmsController extends Controller
                 'message' => 'required'
             ];
 
-            // Customizing Laravel's default error messages for every [Field with Validation Rule] e.g. the 'required' Validation Rule for the 'name' field    // Customizing The Error Messages: https://laravel.com/docs/9.x/validation#manual-customizing-the-error-messages
+
             $customMessages = [
                 // The SAME last Fields (inside $rules array)
                 'name.required'    => 'Name is required',
@@ -39,8 +40,7 @@ class CmsController extends Controller
 
             $validator = \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessages);
 
-            // dd($validator->errors());   // is THE SAME AS:    dd($validator->messages());    // Working With Error Messages: https://laravel.com/docs/9.x/validation#working-with-error-messages
-            // dd($validator->messages()); // is THE SAME AS:    dd($validator->errors());      // Working With Error Messages: https://laravel.com/docs/9.x/validation#working-with-error-messages
+
 
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
@@ -58,7 +58,7 @@ class CmsController extends Controller
                 'comment' => $data['message']
             ];
 
-            \Illuminate\Support\Facades\Mail::send('emails.inquiry', $messageData, function ($message) use ($email) { // Sending Mail: https://laravel.com/docs/9.x/mail#sending-mail    // 'emails.inquiry' is the inquiry.blade.php file inside the 'resources/views/emails' folder that will be sent as an email    // We pass in all the variables that inquiry.blade.php will use    // https://www.php.net/manual/en/functions.anonymous.php
+            \Illuminate\Support\Facades\Mail::send('emails.inquiry', $messageData, function ($message) use ($email) {
                 $message->to($email)->subject('Inquiry from a user');
             });
 

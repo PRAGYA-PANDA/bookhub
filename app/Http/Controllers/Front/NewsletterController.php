@@ -9,15 +9,18 @@ use App\Models\NewsletterSubscriber;
 
 class NewsletterController extends Controller
 {
-    // Add a Newsletter Subscriber email HTML Form Submission in front/layout/footer.blade.php when clicking on the Submit button (using an AJAX Request/Call)    
     public function addSubscriber(Request $request) {
-        if ($request->ajax()) { // if the request is coming via an AJAX call
-            $data = $request->all(); // Getting the name/value pairs array that are sent from the AJAX request (AJAX call)
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
+
+        if ($request->ajax()) {
+            $data = $request->all();
             // dd($data);
 
-            $subscriberCount = NewsletterSubscriber::where('email', $data['subscriber_email'])->count(); //    $data['subscriber_email']    comes from the 'data' object inside the $.ajax() method
-
-            if ($subscriberCount > 0) { 
+            $subscriberCount = NewsletterSubscriber::where('email', $data['subscriber_email'])->count(); 
+            if ($subscriberCount > 0) {
                 return 'Email already exists';
             } else {
                 // INSERT the email in the `newsletter_subscribers` table

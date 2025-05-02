@@ -1,7 +1,7 @@
 <?php
 
 
-// Using Omnipay PayPal package    "composer require league/omnipay omnipay/paypal"    :https://github.com/thephpleague/omnipay-paypal.    // https://github.com/thephpleague/omnipay    
+// Using Omnipay PayPal package    "composer require league/omnipay omnipay/paypal"    :https://github.com/thephpleague/omnipay-paypal.    // https://github.com/thephpleague/omnipay
 namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -17,15 +17,14 @@ use Omnipay\Omnipay;
 
 class PaypalController extends Controller
 {
-    // PayPal Gateway Integration
 
+    private $gateway; 
 
-
-    // Using Omnipay PayPal package    "composer require league/omnipay omnipay/paypal"    :https://github.com/thephpleague/omnipay-paypal.    // https://omnipay.thephpleague.com/simple-example    // https://github.com/thephpleague/omnipay    
-    private $gateway; // $gateway is an object of    Omnipay\Common\GatewayFactory interface (check the first line of code in the __construct() method)
-
-
-    public function __construct() {
+    public function __construct(Request $request) {
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
         // Setup payment gateway
         $this->gateway = Omnipay::create('PayPal_Rest'); // https://github.com/thephpleague/omnipay-paypal#:~:text=PayPal_Rest%20(Paypal%20Rest%20API)
         // dd($this->gateway);
@@ -35,8 +34,12 @@ class PaypalController extends Controller
         $this->gateway->setTestMode(true); // Meaning that we're using this whole thing only for "testing" purposes
     }
 
-    // Pay using PayPal    // https://omnipay.thephpleague.com/simple-example    // https://github.com/thephpleague/omnipay    
+    // Pay using PayPal    // https://omnipay.thephpleague.com/simple-example    // https://github.com/thephpleague/omnipay
     public function pay(Request $request) {
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
         try {
             $paypal_amount = round(Session::get('grand_total') / 80, 2); // 'grand_total' was stored in Session in checkout() method in Front/ProductsController.php    // Interacting With The Session: Retrieving Data: https://laravel.com/docs/9.x/session#retrieving-data    // Note: PayPal accepts world major currencies ONLY, so we divided INR by 80 to convert INR to USD
 
@@ -64,8 +67,12 @@ class PaypalController extends Controller
         }
     }
 
-    
+
     public function success(Request $request) {
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
         if (!Session::has('order_id')) { // if there's no 'order_id' in the Session    // 'user_id' was stored in the Session inside checkout() method in Front/ProductsController.php
             return view('cart');
         }
@@ -97,12 +104,12 @@ class PaypalController extends Controller
                 $payment->save();
 
 
-                // Update the `order_status` column in `orders` table with 'Paid'    
+                // Update the `order_status` column in `orders` table with 'Paid'
                 $order_id = Session::get('order_id'); // Interacting With The Session: Retrieving Data: https://laravel.com/docs/9.x/session#retrieving-data
                 Order::where('id', $order_id)->update(['order_status' => 'Paid']);
 
 
-                // Send making the order PayPal payment confirmation email to the user    
+                // Send making the order PayPal payment confirmation email to the user
                 $orderDetails = Order::with('orders_products')->where('id', $order_id)->first()->toArray(); // Eager Loading: https://laravel.com/docs/9.x/eloquent-relationships#eager-loading    // 'orders_products' is the relationship method name in Order.php model
                 $email = Auth::user()->email; // Retrieving The Authenticated User: https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user
 
@@ -150,18 +157,22 @@ class PaypalController extends Controller
         }
     }
 
-    
+
     public function error() {
         // return 'User declined the payment';
 
-        
+
         return view('front.paypal.fail');
     }
 
 
 
     // PayPal payment gateway integration in Laravel (this route is accessed from checkout() method in Front/ProductsController.php). Rendering front/paypal/paypal.blade.php page
-    public function paypal() {
+    public function paypal(Request $request) {
+        $condition = $request->query('condition');
+        if (!in_array($condition, ['new', 'old'])) {
+            $condition = 'new';
+        }
         if (Session::has('order_id')) { // if there's an order has been placed (and got redirected from inside the checkout() method inside Front/ProductsController.php)    // 'user_id' was stored in Session inside checkout() method in Front/ProductsController.php
             return view('front.paypal.paypal');
 
