@@ -158,7 +158,7 @@
                         <div class="section-1-title-breadcrumb-rating">
                             <div class="product-title">
                                 <h1>
-                                    <a href="javascript:;">{{ $productDetails['product_name'] }}</a> {{-- $productDetails is passed in from detail() method in Front/ProductsController.php --}}
+                                    <a href="javascript:;">{{ $productDetails['product_name'] }} ({{ $productDetails['condition'] }})</a> {{-- $productDetails is passed in from detail() method in Front/ProductsController.php --}}
                                 </h1>
                             </div>
 

@@ -103,7 +103,7 @@
                                                 <div class="what-product-is">
 
                                                     <h6 class="item-title">
-                                                        <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
+                                                        <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }} ({{ $product['condition'] }})</a>
                                                     </h6>
                                                     <div class="item-stars">
                                                         <div class='star' title="0 out of 5 - based on 0 Reviews">
@@ -187,7 +187,7 @@
                                                 <div class="what-product-is">
 
                                                     <h6 class="item-title">
-                                                        <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
+                                                        <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }} ({{ $product['condition'] }})</a>
                                                     </h6>
                                                     <div class="item-stars">
                                                         <div class='star' title="0 out of 5 - based on 0 Reviews">
@@ -264,7 +264,7 @@
                                                 <div class="what-product-is">
 
                                                     <h6 class="item-title">
-                                                        <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
+                                                        <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }} ({{ $product['condition'] }})</a>
                                                     </h6>
                                                     <div class="item-stars">
                                                         <div class='star' title="0 out of 5 - based on 0 Reviews">
@@ -339,9 +339,9 @@
                                             </div>
                                             <div class="item-content">
                                                 <div class="what-product-is">
-                                                    
+
                                                     <h6 class="item-title">
-                                                        <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
+                                                        <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }} ({{ $product['condition'] }})</a>
                                                     </h6>
                                                     <div class="item-stars">
                                                         <div class='star' title="0 out of 5 - based on 0 Reviews">

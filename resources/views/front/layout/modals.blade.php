@@ -246,12 +246,20 @@
             </div>
             <div class="modal-body text-center py-4">
                 <p class="mb-4 lead">Please choose your preference to explore our products:</p>
-                <div class="d-flex justify-content-center gap-3">
-                    <button class="btn btn-info" onclick="setCondition('new')">NEW</button>
-                    <button class="btn btn-info" onclick="setCondition('old')">OLD</button>
+                <div class="d-flex justify-content-center">
+                    <button class="btn px-4 py-2 rounded-pill shadow-sm border-1"
+                        style="background-color: #80adb1; color: #007b8a; margin-right: 1rem;"
+                        onclick="setCondition('new')">NEW
+                    </button>
 
+                    <button class="btn px-4 py-2 rounded-pill shadow-sm border-1"
+                        style="background-color: #738161; color: #152c04;" onclick="setCondition('old')">OLD
+                    </button>
                 </div>
+
             </div>
+
+
         </div>
     </div>
 </div>
