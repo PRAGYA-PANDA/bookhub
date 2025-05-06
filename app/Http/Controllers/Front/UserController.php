@@ -17,19 +17,18 @@ class UserController extends Controller
 {
     // Render User Login/Register page (front/users/login_register.blade.php)
     public function loginRegister(Request $request) {
-        $condition = $request->query('condition');
+        $condition = session('condition', 'new');
+
         if (!in_array($condition, ['new', 'old'])) {
             $condition = 'new';
         }
-        return view('front.users.login_register');
+        return view('front.users.login_register', compact('condition'));
     }
 
     // User Registration (in front/users/login_register.blade.php) <form> submission using an AJAX request. Check front/js/custom.js
     public function userRegister(Request $request) {
-        $condition = $request->query('condition');
-        if (!in_array($condition, ['new', 'old'])) {
-            $condition = 'new';
-        }
+        
+
         if ($request->ajax()) {
             $data = $request->all();
             $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [

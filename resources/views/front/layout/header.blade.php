@@ -141,7 +141,7 @@ $sections = \App\Models\Section::sections();
                             <li>
                                 <a href="javaScript:void(0);" class="u-c-brand" onclick="setCondition('old')">Old</a>
                             </li>
-                            
+
                         </ul>
                     </li>
 
