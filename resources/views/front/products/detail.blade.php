@@ -74,11 +74,6 @@
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12">
 
-
-
-                    {{-- EasyZoom plugin for zooming product images upon hover --}}
-                    {{-- My EasyZoom (jQuery image zoom plugin): https://i-like-robots.github.io/EasyZoom/ --}}
-
                     <!-- Product-zoom-area -->
                     <div class="easyzoom easyzoom--overlay easyzoom--with-thumbnails"> {{-- EasyZoom plugin --}}
                         <a      href="{{ asset('front/images/product_images/large/' . $productDetails['product_image']) }}">
@@ -111,8 +106,6 @@
                     <div class="all-information-wrapper">
 
 
-                        {{-- My Bootstrap error code in case of wrong current password or the new password and confirm password are not matching: --}}
-                        {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
                         @if (Session::has('error_message')) <!-- Check AdminController.php, updateAdminPassword() method -->
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                                 <strong>Error:</strong> {{ Session::get('error_message') }}
@@ -138,13 +131,10 @@
                         @endif
 
 
-                        {{-- Displaying The Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors AND https://laravel.com/docs/9.x/blade#validation-errors --}}
-                        {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
-                        {{-- My Bootstrap success message in case of updating admin password is successful: --}}
                         @if (Session::has('success_message')) <!-- Check AdminController.php, updateAdminPassword() method -->
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
 
-                                {{-- There are TWO ways to: Displaying Unescaped Data: https://laravel.com/docs/9.x/blade#displaying-unescaped-data --}}
+
                                 <strong>Success:</strong> @php echo Session::get('success_message') @endphp       {{-- Displaying Unescaped Data: https://laravel.com/docs/9.x/blade#displaying-unescaped-data --}}
 
                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -243,7 +233,7 @@
                             </span>
                         </div>
 
-                        <div class="section-4-sku-information u-s-p-y-14">
+                        {{-- <div class="section-4-sku-information u-s-p-y-14">
                             <div class="availability">
                                 <span>Availability:</span>
                                 @if ($totalStock > 0)
@@ -258,7 +248,7 @@
                                     <span>{{ $totalStock }} left</span>
                                 </div>
                             @endif
-                        </div>
+                        </div> --}}
                         <div class="section-2-short-description u-s-p-y-14">
                             <h6 class="information-heading u-s-m-b-8">Description:</h6>
                             <p>{{ $productDetails['description'] }}</p>
@@ -345,19 +335,16 @@
                             </div>
                         </form>
 
-
-                        {{-- PIN code Availability Check: check if the PIN code of the user's Delivery Address exists in our database (in both `cod_pincodes` and `prepaid_pincodes`) or not via AJAX. Check front/js/custom.js --}}
                         <br><br><b>Delivery</b>
                         <input type="text" id="pincode" placeholder="Check Pincode" required>
-                        <button type="button" id="checkPincode">Go</button> {{-- We'll use that checkPincode HTML id attribute in front/js/custom.js as a handle for jQuery --}}
+                        <button type="button" id="checkPincode">Go</button>
 
 
                     </div>
                     <!-- Product-details /- -->
                 </div>
             </div>
-            <!-- Product-Detail /- -->
-            <!-- Detail-Tabs -->
+
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="detail-tabs-wrapper u-s-p-t-80">
@@ -398,11 +385,10 @@
                                                     // dd($filter);
                                                 @endphp
 
-                                                @if (isset($productDetails['category_id'])) {{-- which comes from the AJAX call (passed in through the categoryFilters() method in Admin/FilterController.php, and ALSO may come from the if condition above there (in this page) in case of 'Edit Product' (not 'Add a Product') from addEditProduct() method in Admin/ProductsController --}}
+                                                @if (isset($productDetails['category_id']))
                                                     @php
                                                         // dd($filter);
 
-                                                        // Firstly, for every filter in the `products_filters` table, Get the filter's (from the foreach loop) `cat_ids` using filterAvailable() method, then check if the current category id (using the $productDetails['category_id'] variable and depending on the URL) exists in the filter's `cat_ids`. If it exists, then show the filter, if not, then don't show the filter
                                                         $filterAvailable = \App\Models\ProductsFilter::filterAvailable($filter['id'], $productDetails['category_id']);
                                                     @endphp
 
@@ -652,14 +638,11 @@
 
                                             </div>
 
-
-
-                                            {{-- Call the static getDiscountPrice() method in the Product.php Model to determine the final price of a product because a product can have a discount from TWO things: either a `CATEGORY` discount or `PRODUCT` discout --}}
                                             @php
                                                 $getDiscountPrice = \App\Models\Product::getDiscountPrice($product['id']);
                                             @endphp
 
-                                            @if ($getDiscountPrice > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
+                                            @if ($getDiscountPrice > 0)
                                                 <div class="price-template">
                                                     <div class="item-new-price">
                                                         ₹{{ $getDiscountPrice }}
@@ -746,9 +729,6 @@
                                                 </h6>
                                             </div>
 
-
-
-                                            {{-- Call the static getDiscountPrice() method in the Product.php Model to determine the final price of a product because a product can have a discount from TWO things: either a `CATEGORY` discount or `PRODUCT` discout --}}
                                             @php
                                                 $getDiscountPrice = \App\Models\Product::getDiscountPrice($product['id']);
                                             @endphp

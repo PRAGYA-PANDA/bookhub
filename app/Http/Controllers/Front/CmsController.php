@@ -9,10 +9,7 @@ class CmsController extends Controller
 {
 
     public function contact(Request $request) {
-        $condition = $request->query('condition');
-        if (!in_array($condition, ['new', 'old'])) {
-            $condition = 'new';
-        }
+        $condition = session('condition', 'new');
 
         if ($request->isMethod('post')) {
             $data = $request->all();
@@ -69,6 +66,6 @@ class CmsController extends Controller
         }
 
 
-        return view('front.pages.contact');
+        return view('front.pages.contact',compact('condition'));
     }
 }

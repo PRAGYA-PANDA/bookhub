@@ -30,10 +30,8 @@ class ProductsController extends Controller
     public function listing(Request $request)
     { // using the Dynamic Routes with the foreach loop
         // Sorting Filter WITH AJAX in listing.blade.php. Load (and check) ajax_products_listing.blade.php
-        $condition = $request->query('condition');
-        if (!in_array($condition, ['new', 'old'])) {
-            $condition = 'new';
-        }
+
+        $condition = session('condition', 'new');
         if ($request->ajax()) {
             $data = $request->all();
 
@@ -126,7 +124,7 @@ class ProductsController extends Controller
                 $meta_keywords    = $categoryDetails['categoryDetails']['meta_keywords'];
 
 
-                return view('front.products.ajax_products_listing')->with(compact('categoryDetails', 'categoryProducts', 'url', 'meta_title', 'meta_description', 'meta_keywords'));
+                return view('front.products.ajax_products_listing')->with(compact('categoryDetails', 'categoryProducts', 'url', 'meta_title', 'meta_description', 'meta_keywords','condition'));
             } else {
                 abort(404); // we will create the 404 page later on    // https://laravel.com/docs/9.x/helpers#method-abort
             }
@@ -145,6 +143,8 @@ class ProductsController extends Controller
 
                     // We join `products` table (at the `category_id` column) with `categoreis` table (becausee we're going to search `category_name` column in `categories` table)
                     // Note: It's best practice to name table columns with more verbose descriptive names (e.g. if the table name is `products`, then you should have a column called `product_id`, NOT `id`), and also, don't have repeated column names THROUGHOUT/ACROSS the tables of a certain (one) database (i.e. make all your database tables column names (throughout your database) UNIQUE (even columns in different tables!)). That's because of that problem that emerges when you join (JOIN clause) two tables which have the same column names, when you join them, the column names of the second table overrides the column names of the first table (similar column names override each other), leading to many problems. There are TWO ways/workarounds to tackle this problem
+
+$condition = session('condition', 'new');
                     $categoryProducts = Product::select(
                         'products.id',
                         'products.section_id',
@@ -301,10 +301,11 @@ class ProductsController extends Controller
                 // dd($categoryProducts);
 
 
-                return view('front.products.listing')->with(compact('categoryDetails', 'categoryProducts'));
+                return view('front.products.listing')->with(compact('categoryDetails', 'categoryProducts','condition'));
             } else { // If the Search Form is NOT used, render the listing.blade.php page with the Sorting Filter WITHOUT AJAX (using the HTML <form> and jQuery)
                 $url = \Illuminate\Support\Facades\Route::getFacadeRoot()->current()->uri(); // Accessing The Current Route: https://laravel.com/docs/9.x/routing#accessing-the-current-route    // Accessing The Current URL: https://laravel.com/docs/9.x/urls#accessing-the-current-url
                 // dd($url);
+                $condition = session('condition', 'new');
                 $categoryCount = Category::where([
                     'url'    => $url,
                     'status' => 1
@@ -342,7 +343,7 @@ class ProductsController extends Controller
                     $meta_keywords    = $categoryDetails['categoryDetails']['meta_keywords'];
 
 
-                    return view('front.products.listing')->with(compact('categoryDetails', 'categoryProducts', 'url', 'meta_title', 'meta_description', 'meta_keywords','condition'));
+                    return view('front.products.listing')->with(compact('categoryDetails', 'categoryProducts', 'url', 'meta_title', 'meta_description', 'meta_keywords', 'condition'));
                 } else {
                     abort(404); // we will create the 404 page later on    // https://laravel.com/docs/9.x/helpers#method-abort
                 }
@@ -492,7 +493,7 @@ class ProductsController extends Controller
         $meta_keywords    = $productDetails['meta_keywords'];
 
 
-        return view('front.products.detail')->with(compact('productDetails', 'categoryDetails', 'totalStock', 'similarProducts', 'recentlyViewedProducts', 'groupProducts', 'meta_title', 'meta_description', 'meta_keywords', 'ratings', 'avgRating', 'avgStarRating', 'ratingOneStarCount', 'ratingTwoStarCount', 'ratingThreeStarCount', 'ratingFourStarCount', 'ratingFiveStarCount','condition'));
+        return view('front.products.detail')->with(compact('productDetails', 'categoryDetails', 'totalStock', 'similarProducts', 'recentlyViewedProducts', 'groupProducts', 'meta_title', 'meta_description', 'meta_keywords', 'ratings', 'avgRating', 'avgStarRating', 'ratingOneStarCount', 'ratingTwoStarCount', 'ratingThreeStarCount', 'ratingFourStarCount', 'ratingFiveStarCount', 'condition'));
     }
 
 
@@ -530,7 +531,7 @@ class ProductsController extends Controller
         $vendorProducts = $vendorProducts->paginate(30); // Paginating Eloquent Results: https://laravel.com/docs/9.x/pagination#paginating-eloquent-results
 
 
-        return view('front.products.vendor_listing')->with(compact('getVendorShop', 'vendorProducts','condition'));
+        return view('front.products.vendor_listing')->with(compact('getVendorShop', 'vendorProducts', 'condition'));
     }
 
 
@@ -640,7 +641,7 @@ class ProductsController extends Controller
         $meta_keywords    = 'shopping cart, multi vendor';
 
 
-        return view('front.products.cart')->with(compact('getCartItems', 'meta_title', /* 'meta_description', */ 'meta_keywords','condition'));
+        return view('front.products.cart')->with(compact('getCartItems', 'meta_title', /* 'meta_description', */ 'meta_keywords', 'condition'));
     }
 
     // Update Cart Item Quantity AJAX call in front/products/cart_items.blade.php. Check front/js/custom.js
@@ -732,8 +733,8 @@ class ProductsController extends Controller
                 'status'         => true,
                 'totalCartItems' => $totalCartItems, // totalCartItems() function is in our custom Helpers/Helper.php file that we have registered in 'composer.json' file    // We created the CSS class 'totalCartItems' in front/layout/header.blade.php to use it in front/js/custom.js to update the total cart items via AJAX, because in pages that we originally use AJAX to update the cart items (such as when we delete a cart item in http://127.0.0.1:8000/cart using AJAX), the number doesn't change in the header automatically because AJAX is already used and no page reload/refresh has occurred
                 // We'll use that array key 'view' as a JavaScript 'response' property to render the view (    $('#appendCartItems').html(resp.view);    ). Check front/js/custom.js
-                'view'           => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems','condition')), // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
-                'headerview' => (string) \Illuminate\Support\Facades\View::make('front.layout.header_cart_items')->with(compact('getCartItems','condition')) // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
+                'view'           => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems', 'condition')), // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
+                'headerview' => (string) \Illuminate\Support\Facades\View::make('front.layout.header_cart_items')->with(compact('getCartItems', 'condition')) // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
             ]);
         }
     }
@@ -768,7 +769,7 @@ class ProductsController extends Controller
                 'totalCartItems' => $totalCartItems, // totalCartItems() function is in our custom Helpers/Helper.php file that we have registered in 'composer.json' file    // We created the CSS class 'totalCartItems' in front/layout/header.blade.php to use it in front/js/custom.js to update the total cart items via AJAX, because in pages that we originally use AJAX to update the cart items (such as when we delete a cart item in http://127.0.0.1:8000/cart using AJAX), the number doesn't change in the header automatically because AJAX is already used and no page reload/refresh has occurred
                 // We'll use that array key 'view' as a JavaScript 'response' property to render the view (    $('#appendCartItems').html(resp.view);    ). Check front/js/custom.js
                 'view'   => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems')), // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
-                'headerview' => (string) \Illuminate\Support\Facades\View::make('front.layout.header_cart_items')->with(compact('getCartItems','condition')) // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
+                'headerview' => (string) \Illuminate\Support\Facades\View::make('front.layout.header_cart_items')->with(compact('getCartItems', 'condition')) // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
             ]);
         }
     }
@@ -932,7 +933,7 @@ class ProductsController extends Controller
                         'message'        => $message,
                         // We'll use that array key 'view' as a JavaScript 'response' property to render the view (    $('#appendCartItems').html(resp.view);    ). Check front/js/custom.js
                         'view'           => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems')), // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
-                        'headerview'     => (string) \Illuminate\Support\Facades\View::make('front.layout.header_cart_items')->with(compact('getCartItems','condition')) // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
+                        'headerview'     => (string) \Illuminate\Support\Facades\View::make('front.layout.header_cart_items')->with(compact('getCartItems', 'condition')) // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
                     ]);
                 }
             }
@@ -1245,7 +1246,7 @@ class ProductsController extends Controller
         }
 
 
-        return view('front.products.checkout')->with(compact('deliveryAddresses', 'countries', 'getCartItems', 'total_price','condition'));
+        return view('front.products.checkout')->with(compact('deliveryAddresses', 'countries', 'getCartItems', 'total_price', 'condition'));
     }
 
 

@@ -10,12 +10,12 @@
         </div>
         <ul class="mini-cart-list">
 
-             
+
             {{-- We'll place this $total_price inside the foreach loop to calculate the total price of all products in Cart. Check the end of the next foreach loop before @endforeach --}}
             @php $total_price = 0 @endphp
 
             @php
-                $getCartItems = getCartItems(); // getCartItems() function is in our custom Helpers/Helper.php file that we have registered in 'composer.json' file --}} 
+                $getCartItems = getCartItems(); // getCartItems() function is in our custom Helpers/Helper.php file that we have registered in 'composer.json' file --}}
             @endphp
 
             @foreach ($getCartItems as $item) {{-- $getCartItems is passed in from cart() method in Front/ProductsController.php --}}
@@ -40,7 +40,7 @@
         </ul>
         <div class="mini-shop-total clearfix">
             <span class="mini-total-heading float-left">Total:</span>
-            <span class="mini-total-price float-right">EGP{{ $total_price }}</span>
+            <span class="mini-total-price float-right">₹{{ $total_price }}</span>
         </div>
         <div class="mini-action-anchors">
             <a href="{{ url('cart') }}"     class="cart-anchor">View Cart</a>
@@ -52,7 +52,7 @@
 
 
 
-{{-- Solution of the problem where the X icon of the Mini Cart Widget doesn't work (doesn't close the widget) after Updating the Cart or Deleting items from it (meaning, AFTER MAKING AJAX CALLS). This happens after using AJAX while updating or deleting cart items because the Mini Cart Widget page gets loaded again and return-ed via AJAX but return-ed without its JavaScript! --}} 
+{{-- Solution of the problem where the X icon of the Mini Cart Widget doesn't work (doesn't close the widget) after Updating the Cart or Deleting items from it (meaning, AFTER MAKING AJAX CALLS). This happens after using AJAX while updating or deleting cart items because the Mini Cart Widget page gets loaded again and return-ed via AJAX but return-ed without its JavaScript! --}}
 {{-- <script>
     $('#mini-cart-close').on('click', function () {
         $('.mini-cart-wrapper').removeClass('mini-cart-open');

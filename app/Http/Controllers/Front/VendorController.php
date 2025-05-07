@@ -13,15 +13,17 @@ use App\Models\Admin;
 class VendorController extends Controller
 {
     public function loginRegister(Request $request) {
-        $condition = $request->query('condition');
+        $condition = session('condition', 'new');
+
         if (!in_array($condition, ['new', 'old'])) {
             $condition = 'new';
         }
-        return view('front.vendors.login_register');
+        return view('front.vendors.login_register',compact('condition'));
     }
 
     public function vendorRegister(Request $request) {
-        $condition = $request->query('condition');
+        $condition = session('condition', 'new');
+
         if (!in_array($condition, ['new', 'old'])) {
             $condition = 'new';
         }
@@ -105,10 +107,7 @@ class VendorController extends Controller
     }
 
     public function confirmVendor($email,Request $request) {
-        $condition = $request->query('condition');
-        if (!in_array($condition, ['new', 'old'])) {
-            $condition = 'new';
-        }
+        $condition = session('condition', 'new');
 
         $email = base64_decode($email);
         $vendorCount = Vendor::where('email', $email)->count();

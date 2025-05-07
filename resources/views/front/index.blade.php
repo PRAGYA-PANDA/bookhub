@@ -197,7 +197,6 @@
                                                     </div>
                                                 </div>
 
-                                                {{-- Call the static getDiscountPrice() method in the Product.php Model to determine the final price of a product because a product can have a discount from TWO things: either a `CATEGORY` discount or `PRODUCT` discout     --}}
                                                 @php
                                                     $getDiscountPrice = \App\Models\Product::getDiscountPrice($product['id']);
                                                 @endphp

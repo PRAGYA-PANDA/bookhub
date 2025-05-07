@@ -10,11 +10,8 @@ use App\Models\Order;
 class OrderController extends Controller
 {
     // Render User 'My Orders' page
-    public function orders($id = null,Request $request) {
-        $condition = $request->query('condition');
-        if (!in_array($condition, ['new', 'old'])) {
-            $condition = 'new';
-        }
+    public function orders(Request $request, $id = null) {
+        $condition = session('condition', 'new');
         if (empty($id)) {
             $orders = Order::with('orders_products')->where('user_id', \Illuminate\Support\Facades\Auth::user()->id)->orderBy('id', 'Desc')->get()->toArray();
 
