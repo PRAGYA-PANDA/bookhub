@@ -115,13 +115,13 @@
 
 
 
-                                                {{-- Call the static getDiscountPrice() method in the Product.php Model to determine the final price of a product because a product can have a discount from TWO things: either a `CATEGORY` discount or `PRODUCT` discout     --}}
+
                                                 @php
                                                     $getDiscountPrice = \App\Models\Product::getDiscountPrice($product['id']);
                                                 @endphp
 
 
-                                                @if ($getDiscountPrice > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
+                                                @if ($getDiscountPrice > 0)
                                                     <div class="price-template">
                                                         <div class="item-new-price">
                                                             Rs . {{ $getDiscountPrice }}
@@ -130,7 +130,7 @@
                                                             Rs . {{ $product['product_price'] }}
                                                         </div>
                                                     </div>
-                                                @else {{-- if there's no discount on the price, show the original price --}}
+                                                @else 
                                                     <div class="price-template">
                                                         <div class="item-new-price">
                                                             Rs . {{ $product['product_price'] }}

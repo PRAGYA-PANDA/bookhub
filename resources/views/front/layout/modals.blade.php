@@ -2,14 +2,14 @@
 
 
 <!-- Dummy Selectbox -->
-<div class="select-dummy-wrapper">
+{{-- <div class="select-dummy-wrapper">
     <select id="compute-select">
         <option id="compute-option">All</option>
     </select>
-</div>
+</div> --}}
 <!-- Dummy Selectbox /- -->
 <!-- Responsive-Search -->
-<div class="responsive-search-wrapper">
+{{-- <div class="responsive-search-wrapper">
     <button type="button" class="button ion ion-md-close" id="responsive-search-close-button"></button>
     <div class="responsive-search-container">
         <div class="container">
@@ -21,7 +21,7 @@
             </form>
         </div>
     </div>
-</div>
+</div> --}}
 <!-- Responsive-Search /- -->
 <!-- Newsletter-Modal -->
 
@@ -240,20 +240,19 @@
             <div class="modal-header bg-info text-white">
                 <h5 class="modal-title font-weight-bold text-white " id="firstVisitModalLabel">Welcome to Our Store
                 </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true" style="font-size: 1.5rem;">&times;</span>
-                </button>
+               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+
             </div>
             <div class="modal-body text-center py-4">
                 <p class="mb-4 lead">Please choose your preference to explore our products:</p>
                 <div class="d-flex justify-content-center">
                     <button class="btn px-4 py-2 rounded-pill shadow-sm border-1"
                         style="background-color: #80adb1; color: #007b8a; margin-right: 1rem;"
-                        onclick="setCondition('new')">NEW
+                        onclick="set('new')">NEW
                     </button>
 
                     <button class="btn px-4 py-2 rounded-pill shadow-sm border-1"
-                        style="background-color: #738161; color: #152c04;" onclick="setCondition('old')">OLD
+                        style="background-color: #738161; color: #152c04;" onclick="set('old')">OLD
                     </button>
                 </div>
 
@@ -267,14 +266,27 @@
 
 <!-- Quick-view-Modal /- -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <script>
-    $(document).ready(function() {
-        // Check if the modal has already been shown
-        if (!localStorage.getItem('firstVisitShown')) {
-            $('#firstVisitModal').modal('show');
-            localStorage.setItem('firstVisitShown', 'true');
+   document.addEventListener("DOMContentLoaded", function () {
+    if (!localStorage.getItem("firstVisitShown")) {
+        const modal = new bootstrap.Modal(document.getElementById("firstVisitModal"));
+        modal.show();
+        localStorage.setItem("firstVisitShown", "true");
+    }
+});
+
+</script>
+
+{{-- <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const hasVisited = localStorage.getItem("firstVisitShown");
+        if (!hasVisited) {
+            const modal = new bootstrap.Modal(document.getElementById("firstVisitModal"));
+            modal.show();
         }
     });
-</script>
+</script> --}}
+

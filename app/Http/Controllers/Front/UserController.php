@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
 use App\Models\Cart;
-
-
+use App\Models\Category;
+use App\Models\Product;
 
 class UserController extends Controller
 {
@@ -22,7 +22,15 @@ class UserController extends Controller
         if (!in_array($condition, ['new', 'old'])) {
             $condition = 'new';
         }
-        return view('front.users.login_register', compact('condition'));
+
+        $footerProducts = Product::orderBy('id', 'Desc')
+            ->where('condition', $condition)
+            ->where('status', 1)
+            ->take(3)
+            ->get()
+            ->toArray();
+            $category = Category::limit(10)->get();
+        return view('front.users.login_register', compact('condition', 'footerProducts', 'category'));
     }
 
     // User Registration (in front/users/login_register.blade.php) <form> submission using an AJAX request. Check front/js/custom.js

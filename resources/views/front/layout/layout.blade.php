@@ -60,6 +60,14 @@
     <link rel="stylesheet" href="{{ url('front/css/utility.css') }}">
     <!-- Main -->
     <link rel="stylesheet" href="{{ url('front/css/bundle.css') }}">
+    <!--- ================ Font Icon ============================================= -->
+    <link rel="stylesheet" href="{!! asset('assets/css/fontawesome.all.min.css') !!}">
+    <link rel="stylesheet" href="{!! asset('assets/css/fontawesome.min.css') !!}">
+    <!-- ================ Plugins css ============================================ -->
+    <link rel="stylesheet" href="{!! asset('assets/css/plugins.css') !!}">
+    <!-- ================ Theme Style ============================================ -->
+    <link rel="stylesheet" href="{!! asset('assets/css/style.css') !!}">
+    <!-- ================== end Style ============================================ -->
 
 
 
@@ -154,7 +162,7 @@
     </script>
 
     <script>
-        function setCondition(condition) {
+        function set (condition) {
             fetch("{{ route('set.condition') }}", {
                     method: "POST",
                     headers: {

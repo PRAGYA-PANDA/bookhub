@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Banner;
+use App\Models\Category;
 use App\Models\Product;
 
 class IndexController extends Controller
@@ -26,6 +27,15 @@ class IndexController extends Controller
             ->where('condition', $condition)
             ->where('status', 1)
             ->limit(8)
+            ->get()
+            ->toArray();
+
+        $category = Category::limit(10)->get();
+
+        $footerProducts = Product::orderBy('id', 'Desc')
+            ->where('condition', $condition)
+            ->where('status', 1)
+            ->take(3)
             ->get()
             ->toArray();
 
@@ -59,17 +69,32 @@ class IndexController extends Controller
         $meta_description = 'Online Shopping Website which deals in Clothing, Electronics & Appliances Products';
         $meta_keywords = 'eshop website, online shopping, multi vendor e-commerce';
 
-        return view('front.index')->with(compact(
+        // return view('front.index')->with(compact(
+        //     'sliderBanners',
+        //     'fixBanners',
+        //     'newProducts',
+        //     'bestSellers',
+        //     'discountedProducts',
+        //     'featuredProducts',
+        //     'meta_title',
+        //     'meta_description',
+        //     'meta_keywords',
+        //     'condition'
+        // ));
+
+        return view('front.index2')->with(compact(
             'sliderBanners',
             'fixBanners',
             'newProducts',
+            'footerProducts',
             'bestSellers',
             'discountedProducts',
             'featuredProducts',
             'meta_title',
             'meta_description',
             'meta_keywords',
-            'condition'
+            'condition',
+            'category'
         ));
     }
 
