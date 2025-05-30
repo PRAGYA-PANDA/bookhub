@@ -13,6 +13,8 @@
     </title>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="base-url" content="{{ url('') }}">
+    <meta name="app-url" content="{{ config('app.url') }}">
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/favicon/apple-icon-180x180.png') }}">
     <link rel="icon" type="image/png" sizes="192x192"
@@ -179,7 +181,7 @@
                 </div>
                 <div class="col-md-6 text-end text-white">
                     <ul class="list-inline mb-0">
-                        <li class="list-inline-item">Amazon Associates - Amazon’s affiliate marketing program.</li>
+                        <li class="list-inline-item">Amazon Associates - Amazon's affiliate marketing program.</li>
                     </ul>
                 </div>
             </div>
@@ -284,7 +286,7 @@
         <!--~./ end footer bottom area ~-->
     </footer>
 
-    {{-- <script src="{{ asset('assets/js/jquery.min.js') }}"></script> --}}
+    <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
     {{-- <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/popper.min.js') }}"></script> --}}
     <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
