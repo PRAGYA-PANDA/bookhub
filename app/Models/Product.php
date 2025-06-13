@@ -1,21 +1,16 @@
 <?php
-
 namespace App\Models;
 
+use App\Models\Author;
+use App\Models\Category;
+use App\Models\Language;
+use App\Models\Subject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-use App\Models\Category;
-use App\Models\Author;
-use App\Models\Subject;
-use App\Models\Language;
-
 
 class Product extends Model
 {
     use HasFactory;
-
-
 
     // Every 'product' belongs to a 'section'
     public function section()
@@ -46,12 +41,9 @@ class Product extends Model
 
     public function authors()
     {
-        return $this->belongsToMany(Author::class);
+        return $this->belongsToMany(Author::class, 'author_product');
     }
 
-
-
-    // Every product has many attributes
     public function attributes()
     {
         return $this->hasMany('App\Models\ProductsAttribute');
@@ -63,19 +55,16 @@ class Product extends Model
         return $this->hasMany('App\Models\ProductsImage');
     }
 
-
     // Relationship of a Product `products` table with Vendor `vendors` table (every product belongs to a vendor)
     public function vendor()
     {
         return $this->belongsTo('App\Models\Vendor', 'vendor_id')->with('vendorbusinessdetails'); // 'vendor_id' is the Foreign Key of the Relationship
     }
 
-
-
-    // A static method (to be able to be called directly without instantiating an object in index.blade.php) to determine the final price of a product because a product can have a discount from TWO things: either a `CATEGORY` discount or `PRODUCT` discout
+                                                           // A static method (to be able to be called directly without instantiating an object in index.blade.php) to determine the final price of a product because a product can have a discount from TWO things: either a `CATEGORY` discount or `PRODUCT` discout
     public static function getDiscountPrice($product_id)
     { // this method is called in front/index.blade.php
-        // Get the product PRICE, DISCOUNT and CATEGORY ID
+                                                               // Get the product PRICE, DISCOUNT and CATEGORY ID
         $productDetails = Product::select('product_price', 'product_discount', 'category_id')->where('id', $product_id)->first();
         $productDetails = json_decode(json_encode($productDetails), true); // convert the object to an array
 
@@ -83,29 +72,25 @@ class Product extends Model
         $categoryDetails = Category::select('category_discount')->where('id', $productDetails['category_id'])->first();
         $categoryDetails = json_decode(json_encode($categoryDetails), true); // convert the object to an array
 
-
         if ($productDetails['product_discount'] > 0) { // if there's a 'product_discount' (in `products` table) (i.e. discount is not zero 0)
-            // if there's a PRODUCT discount on the product itself
+                                                           // if there's a PRODUCT discount on the product itself
             $discounted_price = $productDetails['product_price'] - ($productDetails['product_price'] * $productDetails['product_discount'] / 100);
         } else if ($categoryDetails['category_discount'] > 0) { // if there's a `category_discount` (in `categories` table) (i.e. discount is not zero 0) (if there's a discount on the whole category of that product)
-            // if there's NO a PRODUCT discount, but there's a CATEGORY discount
+                                                                    // if there's NO a PRODUCT discount, but there's a CATEGORY discount
             $discounted_price = $productDetails['product_price'] - ($productDetails['product_price'] * $categoryDetails['category_discount'] / 100);
         } else { // there's no discount on neither `product_discount` (in `products` table) nor `category_discount` (in `categories` table)
             $discounted_price = 0;
         }
 
-
         return $discounted_price;
     }
 
-
-
     public static function getDiscountAttributePrice($product_id, $size)
     { // this method is called (used) in front/products/detail.blade.php and cart_items.blade.php and in applyCoupon() method in Front/ProudctsController.php
-        // Get that product attributes from `products_attributes` table which has that specific `product_id` and `size`
-        $proAttrPrice = \App\Models\ProductsAttribute::where([ // from `products_attributes` table
+                                                                               // Get that product attributes from `products_attributes` table which has that specific `product_id` and `size`
+        $proAttrPrice = \App\Models\ProductsAttribute::where([                 // from `products_attributes` table
             'product_id' => $product_id,
-            'size'       => $size
+            'size'       => $size,
         ])->first()->toArray();
 
         // Get the product DISCOUNT and CATEGORY ID of that product
@@ -117,30 +102,27 @@ class Product extends Model
         $catDetails = json_decode(json_encode($catDetails), true); // convert the object to an array
 
         if ($proDetails['product_discount'] > 0) { // if there's a 'product_discount' (in `products` table) (i.e. discount is not zero 0)
-            // if there's a PRODUCT discount on the product itself
+                                                       // if there's a PRODUCT discount on the product itself
             $final_price = $proAttrPrice['price'] - ($proAttrPrice['price'] * $proDetails['product_discount'] / 100);
-            $discount = $proAttrPrice['price'] - $final_price; // the discount value = original price - price after discount
+            $discount    = $proAttrPrice['price'] - $final_price; // the discount value = original price - price after discount
 
         } else if ($catDetails['category_discount'] > 0) { // if there's a `category_discount` (in `categories` table) (i.e. discount is not zero 0) (if there's a discount on the whole category of that product)
-            // if there's NO a PRODUCT discount, but there's a CATEGORY discount
+                                                               // if there's NO a PRODUCT discount, but there's a CATEGORY discount
             $final_price = $proAttrPrice['price'] - ($proAttrPrice['price'] * $catDetails['category_discount'] / 100);
-            $discount = $proAttrPrice['price'] - $final_price; // the discount value = original price - price after discount
+            $discount    = $proAttrPrice['price'] - $final_price; // the discount value = original price - price after discount
 
-            // Note: Didn't ACCOUNT FOR presence of discounts of BOTH `product_discount` (in `products` table) AND `category_discount` (in `categories` table) AT THE SAME TIME!!
+                     // Note: Didn't ACCOUNT FOR presence of discounts of BOTH `product_discount` (in `products` table) AND `category_discount` (in `categories` table) AT THE SAME TIME!!
         } else { // there's no discount on neither `product_discount` (in `products` table) nor `category_discount` (in `categories` table)
             $final_price = $proAttrPrice['price'];
-            $discount = 0;
+            $discount    = 0;
         }
 
-
-        return array(
+        return [
             'product_price' => $proAttrPrice['price'], // the original price of that `product_id` and `size` in `products_attributes` table
             'final_price'   => $final_price,           // the price of that `product_id` and `size` in `products_attributes` table after deducting the discount (of either `product_discount` (in `products` table) or `category_discount` (in `categories` table))
-            'discount'      => $discount               // the value of the discount (if any)
-        );
+            'discount'      => $discount,              // the value of the discount (if any)
+        ];
     }
-
-
 
     public static function isProductNew($product_id)
     {
@@ -154,27 +136,20 @@ class Product extends Model
             $isProductNew = 'No';
         }
 
-
         return $isProductNew;
     }
-
-
-
 
     public static function getProductImage($product_id)
     { // this method is used in front/orders/order_details.blade.php
         $getProductImage = Product::select('product_image')->where('id', $product_id)->first()->toArray();
 
-
         return $getProductImage['product_image'];
     }
-
 
     // Note: We need to prevent orders (upon checkout and payment) of the 'disabled' products (`status` = 0), where the product ITSELF can be disabled in admin/products/products.blade.php (by checking the `products` database table) or a product's attribute (`stock`) can be disabled in 'admin/attributes/add_edit_attributes.blade.php' (by checking the `products_attributes` database table). We also prevent orders of the out of stock / sold-out products (by checking the `products_attributes` database table)
     public static function getProductStatus($product_id)
     {
         $getProductStatus = Product::select('status')->where('id', $product_id)->first();
-
 
         return $getProductStatus->status;
     }

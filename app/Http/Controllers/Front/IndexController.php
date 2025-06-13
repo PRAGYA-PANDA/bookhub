@@ -22,10 +22,10 @@ class IndexController extends Controller
         // }
         $condition   = session('condition', 'new');
         $sections    = Section::all();
-        $newProducts = Product::with('publisher')
+        $newProducts = Product::with(['authors', 'publisher'])
             ->where('condition', $condition)
             ->where('status', 1)
-            ->orderByDesc('id')
+            ->orderBy('id', 'desc')
             ->limit(8)
             ->get();
 

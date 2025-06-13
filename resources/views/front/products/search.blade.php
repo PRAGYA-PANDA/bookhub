@@ -163,8 +163,21 @@
                                         {{ Str::limit($product->product_name, 50) }}
                                     </a>
                                 </h5>
-                                <p class="text-muted small mb-2">
+                                {{-- <p class="text-muted small mb-2">
                                     {{ Str::limit($product->description, 80) }}
+                                </p> --}}
+                                
+                                <p class="text-muted small mb-2">Publisher: {{ $product->publisher->name ?? 'N/A' }}</p>
+                                <p class="text-muted small mb-2">Authors:
+                                    @if ($product->authors->isNotEmpty())
+                                        @foreach ($product->authors as $author)
+                                            {{ $author->name }}@if (!$loop->last)
+                                                ,
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        N/A
+                                    @endif
                                 </p>
 
                                 @php

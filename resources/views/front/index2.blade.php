@@ -16,10 +16,23 @@
                         <div class="content-entry-wrap">
                             <div class="entry-content card p-2 glass-effect">
                                 <h3 class="entry-title">
-                                    <a href="{{ url('product/' . $product['id']) }}"
-                                        style="text-decoration: none;">{{ $product['product_name'] }}</a>
+                                    <a href="{{ url('product/' . $product->id) }}" style="text-decoration: none;">
+                                        {{ $product->product_name }}
+                                    </a>
                                 </h3>
                                 <p>Publisher: {{ $product->publisher->name ?? 'N/A' }}</p>
+                                <p>Authors:
+                                    @if ($product->authors->isNotEmpty())
+                                        @foreach ($product->authors as $author)
+                                            {{ $author->name }}@if (!$loop->last)
+                                                ,
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        N/A
+                                    @endif
+                                </p>
+
                             </div>
                         </div>
 
@@ -157,17 +170,30 @@
                                     </a>
                                 @endif
                                 <div class="card-body">
-                                    <div class="text-warning mb-2">
+                                    {{-- <div class="text-warning mb-2">
                                         @for ($i = 0; $i < 5; $i++)
                                             <span class="star">&#9733;</span>
                                         @endfor
-                                    </div>
+                                    </div> --}}
                                     <h5 class="card-title">
                                         <a href="{{ url('product/' . $product['id']) }}"
                                             class="text-dark">{{ $product['product_name'] }}
-                                            ({{ $product['condition'] }})</a>
+                                            ({{ $product['condition'] }})
+                                        </a>
                                     </h5>
                                     <p class="card-text text-muted">{{ $product->Category->title_en ?? '' }}</p>
+                                    <p>Publisher: {{ $product->publisher->name ?? 'N/A' }}</p>
+                                     <p>Authors:
+                                    @if ($product->authors->isNotEmpty())
+                                        @foreach ($product->authors as $author)
+                                            {{ $author->name }}@if (!$loop->last)
+                                                ,
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        N/A
+                                    @endif
+                                </p>
                                     <span class="fw-bold">Rs.
                                         {{ \App\Models\Product::getDiscountPrice($product['id']) }}</span>
                                 </div>

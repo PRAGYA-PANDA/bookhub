@@ -461,9 +461,6 @@
                                     <div class="spec-table u-s-m-b-50">
                                         <h4 class="spec-heading">Product Details</h4>
                                         <table>
-
-
-
                                             @php
                                                 $productFilters = \App\Models\ProductsFilter::productFilters(); // Get ALL the (enabled/active) Filters
                                                 // dd($productFilters);
@@ -733,9 +730,21 @@
                                                     </a>
                                                 </h5>
 
-                                                <p class="text-muted small mb-2" style="height: 40px; overflow: hidden;">
+                                                {{-- <p class="text-muted small mb-2" style="height: 40px; overflow: hidden;">
                                                     {{ Str::limit($product['description'], 60) }}
-                                                </p>
+                                                </p> --}}
+
+                                                <p class="text-muted small mb-2">Publisher: {{ $product['publisher']['name'] ?? 'N/A' }}</p>
+<p class="text-muted small mb-2">Authors:
+    @if (!empty($product['authors']))
+        @foreach ($product['authors'] as $author)
+            {{ $author['name'] }}@if (!$loop->last), @endif
+        @endforeach
+    @else
+        N/A
+    @endif
+</p>
+
 
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <div class="price-block">
@@ -831,9 +840,20 @@
                                                     </a>
                                                 </h5>
 
-                                                <p class="text-muted small mb-2" style="height: 40px; overflow: hidden;">
+                                                {{-- <p class="text-muted small mb-2" style="height: 40px; overflow: hidden;">
                                                     {{ Str::limit($product['description'], 60) }}
-                                                </p>
+                                                </p> --}}
+
+                                                <p class="text-muted small mb-2">Publisher: {{ $product['publisher']['name'] ?? 'N/A' }}</p>
+<p class="text-muted small mb-2">Authors:
+    @if (!empty($product['authors']))
+        @foreach ($product['authors'] as $author)
+            {{ $author['name'] }}@if (!$loop->last), @endif
+        @endforeach
+    @else
+        N/A
+    @endif
+</p>
 
                                                 <div class="d-flex justify-content-between align-items-center">
                                                     <div class="price-block">
