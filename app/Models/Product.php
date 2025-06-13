@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Category;
 use App\Models\Author;
+use App\Models\Subject;
+use App\Models\Language;
 
 
 class Product extends Model
@@ -35,6 +37,11 @@ class Product extends Model
     public function subject()
     {
         return $this->belongsTo(Subject::class, 'subject_id');
+    }
+
+    public function language()
+    {
+        return $this->belongsTo(Language::class, 'language_id');
     }
 
     public function authors()

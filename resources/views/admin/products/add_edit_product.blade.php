@@ -305,6 +305,20 @@
                                         @if (!empty($product['product_name'])) value="{{ $product['product_name'] }}" @else value="{{ old('product_name') }}" @endif>
                                     {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="language_id">Book Language</label>
+                                    <select name="language_id" id="language_id" class="form-control text-dark">
+                                        <option value="">Select Language</option>
+                                        @foreach ($languages as $language)
+                                            <option value="{{ $language['id'] }}"
+                                                @if (!empty($product['language_id']) && $product['language_id'] == $language['id']) selected @endif>
+                                                {{ $language['name'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                                 <div class="form-group">
                                     <label for="product_isbn">ISBN number</label>
                                     <input type="text" class="form-control" id="product_isbn"

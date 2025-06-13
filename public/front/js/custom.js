@@ -251,49 +251,45 @@ $(document).ready(function() {
 
 
     // User Login <form> submission (in front/users/login_register.blade.php)
-    $('#loginForm').submit(function() {
-        var formdata = $(this).serialize();
-        console.log('Form submitted, data:', formdata); // Debug log
+   $(document).ready(function () {
+    $('#loginForm').submit(function (e) {
+        e.preventDefault();
+
+        // Clear previous error messages
+        $('#login-error').text('');
+        $('#login-email').text('');
+        $('#login-password').text('');
+
+        var email = $('#users-email').val();
+        var password = $('#users-password').val();
 
         $.ajax({
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            url    : baseUrl + '/user/login',
-            type   : 'POST',
-            data   : formdata,
-            success: function(resp) {
-                console.log('Success response:', resp); // Debug log
-                if (resp.type == 'error') {
-                    $.each(resp.errors, function(i, error) {
-                        $('#login-' + i).attr('style', 'color: red');
-                        $('#login-' + i).html(error);
-                        setTimeout(function() {
-                            $('#login-' + i).css({
-                                'display': 'none'
-                            });
-                        }, 3000);
-                    });
-                } else if (resp.type == 'incorrect') {
-                    $('#login-error').attr('style', 'color: red');
-                    $('#login-error').html(resp.message);
-                } else if (resp.type == 'inactive') {
-                    $('#login-error').attr('style', 'color: red');
-                    $('#login-error').html(resp.message);
-                } else if (resp.type == 'success') {
+            type: 'POST',
+            url: '/user/login', // This should match the route handling the AJAX login
+            data: {
+                email: email,
+                password: password,
+                _token: $('input[name="_token"]').val()
+            },
+            success: function (resp) {
+                if (resp.type === 'success') {
                     window.location.href = resp.url;
+                } else if (resp.type === 'inactive' || resp.type === 'incorrect') {
+                    $('#login-error').text(resp.message);
+                } else if (resp.type === 'error') {
+                    $.each(resp.errors, function (key, val) {
+                        $('#login-' + key).text(val[0]);
+                    });
                 }
             },
-            error: function(xhr, status, error) {
-                console.log('Error details:', {
-                    status: status,
-                    error: error,
-                    response: xhr.responseText
-                });
-                alert('Error occurred during login. Please try again.');
+            error: function () {
+                $('#login-error').text('An unexpected error occurred.');
             }
         });
-
-        return false; // Prevent form default submission
     });
+});
+
+
 
 
 

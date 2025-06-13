@@ -189,6 +189,12 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
 
         // Delete a Rating via AJAX in admin/ratings/ratings.blade.php, check admin/js/custom.js
         Route::get('delete-rating/{id}', 'RatingController@deleteRating');
+
+        // Languages Routes
+        Route::get('languages', 'App\Http\Controllers\Admin\LanguageController@languages');
+        Route::post('update-language-status', 'App\Http\Controllers\Admin\LanguageController@updateLanguageStatus');
+        Route::match(['get', 'post'], 'add-edit-language/{id?}', 'App\Http\Controllers\Admin\LanguageController@addEditLanguage');
+        Route::get('delete-language/{id}', 'App\Http\Controllers\Admin\LanguageController@deleteLanguage');
     });
 
 });
@@ -259,10 +265,10 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
     Route::get('user/login-register', ['as' => 'login', 'uses' => 'UserController@loginRegister']); // 'as' => 'login'    is Giving this route a name 'login' route in order for the 'auth' middleware ('auth' middleware is the Authenticate.php) to redirect to the right page
 
     // User Registration (in front/users/login_register.blade.php) <form> submission using an AJAX request. Check front/js/custom.js
-    Route::post('user/register', 'UserController@userRegister');
+    Route::post('user/register', 'UserController@userRegister')->name('user.register');
 
     // User Login (in front/users/login_register.blade.php) <form> submission using an AJAX request. Check front/js/custom.js
-    Route::post('user/login', 'UserController@userLogin');
+    Route::post('user/login', 'UserController@userLogin')->name('user.login');
 
     // User logout (This route is accessed from Logout tab in the drop-down menu in the header (in front/layout/header.blade.php))
     Route::get('user/logout', 'UserController@userLogout');
@@ -344,5 +350,8 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
         // Make an iyzipay payment (redirect the user to iyzico payment gateway with the order details)
         Route::get('iyzipay/pay', 'IyzipayController@pay');
     });
+
+    // Add this route with your other front-end routes
+    Route::get('/search-products', [App\Http\Controllers\Front\IndexController::class, 'searchProducts']);
 
 });

@@ -1,5 +1,5 @@
 {{-- Note: front/products/detail.blade.php is the page that opens when you click on a product in the FRONT home page --}} {{-- $productDetails, categoryDetails and $totalStock are passed in from detail() method in Front/ProductsController.php --}}
-@extends('front.layout.layout')
+@extends('front.layout.layout2')
 
 
 @section('content')
@@ -45,27 +45,81 @@
         .rate > label:hover ~ input:checked ~ label {
             color: #c59b08;
         }
-    </style>
+        .breadcrumb-item:first-child::before {
+        display: none;
+        }
 
+        /* Product Card Styles */
+        .product-card {
+            transition: all 0.3s ease;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+        }
+        .product-card .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover .card-img-top {
+            transform: scale(1.05);
+        }
+        .product-card .card-body {
+            padding: 1.25rem;
+        }
+        .product-card .card-title {
+            font-size: 1rem;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+        .product-card .card-text {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+        .product-card .price-block {
+            margin-top: 1rem;
+        }
+        .product-card .badge {
+            font-weight: 500;
+            padding: 0.5em 0.75em;
+        }
+        .section-header {
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        .section-header h3 {
+            color: #333;
+            font-weight: 600;
+        }
+        .section-header p {
+            color: #6c757d;
+            margin-bottom: 0;
+        }
+    </style>
 
 
     <!-- Page Introduction Wrapper -->
     <div class="page-style-a">
-        <div class="container">
-            <div class="page-intro">
-                <h2>Detail</h2>
-                <ul class="bread-crumb">
-                    <li class="has-separator">
-                        <i class="ion ion-md-home"></i>
-                        <a href="{{ url('/') }}">Home</a>
-                    </li>
-                    <li class="is-marked">
-                        <a href="javascript:;">Detail</a>
-                    </li>
-                </ul>
-            </div>
+    <div class="container">
+        <div class="page-intro text-center">
+            <h2>Detail</h2>
+            <ul class="bread-crumb d-inline-block">
+                <li class="has-separator d-inline-block mx-2">
+                    <a href="{{ url('/') }}" class="text-decoration-none font-weight-bold" style="color: #6c5dd4; border: none;">Home</a>
+                </li>
+                <li class="is-marked d-inline-block mx-2">
+                    <a href="" class="text-decoration-none font-weight-bold" style="color: #6c5dd4; border: none;">Details</a>
+                </li>
+            </ul>
         </div>
     </div>
+</div><br><br>
+
     <!-- Page Introduction Wrapper /- -->
     <!-- Single-Product-Full-Width-Page -->
     <div class="page-detail u-s-p-t-80">
@@ -73,33 +127,45 @@
             <!-- Product-Detail -->
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12">
+                    {{-- Product Image Gallery --}}
+                    <div class="product-gallery mb-4">
+                        <div class="main-image-container mb-3">
+                            <div class="easyzoom easyzoom--overlay easyzoom--with-thumbnails"> {{-- EasyZoom plugin --}}
+                                <a href="{{ asset('front/images/product_images/large/' . $productDetails['product_image']) }}" class="main-image-link">
+                                    <img src="{{ asset('front/images/product_images/large/' . $productDetails['product_image']) }}"
+                                         alt="{{ $productDetails['product_name'] }}"
+                                         class="img-fluid rounded shadow-sm"
+                                         style="width: 100%; height: auto; object-fit: cover;">
+                                </a>
+                            </div>
+                        </div>
 
-                    <!-- Product-zoom-area -->
-                    <div class="easyzoom easyzoom--overlay easyzoom--with-thumbnails"> {{-- EasyZoom plugin --}}
-                        <a      href="{{ asset('front/images/product_images/large/' . $productDetails['product_image']) }}">
-                            <img src="{{ asset('front/images/product_images/large/' . $productDetails['product_image']) }}" alt="" width="500" height="500" />
-                        </a>
+                        <div class="thumbnails-container">
+                            <div class="row">
+                                <div class="col-3 mb-3">
+                                    <a href="{{ asset('front/images/product_images/large/' . $productDetails['product_image']) }}"
+                                       data-standard="{{ asset('front/images/product_images/small/' . $productDetails['product_image']) }}"
+                                       class="thumbnail-link active">
+                                        <img src="{{ asset('front/images/product_images/small/' . $productDetails['product_image']) }}"
+                                             class="img-fluid rounded shadow-sm"
+                                             alt="Thumbnail">
+                                    </a>
+                                </div>
+
+                                @foreach ($productDetails['images'] as $image)
+                                    <div class="col-3 mb-3">
+                                        <a href="{{ asset('front/images/product_images/large/' . $image['image']) }}"
+                                           data-standard="{{ asset('front/images/product_images/small/' . $image['image']) }}"
+                                           class="thumbnail-link">
+                                            <img src="{{ asset('front/images/product_images/small/' . $image['image']) }}"
+                                                 class="img-fluid rounded shadow-sm"
+                                                 alt="Thumbnail">
+                                        </a>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="thumbnails" style="margin-top: 30px"> {{-- EasyZoom plugin --}}
-                        <a      href="{{ asset('front/images/product_images/large/' . $productDetails['product_image']) }}" data-standard="{{ asset('front/images/product_images/small/' . $productDetails['product_image']) }}">
-                            <img src="{{ asset('front/images/product_images/small/' . $productDetails['product_image']) }}" width="120" height="120" alt="" />
-                        </a>
-
-
-
-                        {{-- Show the product Alternative images (`image` in `products_images` table) --}}
-                        @foreach ($productDetails['images'] as $image)
-                            {{-- EasyZoom plugin --}}
-                            <a      href="{{ asset('front/images/product_images/large/' . $image['image']) }}" data-standard="{{ asset('front/images/product_images/small/' . $image['image']) }}">
-                                <img src="{{ asset('front/images/product_images/small/' . $image['image']) }}" width="120" height="120" alt="" />
-                            </a>
-                        @endforeach
-
-
-
-                    </div>
-                    <!-- Product-zoom-area /- -->
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <!-- Product-details -->
@@ -146,199 +212,226 @@
 
 
                         <div class="section-1-title-breadcrumb-rating">
-                            <div class="product-title">
-                                <h1>
-                                    <a href="javascript:;">{{ $productDetails['product_name'] }} ({{ $productDetails['condition'] }})</a> {{-- $productDetails is passed in from detail() method in Front/ProductsController.php --}}
+                            <div class="product-title mb-4">
+                                <h1 class="h2 font-weight-bold">
+                                    {{ $productDetails['product_name'] }}
+                                    <span class="badge badge-secondary">{{ $productDetails['condition'] }}</span>
                                 </h1>
                             </div>
 
+                            {{-- Breadcrumb Navigation --}}
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb bg-transparent p-0 mb-4">
+                                    <li class="breadcrumb-item">
+                                        <a href="{{ url('/') }}" class="text-decoration-none" style="color: #6c5dd4;">Home</a>
+                                    </li>
+                                    <li class="breadcrumb-item">
+                                        <a href="javascript:;" class="text-decoration-none" style="color: #6c5dd4;">{{ $productDetails['section']['name'] }}</a>
+                                    </li>
+
+                                    @php
+                                    // Split the breadcrumb string at " / "
+                                    $breadcrumbLinks = explode(' / ', $categoryDetails['breadcrumbs']);
+                                    @endphp
+
+                                    @foreach($breadcrumbLinks as $link)
+                                    <li class="breadcrumb-item">
+                                    {{-- Add your color and remove underline --}}
+                                    {!! str_replace('<a ', '<a style="color:#6c5dd4; text-decoration:none;" ', $link) !!}
+                                    </li>
+                                    @endforeach
 
 
-                            {{-- Breadcrumb --}}
-                            <ul class="bread-crumb">
-                                <li class="has-separator">
-                                    <a href="{{ url('/') }}">Home</a> {{-- Home --}}
-                                </li>
-                                <li class="has-separator">
-                                    <a href="javascript:;">{{ $productDetails['section']['name'] }}</a> {{-- Section Name --}}
-                                </li>
-                                @php echo $categoryDetails['breadcrumbs'] @endphp {{-- $categoryDetails is passed in from detail() method in Front/ProductsController.php --}}
-                            </ul>
-                            {{-- Breadcrumb --}}
+                                </ol>
+                            </nav>
 
-
-
-                            <div class="product-rating">
-                                <div title="{{ $avgRating }} out of 5 - based on {{ count($ratings) }} Reviews">
-
-                                    {{-- Show/Display the Rating Stars --}}
-                                    @if ($avgStarRating > 0) {{-- If the product has been rated at least once, show the "Stars" HTML Entities --}}
-                                        @php
-                                            $star = 1;
-                                            while ($star < $avgStarRating):
-                                        @endphp
-
-                                                <span style="color: gold; font-size: 17px">&#9733;</span>
-
-                                        @php
+                            {{-- Product Rating Summary --}}
+                            <div class="product-rating mb-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="rating-stars mr-2">
+                                        @if ($avgStarRating > 0)
+                                            @php
+                                                $star = 1;
+                                                while ($star <= 5):
+                                            @endphp
+                                                <span style="color: {{ $star <= $avgStarRating ? '#ffc700' : '#ccc' }}; font-size: 20px">★</span>
+                                            @php
                                                 $star++;
-                                            endwhile;
-                                        @endphp
-                                        ({{ $avgRating }})
+                                                endwhile;
+                                            @endphp
+                                        @endif
+                                    </div>
+                                    <div class="rating-number">
+                                        <span class="font-weight-bold">{{ $avgRating }}</span>
+                                        <span class="text-muted">({{ count($ratings) }} Reviews)</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Product Key Information --}}
+                            <div class="product-info mb-4">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="info-item mb-3">
+                                            <label class="text-muted mb-1">Publisher</label>
+                                            <div class="font-weight-bold">{{ $productDetails->publisher->name ?? 'N/A' }}</div>
+                                        </div>
+                                        <div class="info-item mb-3">
+                                            <label class="text-muted mb-1">Authors</label>
+                                            <div class="font-weight-bold">{{ $productDetails->authors->pluck('name')->join(', ') ?: 'N/A' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-item mb-3">
+                                            <label class="text-muted mb-1">ISBN</label>
+                                            <div class="font-weight-bold">{{ $productDetails['product_isbn'] }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Product Price Section --}}
+                            <div class="product-price mb-4">
+                                @php
+                                    $originalPrice = $productDetails['product_price'];
+                                    $discountedPrice = \App\Models\Product::getDiscountPrice($productDetails['id']);
+                                    $savings = $originalPrice - $discountedPrice;
+                                    $savingsPercentage = ($originalPrice > 0 && $savings > 0)
+                                        ? ($savings / $originalPrice) * 100
+                                        : 0;
+                                @endphp
+
+                                <div class="price-container">
+                                    @if ($discountedPrice > 0)
+                                        <div class="current-price">
+                                            <span class="currency">₹</span>
+                                            <span class="amount h2 font-weight-bold" style="color: #6c5dd4;">{{ $discountedPrice }}</span>
+                                        </div>
+                                        <div class="original-price">
+                                            <span class="text-muted mr-2">M.R.P.:</span>
+                                            <span class="strike-through text-muted"><del>₹{{ $originalPrice }}</del></span>
+                                        </div>
+                                        <div class="savings mt-2">
+                                            <span class="badge badge-success">
+                                                Save {{ number_format($savingsPercentage, 1) }}%
+                                            </span>
+                                        </div>
+                                    @else
+                                        <div class="current-price">
+                                            <span class="currency">₹</span>
+                                            <span class="amount h2 font-weight-bold" style="color: #6c5dd4;">{{ $originalPrice }}</span>
+                                        </div>
                                     @endif
-
                                 </div>
                             </div>
                         </div>
 
-                        <div class="section-4-sku-information u-s-p-y-14">
-                            <h6 class="information-heading u-s-m-b-8">Publisher: <b>{{ $productDetails->publisher->name ?? 'N/A' }}</b>
-                            </h6>
-                            <div class="availability">
-                                <h6 class="information-heading u-s-m-b-8">Authors {{ $productDetails->authors->count() > 1 ? '' : '' }}:
-                                    <b>{{ $productDetails->authors->pluck('name')->join(', ') ?: 'N/A' }}</b></h6>
-                                    <h6 class="information-heading u-s-m-b-8">ISBN Information: <b>{{ $productDetails['product_isbn'] }}</b></h6>
-                            </div>
+                        {{-- Product Description --}}
+                        <div class="product-description mb-4">
+                            <h6 class="font-weight-bold mb-3">Description</h6>
+                            <p class="text-muted">{{ $productDetails['description'] }}</p>
                         </div>
 
-                        <div class="section-3-price-original-discount u-s-p-y-1">
-                            @php
-                                $originalPrice = $productDetails['product_price'];
-                                $discountedPrice = \App\Models\Product::getDiscountPrice($productDetails['id']);
-                                $savings = $originalPrice - $discountedPrice;
-                                $savingsPercentage = ($originalPrice > 0 && $savings > 0)
-                                    ? ($savings / $originalPrice) * 100
-                                    : 0;
-                            @endphp
-
-                            <span class="getAttributePrice">
-                                @if ($discountedPrice > 0)
-                                    {{-- Discounted Price --}}
-                                    <div class="price">
-                                        <h4>₹{{ $discountedPrice }}</h4>
-                                    </div>
-                                    <div class="original-price">
-                                        <span>M.R.P.:</span>
-                                        <span style="color: red"><strike>₹{{ $originalPrice }}</strike></span>
-                                    </div>
-                                    <div class="you-save" style="color: green;">
-                                        You Save: {{ number_format($savingsPercentage, 1) }}%
-                                    </div>
-                                @else
-                                    {{-- Regular Price --}}
-                                    <div class="price">
-                                        <h4>₹{{ $originalPrice }}</h4>
-                                    </div>
-                                @endif
-                            </span>
-                        </div>
-
-                        {{-- <div class="section-4-sku-information u-s-p-y-14">
-                            <div class="availability">
-                                <span>Availability:</span>
-                                @if ($totalStock > 0)
-                                    <span>In Stock</span>
-                                @else
-                                    <span style="color: red">Out of Stock (Sold-out)</span>
-                                @endif
-                            </div>
-                            @if ($totalStock > 0)
-                                <div class="left">
-                                    <span>Only:</span>
-                                    <span>{{ $totalStock }} left</span>
-                                </div>
-                            @endif
-                        </div> --}}
-                        <div class="section-2-short-description u-s-p-y-14">
-                            <h6 class="information-heading u-s-m-b-8">Description:</h6>
-                            <p>{{ $productDetails['description'] }}</p>
-                        </div>
-
-
-
-                        {{-- Show the vendor shop name (only in case that the product is added by a vendor, not admin or superadmin) --}}
+                        {{-- Vendor Information --}}
                         @if(isset($productDetails['vendor']))
-                            <div>
-                                {{-- Sold by: {{ $productDetails['vendor']['name'] }} --}}
-                                Sold by: <a href="/products/{{ $productDetails['vendor']['id'] }}">
-                                            {{ $productDetails['vendor']['vendorbusinessdetails']['shop_name'] }}
-                                        </a>
+                            <div class="vendor-info mb-4">
+                                <h6 class="font-weight-bold mb-2">Seller Information</h6>
+                                <a href="/products/{{ $productDetails['vendor']['id'] }}" class="text-decoration-none">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-store mr-2" style="color: #6c5dd4;"></i>
+                                        <span>{{ $productDetails['vendor']['vendorbusinessdetails']['shop_name'] }}</span>
+                                    </div>
+                                </a>
                             </div>
                         @endif
 
 
 
-                        {{-- Add to Cart <form> --}}
+                        {{-- Add to Cart Form --}}
                         <form action="{{ url('cart/add') }}" method="Post" class="post-form">
-                            @csrf {{-- Preventing CSRF Requests: https://laravel.com/docs/9.x/csrf#preventing-csrf-requests --}}
+                            @csrf
 
+                            <input type="hidden" name="product_id" value="{{ $productDetails['id'] }}">
 
-                            <input type="hidden" name="product_id" value="{{ $productDetails['id'] }}"> {{-- Add to Cart <form> --}}
+                            <div class="add-to-cart-section mb-4">
+                                {{-- Quantity Selector --}}
+                                <div class="quantity-selector mb-3">
+                                    <label class="font-weight-bold mb-2">Quantity</label>
+                                    <div class="input-group" style="width: 150px;">
+                                        <div class="input-group-prepend">
+                                            <button type="button" class="btn btn-outline-secondary" onclick="decrementQuantity()">-</button>
+                                        </div>
 
-
-                            <div class="section-5-product-variants u-s-p-y-14">
-
-
-
-                                {{-- Managing Product Colors (using the `group_code` column in `products` table) --}}
-                                @if (count($groupProducts) > 0) {{-- if there's a value for the `group_code` column (in `products` table) for the currently viewed product --}}
-                                    <div>
-                                        <div><strong>Product Colors</strong></div>
-                                        <div style="margin-top: 10px">
-                                            @foreach ($groupProducts as $product)
-                                                <a href="{{ url('product/' . $product['id']) }}">
-                                                    <img style="width: 80px" src="{{ asset('front/images/product_images/small/' . $product['product_image']) }}">
-                                                </a>
-                                            @endforeach
+                                        <input type="number"
+                                               class="form-control text-center"
+                                               name="quantity"
+                                               id="quantity"
+                                               value="1"
+                                               min="1"
+                                               style="border-color: #6c5dd4;">
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-outline-secondary" onclick="incrementQuantity()">+</button>
                                         </div>
                                     </div>
-                                @endif
-
-
-
-                                {{-- <div class="sizes u-s-m-b-11" style="margin-top: 20px">
-                                    <span>Available Size:</span>
-                                    <div class="size-variant select-box-wrapper">
-                                        <select class="select-box product-size" id="getPrice" product-id="{{ $productDetails['id'] }}" name="size" required> {{-- Check front/js/custom.js file --}}
-
-
-
-                                            {{-- <option value="">Select Size</option>
-                                            @foreach ($productDetails['attributes'] as $attribute)
-                                                <option value="{{ $attribute['size'] }}">{{ $attribute['size'] }}</option>
-                                            @endforeach
-
-
-
-                                        </select>
-                                    </div>
-                                </div> --}}
-
-                            </div>
-                            <div class="section-6-social-media-quantity-actions u-s-p-y-14">
-
-
-                                <div class="quantity-wrapper u-s-m-b-22">
-                                    <span>Quantity:</span>
-                                    <div class="quantity">
-                                        <input class="quantity-text-field" type="number" name="quantity" value="1">
-                                    </div>
-                                </div>
-                                <div>
-                                    <button class="button button-outline-secondary" type="submit">Add to cart</button>
-                                    <button class="button button-outline-secondary far fa-heart u-s-m-l-6"></button>
-                                    <button class="button button-outline-secondary far fa-envelope u-s-m-l-6"></button>
                                 </div>
 
-
-
+                                {{-- Action Buttons --}}
+                                <div class="action-buttons">
+                                    <div class="row">
+                                        <div class="col-12 col-md-6 mb-2">
+                                            <button type="submit" class="btn btn-primary btn-block" style="background-color: #6c5dd4; border-color: #6c5dd4;">
+                                                <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
+                                            </button>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="d-flex">
+                                                <button type="button" class="btn btn-outline-secondary flex-grow-1 mr-2">
+                                                    <i class="far fa-heart"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary flex-grow-1">
+                                                    <i class="far fa-envelope"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </form>
 
-                        <br><br><b>Delivery</b>
-                        <input type="text" id="pincode" placeholder="Check Pincode" required>
-                        <button type="button" id="checkPincode">Go</button>
+                        {{-- Delivery Check --}}
+                        <div class="delivery-check mb-4">
+                            <h6 class="font-weight-bold mb-3">Check Delivery Availability</h6>
+                            <div class="input-group">
+                                <input type="text"
+                                       class="form-control"
+                                       id="pincode"
+                                       placeholder="Enter Pincode"
+                                       style="border-color: #6c5dd4;">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary"
+                                            type="button"
+                                            id="checkPincode"
+                                            style="border-color: #6c5dd4; color: #6c5dd4;">
+                                        Check
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
+                        {{-- Add this JavaScript for quantity controls --}}
+                        <script>
+                            function incrementQuantity() {
+                                const input = document.getElementById('quantity');
+                                input.value = parseInt(input.value) + 1;
+                            }
+
+                            function decrementQuantity() {
+                                const input = document.getElementById('quantity');
+                                if (parseInt(input.value) > 1) {
+                                    input.value = parseInt(input.value) - 1;
+                                }
+                            }
+                        </script>
 
                     </div>
                     <!-- Product-details /- -->
@@ -584,190 +677,224 @@
             <!-- Detail-Tabs /- -->
             <!-- Different-Product-Section -->
             <div class="detail-different-product-section u-s-p-t-80">
-                <!-- Similar-Products -->
+                <!-- Similar Products -->
                 <section class="section-maker">
                     <div class="container">
-                        <div class="sec-maker-header text-center">
-                            <h3 class="sec-maker-h3">Similar Products</h3>
+                        <div class="section-header mb-4">
+                            <h3 class="h4 mb-0 d-flex align-items-center">
+                                <i class="fas fa-book me-2" style="color: #6c5dd4;"></i>
+                                Similar Books
+                            </h3>
+                            <p class="text-muted mt-2 mb-0">Books you might also like</p>
                         </div>
-                        <div class="slider-fouc">
-                            <div class="products-slider owl-carousel" data-item="4">
 
+                        <div class="similar-products-slider">
+                            <div class="row">
+                                @forelse($similarProducts as $product)
+                                    <div class="col-md-3 mb-4">
+                                        <div class="card h-100 border-0 shadow-sm product-card">
+                                            <div class="position-relative">
+                                                <a href="{{ url('product/' . $product['id']) }}">
+                                                    @php
+                                                        $product_image_path = 'front/images/product_images/small/' . $product['product_image'];
+                                                    @endphp
 
-
-                                {{-- Show similar products (or related products) (functionality) by getting other products from THE SAME CATEGORY --}}
-                                @foreach ($similarProducts as $product)
-                                    <div class="item">
-                                        <div class="image-container">
-                                            <a class="item-img-wrapper-link" href="{{ url('product/' . $product['id']) }}">
-
-
+                                                    @if (!empty($product['product_image']) && file_exists($product_image_path))
+                                                        <img class="card-img-top"
+                                                             src="{{ asset($product_image_path) }}"
+                                                             alt="{{ $product['product_name'] }}"
+                                                             style="height: 200px; object-fit: cover;">
+                                                    @else
+                                                        <img class="card-img-top"
+                                                             src="{{ asset('front/images/product_images/small/no-image.png') }}"
+                                                             alt="No Image"
+                                                             style="height: 200px; object-fit: cover;">
+                                                    @endif
+                                                </a>
 
                                                 @php
-                                                    $product_image_path = 'front/images/product_images/small/' . $product['product_image'];
+                                                    $discount = \App\Models\Product::getDiscountPrice($product['id']);
                                                 @endphp
 
-                                                @if (!empty($product['product_image']) && file_exists($product_image_path)) {{-- if the product image exists in BOTH database table AND filesystem (on server) --}}
-                                                    <img class="img-fluid" src="{{ asset($product_image_path) }}" alt="Product">
-                                                @else {{-- show the dummy image --}}
-                                                    <img class="img-fluid" src="{{ asset('front/images/product_images/small/no-image.png') }}" alt="Product">
+                                                @if($discount > 0)
+                                                    <div class="position-absolute top-0 end-0 m-2">
+                                                        <span class="badge bg-danger">
+                                                            Save {{ number_format((($product['product_price'] - $discount) / $product['product_price']) * 100, 0) }}%
+                                                        </span>
+                                                    </div>
                                                 @endif
-
-
-
-                                            </a>
-                                            <div class="item-action-behaviors">
-                                                <a class="item-quick-look" data-toggle="modal" href="#quick-view">Quick Look</a>
-                                                <a class="item-mail" href="javascript:void(0)">Mail</a>
-                                                <a class="item-addwishlist" href="javascript:void(0)">Add to Wishlist</a>
-                                                <a class="item-addCart" href="javascript:void(0)">Add to Cart</a>
-                                            </div>
-                                        </div>
-                                        <div class="item-content">
-                                            <div class="what-product-is">
-                                                <ul class="bread-crumb">
-
-                                                    <li>
-                                                        <a href="listing.html">{{ $product->name ?? '' }}</a>
-
-                                                    </li>
-                                                </ul>
-                                                <h6 class="item-title">
-                                                    <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
-                                                </h6>
-
                                             </div>
 
-                                            @php
-                                                $getDiscountPrice = \App\Models\Product::getDiscountPrice($product['id']);
-                                            @endphp
+                                            <div class="card-body">
+                                                <h5 class="card-title mb-1" style="height: 40px; overflow: hidden;">
+                                                    <a href="{{ url('product/' . $product['id']) }}"
+                                                       class="text-decoration-none text-dark">
+                                                        {{ Str::limit($product['product_name'], 40) }}
+                                                    </a>
+                                                </h5>
 
-                                            @if ($getDiscountPrice > 0)
-                                                <div class="price-template">
-                                                    <div class="item-new-price">
-                                                        ₹{{ $getDiscountPrice }}
+                                                <p class="text-muted small mb-2" style="height: 40px; overflow: hidden;">
+                                                    {{ Str::limit($product['description'], 60) }}
+                                                </p>
+
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="price-block">
+                                                        @if($discount > 0)
+                                                            <span class="text-danger"><del>₹{{ $product['product_price'] }}</del></span>
+                                                            <span class="h5 mb-0 ms-2">₹{{ $discount }}</span>
+                                                        @else
+                                                            <span class="h5 mb-0">₹{{ $product['product_price'] }}</span>
+                                                        @endif
                                                     </div>
-                                                    <div class="item-old-price">
-                                                        ₹{{ $product['product_price'] }}
-                                                    </div>
+                                                    <span class="badge" style="background-color: #6c5dd4;">
+                                                        {{ ucfirst($product['condition']) }}
+                                                    </span>
                                                 </div>
-                                            @else {{-- if there's no discount on the price, show the original price --}}
-                                                <div class="price-template">
-                                                    <div class="item-new-price">
-                                                        ₹{{ $product['product_price'] }}
-                                                    </div>
+                                            </div>
+
+                                            <div class="card-footer bg-white border-top-0 p-3">
+                                                <div class="d-grid">
+                                                    <a href="{{ url('product/' . $product['id']) }}"
+                                                       class="btn btn-outline-primary btn-sm"
+                                                       style="border-color: #6c5dd4; color: #6c5dd4;">
+                                                        View Details
+                                                    </a>
                                                 </div>
-                                            @endif
-
-
-
-                                        </div>
-                                        <div class="tag new">
-                                            <span>NEW</span>
+                                            </div>
                                         </div>
                                     </div>
-                                @endforeach
-
-
-
+                                @empty
+                                    <div class="col-12">
+                                        <div class="alert alert-info">
+                                            No similar products found.
+                                        </div>
+                                    </div>
+                                @endforelse
                             </div>
                         </div>
                     </div>
                 </section>
-                <!-- Similar-Products /- -->
-                <!-- Recently-View-Products  -->
-                <section class="section-maker">
+
+                <!-- Recently Viewed Products -->
+                <section class="section-maker mt-5">
                     <div class="container">
-                        <div class="sec-maker-header text-center">
-                            <h3 class="sec-maker-h3">Recently Viewed Products</h3>
+                        <div class="section-header mb-4">
+                            <h3 class="h4 mb-0 d-flex align-items-center">
+                                <i class="fas fa-history me-2" style="color: #6c5dd4;"></i>
+                                Recently Viewed
+                            </h3>
+                            <p class="text-muted mt-2 mb-0">Books you've viewed recently</p>
                         </div>
-                        <div class="slider-fouc">
-                            <div class="products-slider owl-carousel" data-item="4">
 
+                        <div class="recently-viewed-slider">
+                            <div class="row">
+                                @forelse($recentlyViewedProducts as $product)
+                                    <div class="col-md-3 mb-4">
+                                        <div class="card h-100 border-0 shadow-sm product-card">
+                                            <div class="position-relative">
+                                                <a href="{{ url('product/' . $product['id']) }}">
+                                                    @php
+                                                        $product_image_path = 'front/images/product_images/small/' . $product['product_image'];
+                                                    @endphp
 
-
-
-                                {{-- Recently Viewed Products (Items) functionality --}}
-                                @foreach ($recentlyViewedProducts as $product)
-                                    <div class="item">
-                                        <div class="image-container">
-                                            <a class="item-img-wrapper-link" href="{{ url('product/' . $product['id']) }}">
-
-
+                                                    @if (!empty($product['product_image']) && file_exists($product_image_path))
+                                                        <img class="card-img-top"
+                                                             src="{{ asset($product_image_path) }}"
+                                                             alt="{{ $product['product_name'] }}"
+                                                             style="height: 200px; object-fit: cover;">
+                                                    @else
+                                                        <img class="card-img-top"
+                                                             src="{{ asset('front/images/product_images/small/no-image.png') }}"
+                                                             alt="No Image"
+                                                             style="height: 200px; object-fit: cover;">
+                                                    @endif
+                                                </a>
 
                                                 @php
-                                                    $product_image_path = 'front/images/product_images/small/' . $product['product_image'];
+                                                    $discount = \App\Models\Product::getDiscountPrice($product['id']);
                                                 @endphp
 
-                                                @if (!empty($product['product_image']) && file_exists($product_image_path)) {{-- if the product image exists in BOTH database table AND filesystem (on server) --}}
-                                                    <img class="img-fluid" src="{{ asset($product_image_path) }}" alt="Product">
-                                                @else {{-- show the dummy image --}}
-                                                    <img class="img-fluid" src="{{ asset('front/images/product_images/small/no-image.png') }}" alt="Product">
+                                                @if($discount > 0)
+                                                    <div class="position-absolute top-0 end-0 m-2">
+                                                        <span class="badge bg-danger">
+                                                            Save {{ number_format((($product['product_price'] - $discount) / $product['product_price']) * 100, 0) }}%
+                                                        </span>
+                                                    </div>
                                                 @endif
-
-
-
-                                            </a>
-                                            <div class="item-action-behaviors">
-                                                <a class="item-quick-look" data-toggle="modal" href="#quick-view">Quick Look</a>
-                                                <a class="item-mail" href="javascript:void(0)">Mail</a>
-                                                <a class="item-addwishlist" href="javascript:void(0)">Add to Wishlist</a>
-                                                <a class="item-addCart" href="javascript:void(0)">Add to Cart</a>
-                                            </div>
-                                        </div>
-                                        <div class="item-content">
-                                            <div class="what-product-is">
-                                                <ul class="bread-crumb">
-
-                                                    <li>
-                                                        <a href="listing.html">{{ $product->name ?? '' }}</a>
-
-                                                    </li>
-                                                </ul>
-                                                <h6 class="item-title">
-                                                    <a href="{{ url('product/' . $product['id']) }}">{{ $product['product_name'] }}</a>
-                                                </h6>
                                             </div>
 
-                                            @php
-                                                $getDiscountPrice = \App\Models\Product::getDiscountPrice($product['id']);
-                                            @endphp
+                                            <div class="card-body">
+                                                <h5 class="card-title mb-1" style="height: 40px; overflow: hidden;">
+                                                    <a href="{{ url('product/' . $product['id']) }}"
+                                                       class="text-decoration-none text-dark">
+                                                        {{ Str::limit($product['product_name'], 40) }}
+                                                    </a>
+                                                </h5>
 
-                                            @if ($getDiscountPrice > 0) {{-- If there's a discount on the price, show the price before (the original price) and after (the new price) the discount --}}
-                                                <div class="price-template">
-                                                    <div class="item-new-price">
-                                                        ₹{{ $getDiscountPrice }}
+                                                <p class="text-muted small mb-2" style="height: 40px; overflow: hidden;">
+                                                    {{ Str::limit($product['description'], 60) }}
+                                                </p>
+
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="price-block">
+                                                        @if($discount > 0)
+                                                            <span class="text-danger"><del>₹{{ $product['product_price'] }}</del></span>
+                                                            <span class="h5 mb-0 ms-2">₹{{ $discount }}</span>
+                                                        @else
+                                                            <span class="h5 mb-0">₹{{ $product['product_price'] }}</span>
+                                                        @endif
                                                     </div>
-                                                    <div class="item-old-price">
-                                                        ₹{{ $product['product_price'] }}
-                                                    </div>
+                                                    <span class="badge" style="background-color: #6c5dd4;">
+                                                        {{ ucfirst($product['condition']) }}
+                                                    </span>
                                                 </div>
-                                            @else {{-- if there's no discount on the price, show the original price --}}
-                                                <div class="price-template">
-                                                    <div class="item-new-price">
-                                                        ₹{{ $product['product_price'] }}
-                                                    </div>
+                                            </div>
+
+                                            <div class="card-footer bg-white border-top-0 p-3">
+                                                <div class="d-grid">
+                                                    <a href="{{ url('product/' . $product['id']) }}"
+                                                       class="btn btn-outline-primary btn-sm"
+                                                       style="border-color: #6c5dd4; color: #6c5dd4;">
+                                                        View Details
+                                                    </a>
                                                 </div>
-                                            @endif
-
-
-
-                                        </div>
-                                        <div class="tag new">
-                                            <span>NEW</span>
+                                            </div>
                                         </div>
                                     </div>
-                                @endforeach
-
-
-
+                                @empty
+                                    <div class="col-12">
+                                        <div class="alert alert-info">
+                                            No recently viewed products.
+                                        </div>
+                                    </div>
+                                @endforelse
                             </div>
                         </div>
                     </div>
                 </section>
-                <!-- Recently-View-Products /- -->
             </div>
-            <!-- Different-Product-Section /- -->
+
+            <style>
+                .product-card {
+                    transition: all 0.3s ease;
+                }
+                .product-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+                }
+                .section-header {
+                    border-bottom: 2px solid #f0f0f0;
+                    padding-bottom: 1rem;
+                }
+                .card-img-top {
+                    border-top-left-radius: 0.5rem;
+                    border-top-right-radius: 0.5rem;
+                }
+                .badge {
+                    font-weight: 500;
+                    padding: 0.5em 0.75em;
+                }
+            </style>
         </div>
     </div>
     <!-- Single-Product-Full-Width-Page /- -->

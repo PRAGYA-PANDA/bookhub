@@ -14,6 +14,7 @@ use App\Models\ProductsImage;
 use App\Models\ProductsFilter;
 use App\Models\ProductsAttribute;
 use App\Models\Subject;
+use App\Models\Language;
 
 class ProductsController extends Controller
 {
@@ -113,7 +114,7 @@ class ProductsController extends Controller
                 'product_name'  => 'required', // only alphabetical characters and spaces
                 'product_isbn'  => 'required', // alphanumeric regular expression
                 'product_price' => 'required|numeric',
-
+                'language_id'   => 'required',
             ];
 
             $customMessages = [ // Specifying A Custom Message For A Given Attribute: https://laravel.com/docs/9.x/validation#specifying-a-custom-message-for-a-given-attribute
@@ -124,14 +125,13 @@ class ProductsController extends Controller
                 'product_isbn.required'  => 'Book ISBN is required',
                 'product_price.required' => 'Book Price is required',
                 'product_price.numeric'  => 'Valid Book Price is required',
-
-
+                'language_id.required'   => 'Book Language is required',
             ];
 
             $this->validate($request, $rules, $customMessages);
 
             // Upload Product Image after Resize
-            // Important Note: There are going to be 3 three sizes for the product image: Admin will upload the image with the recommended size which 1000*1000 which is the 'large' size, but then we're going to use 'Intervention' package to get another two sizes: 500*500 which is the 'medium' size and 250*250 which is the 'small' size
+            // Important Note: There are going to be 3 three sizes for the product image: Admin will upload the image with the recommended size which 1000*1000 which is the 'large' size, but theni we're going to use 'Intervention' package to get another two sizes: 500*500 which is the 'medium' size and 250*250 which is the 'small' size
             // The 3 three image sizes: large: 1000x1000, medium: 500x500, small: 250x250
             if ($request->hasFile('product_image')) {
                 $image_tmp = $request->file('product_image');
@@ -171,6 +171,7 @@ class ProductsController extends Controller
             $product->publisher_id    = $data['publisher_id'];
             //$product->authors()->sync($data['author_id']);
             $product->subject_id    = $data['subject_id'];
+            $product->language_id    = $data['language_id'];
 
 
             // Saving the seleted filter for a product
@@ -270,10 +271,10 @@ class ProductsController extends Controller
             //dd($authors);
         $subjects = Subject::where('status', 1)->get()->toArray();
         // dd($subjects);
-
+        $languages = Language::get();
 
         // return view('admin.products.add_edit_product')->with(compact('title', 'product'));
-        return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories', 'publishers','authors','subjects'));
+        return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories', 'publishers','authors','subjects', 'languages'));
     }
 
     public function getAuthor(Request $request){

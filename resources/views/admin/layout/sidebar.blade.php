@@ -181,6 +181,9 @@
                                 @if (Session::get('page') == 'subjects') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
                                 class="nav-link" href="{{ url('admin/subjects') }}">Subject</a></li>
                         <li class="nav-item"> <a
+                                @if (Session::get('page') == 'languages') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
+                                class="nav-link" href="{{ url('admin/languages') }}">Book Languages</a></li>
+                        <li class="nav-item"> <a
                                 @if (Session::get('page') == 'products') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
                                 class="nav-link" href="{{ url('admin/products') }}">Products</a></li>
                         <li class="nav-item"> <a

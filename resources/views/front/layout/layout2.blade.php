@@ -40,9 +40,105 @@
     <!-- Bootstrap Bundle with Popper -->
     {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> --}}
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* Custom Navigation Styles */
+        .mainmenu-area .nav-item {
+            margin-right: 10px;
+        }
+
+        .mainmenu-area .nav-link {
+            color: #333;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .mainmenu-area .nav-link:hover {
+            color: #6c5dd4;
+            background-color: rgba(108, 93, 212, 0.1);
+        }
+
+        .mainmenu-area .dropdown-menu {
+            border: none;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 8px 0;
+        }
+
+        .mainmenu-area .dropdown-item {
+            padding: 8px 20px;
+            color: #333;
+            transition: all 0.2s ease;
+        }
+
+        .mainmenu-area .dropdown-item:hover {
+            background-color: rgba(108, 93, 212, 0.1);
+            color: #6c5dd4;
+        }
+
+        .mainmenu-area .dropdown-divider {
+            margin: 4px 0;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Active state */
+        .mainmenu-area .nav-link.active {
+            color: #6c5dd4;
+            background-color: rgba(108, 93, 212, 0.1);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            /* Light translucent */
+            backdrop-filter: blur(10px);
+            /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(10px);
+            /* For Safari */
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            /* Subtle border */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            /* Optional soft shadow */
+            color: #fff;
+            /* Optional: makes text more visible on transparent background */
+            transition: all 0.3s ease;
+        }
+
+        .glass-effect:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+
 </head>
 
 <body>
+
+    <!-- Top Contact Navbar -->
+    <div class="full-layer-outer-header border-bottom" style="background-color: rgb(202, 199, 199)">
+        <div class="container d-flex justify-content-end align-items-center">
+            <nav>
+                <ul class="nav">
+                    <li class="nav-item me-4">
+                        <a class="nav-link text-dark p-0" href="tel:+201255845857">
+                            <i class="fas fa-phone text-dark me-2"></i>
+                            Telephone: +201255845857
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark p-0" href="mailto:info@multi-vendore-commerce.com">
+                            <i class="fas fa-envelope text-dark me-2"></i>
+                            E-mail: info@multi-vendore-commerce.com
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
 
     <header class="site-header header-style-two">
         <div class="site-navigation">
@@ -50,88 +146,107 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="navbar navbar-expand-lg navigation-area">
-                            <!--~./ ======================= start site logo block ========== -->
+                            <!-- Site Logo -->
                             <div class="site-logo-block">
                                 <a class="navbar-brand site-logo" href="{{ url('/') }}">
                                     <img alt="logo" src="{{ asset('front/images/main-logo/logo.png') }}">
                                 </a>
                             </div>
+
+                            <!-- Navigation Menu -->
                             <div class="mainmenu-area">
                                 <nav class="menu">
-                                    <ul id="nav">
-                                        <!-- ========== Start Dropdown Category ========= -->
-
+                                    <ul id="nav" class="navbar-nav">
+                                        <!-- Books Menu -->
                                         <li class="nav-item dropdown">
                                             <a class="nav-link dropdown-toggle" href="#" role="button"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                                Change Condition (currently {{ ucfirst($condition) }})
+                                                <i class="fas fa-book me-2"></i>Books
                                             </a>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="javascript:void(0);"
-                                                        onclick="set('new')">New</a></li>
-                                                <li><a class="dropdown-item" href="javascript:void(0);"
-                                                        onclick="set('old')">Old</a></li>
-                                            </ul>
-                                        </li>
-
-
-                                        <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle" href="#" role="button"
-                                                data-bs-toggle="dropdown">Language</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">English</a></li>
-                                                <li><a class="dropdown-item" href="#">Français</a></li>
-                                            </ul>
-                                        </li>
-
-
-                                        {{-- <li class="dropdown-trigger">
-                                            <a href="#">{!! __('main.Categories') !!}</a>
-                                            <ul class="dropdown-content">
-                                                @foreach (Catalls() as $Catall)
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ url('/search-products') }}">
+                                                        <i class="fas fa-list me-2"></i>All Books
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                @foreach ($sections as $section)
                                                     <li>
-                                                        <a href="{!! url('Cat') !!}/{!! $Catall->slug !!}">
-                                                            {!! $Catall->{'Title_' . $Locale} !!}
+                                                        <a class="dropdown-item"
+                                                            href="{{ url('/search-products?section_id=' . $section->id) }}">
+                                                            {{ $section->name }}
                                                         </a>
                                                     </li>
                                                 @endforeach
                                             </ul>
                                         </li>
-                                        <li class="dropdown-trigger">
-                                            <a href="#">{!! __('main.Language') !!}</a>
-                                            <ul class="dropdown-content">
-                                                @if (option('Language') == 'on')
-                                                    @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
-                                                        <li>
-                                                            <a rel="alternate" hreflang="{!! $localeCode !!}"
-                                                                href="{!! LaravelLocalization::getLocalizedURL($localeCode, null, [], true) !!}">
-                                                                {!! $properties['native'] !!}
-                                                            </a>
-                                                        </li>
-                                                    @endforeach
-                                                @else
-                                                @endif
+
+                                        <!-- Condition Menu -->
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" role="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-tag me-2"></i>
+                                                Condition ({{ ucfirst($condition) }})
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item" href="javascript:void(0);"
+                                                        onclick="set('new')">
+                                                        <i class="fas fa-star me-2"></i>New
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="javascript:void(0);"
+                                                        onclick="set('old')">
+                                                        <i class="fas fa-book-open me-2"></i>Old
+                                                    </a>
+                                                </li>
                                             </ul>
-                                        </li> --}}
+                                        </li>
+
+                                        <!-- Language Menu -->
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" href="#" role="button"
+                                                data-bs-toggle="dropdown">
+                                                <i class="fas fa-globe me-2"></i>Language
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#"><i
+                                                            class="fas fa-flag me-2"></i>English</a></li>
+                                                <li><a class="dropdown-item" href="#"><i
+                                                            class="fas fa-flag me-2"></i>Odia</a></li>
+                                            </ul>
+                                        </li>
                                     </ul>
                                 </nav>
                             </div>
+
+                            <!-- Right Navigation Items -->
                             <div class="header-navigation-right">
-                                <!--~./ ============================ search-wrap ============================ ~-->
+                                <!-- Search Button -->
+                                <button type="button" class="btn btn-link me-3" data-bs-toggle="modal"
+                                    data-bs-target="#searchModal">
+                                    <i class="fas fa-search fa-lg" style="color: #6c5dd4;"></i>
+                                </button>
+
+                                <!-- User Account -->
                                 @guest
-                                    <a class="btn text-white mr-2" style="background-color: #6c5dd4;"
+                                    <a class="btn text-white" style="background-color: #6c5dd4;"
                                         href="{{ route('login') }}">
-                                        <i class="fas fa-sign-in-alt"></i> Login/Register
+                                        <i class="fas fa-user me-2"></i>Login/Register
                                     </a>
                                 @else
-                                    <div class="d-flex align-items-center justify-content-end">
+                                    <div class="d-flex align-items-center">
                                         <img class="rounded-circle me-2"
                                             src="{{ asset(Auth::user()->ImageUpload->filename ?? 'assets/images/avatar.png') }}"
                                             width="35" height="35">
                                         <span class="me-2">{{ Auth::user()->name }}</span>
-                                        <a class="btn btn-outline-light btn-sm" href="{{ route('logout') }}"
+                                        <a class="btn btn-sm" style="background-color: #6c5dd4; color: white;"
+                                            href="{{ route('logout') }}"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            <i class="fas fa-sign-out-alt"></i>
+                                            <i class="fas fa-sign-out-alt"></i> Log out
                                         </a>
                                     </div>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST"
@@ -139,7 +254,6 @@
                                         @csrf
                                     </form>
                                 @endguest
-                                <!--~./ ============================ search-wrap ============================ ~-->
                             </div>
                         </div>
                     </div>
@@ -222,13 +336,13 @@
                                             </a>
                                         </div>
                                         <div class="content-entry-wrap">
-                                            <div>
+                                            {{-- <div>
                                                 <span class="star">&#9733;</span>
                                                 <span class="star">&#9733;</span>
                                                 <span class="star">&#9733;</span>
                                                 <span class="star">&#9733;</span>
                                                 <span class="star">&#9733;</span>
-                                            </div>
+                                            </div> --}}
                                             <h3 class="entry-title">
                                                 <a href="{{ url('product/' . $product['id']) }}">
                                                     {{ $product['product_name'] }}
@@ -270,16 +384,23 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6">
                         <div class="copyright-text">
-                            <p>{!! __('main.Reserved') !!}</p>
+                            <p>Copyright © Sridipta Research & Development Consultancy Pvt. Ltd.</p>
                         </div>
                     </div><!--~./ end copyright ~-->
                     <div class="col-lg-6 col-md-6">
                         <div class="footer-menu">
                             <ul class="list">
-                                <li><a>{!! __('main.Amazon_Associates') !!}</a></li>
+                                <li>
+                                    <a href="https://srdcindia.co.in/" target="_blank"
+                                        style="text-decoration: none;">
+                                        Sridipta Research & Development Consultancy Pvt. Ltd. - Trusted Technology
+                                        Partner.
+                                    </a>
+                                </li>
                             </ul>
                         </div><!--~./ end footer menu ~-->
                     </div>
+
                 </div>
             </div>
         </div>
@@ -337,6 +458,192 @@
     </script>
 
     @include('front.layout.scripts')
+
+    <!-- Full Page Search Modal -->
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content glass-modal-full">
+
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex align-items-center justify-content-center">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="text-center mb-3">
+                                <img alt="logo" class="glass-img" style="height: 50px;width: 200px;"
+                                    src="{{ asset('front/images/main-logo/logo.png') }}">
+                            </div>
+
+                            <div class="col-md-8">
+                                <h2 class="text-center mb-4">Search Books</h2>
+                                <form action="{{ url('/search-products') }}" method="get" id="fullPageSearchForm">
+                                    <div class="mb-4">
+                                        <div class="input-group input-group-lg">
+                                            <input type="text" class="form-control glass-input" name="search"
+                                                id="fullPageSearch" placeholder="Search by title, author, ISBN..."
+                                                required>
+
+                                            <button class="btn glass-button px-4" type="submit">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                    <style>
+                                        /* Full-page modal glass effect */
+                                        .glass-modal-full {
+                                            background: rgba(255, 255, 255, 0.1);
+                                            /* semi-transparent white */
+                                            backdrop-filter: blur(12px);
+                                            /* main blur */
+                                            -webkit-backdrop-filter: blur(12px);
+                                            /* for Safari */
+                                            border-radius: 0;
+                                            /* full screen - no border */
+                                            border: 1px solid rgba(255, 255, 255, 0.2);
+                                            color: #fff;
+                                            box-shadow: none;
+                                            height: 100vh;
+                                            overflow-y: auto;
+                                        }
+
+                                        .glass-img {
+                                            mix-blend-mode: multiply !important;
+                                            /* or lighten/darken depending on bg */
+                                            background: transparent !important;
+                                        }
+
+                                        /* Optional: dark text override if needed */
+                                        .glass-modal-full input,
+                                        .glass-modal-full select,
+                                        .glass-modal-full h2,
+                                        .glass-modal-full label,
+                                        .glass-modal-full span,
+                                        .glass-modal-full button,
+                                        .glass-modal-full p {
+                                            color: #fff;
+                                        }
+
+                                        .glass-modal-full input::placeholder {
+                                            color: rgba(255, 255, 255, 0.6);
+                                        }
+
+                                        /* Frosted glass effect for buttons */
+                                        .glass-button {
+                                            background: rgba(255, 255, 255, 0.1);
+                                            backdrop-filter: blur(10px);
+                                            -webkit-backdrop-filter: blur(10px);
+                                            border: 1px solid rgba(255, 255, 255, 0.3);
+                                            color: #fff;
+                                            border-radius: 10px;
+                                            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                                            transition: all 0.3s ease;
+                                        }
+
+                                        /* Hover effect */
+                                        .glass-button:hover {
+                                            background: rgba(255, 255, 255, 0.2);
+                                            border-color: rgba(255, 255, 255, 0.4);
+                                            transform: scale(1.05);
+                                        }
+
+                                        /* Optional focus effect */
+                                        .glass-button:focus {
+                                            outline: none;
+                                            box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+                                        }
+
+                                        /* Glass effect for input fields */
+                                        .glass-input {
+                                            background: rgba(255, 255, 255, 0.1);
+                                            backdrop-filter: blur(10px);
+                                            -webkit-backdrop-filter: blur(10px);
+                                            border: 1px solid rgba(255, 255, 255, 0.3);
+                                            color: #fff;
+                                            border-radius: 8px;
+                                            padding: 0.75rem 1rem;
+                                            transition: all 0.3s ease;
+                                        }
+
+                                        /* Placeholder color */
+                                        .glass-input::placeholder {
+                                            color: rgba(255, 255, 255, 0.6);
+                                        }
+
+                                        /* Focus effect */
+                                        .glass-input:focus {
+                                            background: rgba(255, 255, 255, 0.15);
+                                            border-color: rgba(255, 255, 255, 0.4);
+                                            outline: none;
+                                            color: #fff;
+                                            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+                                        }
+                                    </style>
+
+
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            const slider = document.getElementById('priceRangeSlider');
+                                            const minPriceInput = document.getElementById('minPrice');
+                                            const maxPriceInput = document.getElementById('maxPrice');
+                                            const minPriceDisplay = document.getElementById('priceRangeMin');
+                                            const maxPriceDisplay = document.getElementById('priceRangeMax');
+
+                                            // Initialize with default values
+                                            let minPrice = 0;
+                                            let maxPrice = 10000;
+
+                                            // Update display when slider changes
+                                            slider.addEventListener('input', function() {
+                                                const value = parseInt(this.value);
+                                                minPrice = Math.max(0, value - 2000);
+                                                maxPrice = value;
+
+                                                updateDisplay();
+                                            });
+
+                                            // Update when min price input changes
+                                            minPriceInput.addEventListener('input', function() {
+                                                minPrice = parseInt(this.value) || 0;
+                                                if (minPrice > maxPrice) {
+                                                    maxPrice = minPrice;
+                                                    maxPriceInput.value = maxPrice;
+                                                }
+                                                updateDisplay();
+                                            });
+
+                                            // Update when max price input changes
+                                            maxPriceInput.addEventListener('input', function() {
+                                                maxPrice = parseInt(this.value) || 10000;
+                                                if (maxPrice < minPrice) {
+                                                    minPrice = maxPrice;
+                                                    minPriceInput.value = minPrice;
+                                                }
+                                                updateDisplay();
+                                            });
+
+                                            function updateDisplay() {
+                                                minPriceDisplay.textContent = minPrice;
+                                                maxPriceDisplay.textContent = maxPrice;
+                                                minPriceInput.value = minPrice;
+                                                maxPriceInput.value = maxPrice;
+                                                slider.value = maxPrice;
+                                            }
+
+                                            // Initialize display
+                                            updateDisplay();
+                                        });
+                                    </script>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

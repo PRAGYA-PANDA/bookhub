@@ -1006,9 +1006,8 @@ textarea {
 }
 
 .breadcrumb .breadcrumb-item:before {
-  content: "";
-  font-family: "FontAwesome";
-  padding: 0 20px 0 15px;
+  /*
+   */
 }
 
 .breadcrumb .breadcrumb-item:first-child:before {
@@ -2846,7 +2845,7 @@ ul.dropdown-content > .dropdown-trigger:hover > ul.dropdown-content > li:hover >
 }
 
 .site-header.header-style-two .site-navigation {
-  padding: 3px 0;
+  /* padding: 3px 0; */
 }
 
 .site-header.header-style-two .site-navigation .navigation-area .site-logo-block,

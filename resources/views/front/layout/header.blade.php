@@ -166,41 +166,10 @@ $sections = \App\Models\Section::sections();
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-6 u-d-none-lg">
 
 
+               
 
-                    {{-- Website Search Form (to search for all website products) --}}
-                    <form class="form-searchbox" action="{{ url('/search-products') }}" method="get">
-                        <label class="sr-only" for="search-landscape">Search</label>
-                        <input id="search-landscape" type="text" class="text-field" placeholder="Search everything"
-                            name="search" @if (isset($_REQUEST['search']) && !empty($_REQUEST['search'])) value="{{ $_REQUEST['search'] }}" @endif>
-                        {{-- We use the "name" HTML attribute as a key/name for the "value" HTML attribute for submitting the Search Form. Check the "value" HTML attribute too inside the <option> HTML tag down below! --}} {{-- if the user uses the Search Form --}}
-                        <div class="select-box-position">
-                            <div class="select-box-wrapper select-hide">
-                                <label class="sr-only" for="select-category">Choose category for search</label>
-                                <select class="select-box" id="select-category" name="section_id">
-
-                                    <option selected="selected" value="">All</option>
-                                    @foreach ($sections as $section)
-                                        <option value="{{ $section['id'] }}"
-                                            @if (isset($_REQUEST['section_id']) && !empty($_REQUEST['section_id']) && $_REQUEST['section_id'] == $section['id']) selected @endif>{{ $section['name'] }}
-                                        </option> {{-- the search bar drop-down menu at the top --}} {{-- We use the "value" HTML attribute as a value for the "name" HTML attribute for submitting the Search Form. Check the "name" HTML attribute too inside the <input> HTML tag above there! --}}
-                                    @endforeach
-
-                                </select>
-                            </div>
-                        </div>
-                        <button id="btn-search" type="submit" class="button button-primary fas fa-search"></button>
-                    </form>
-
-                    @php
-                        // dd($_GET);
-                    @endphp
-
-
-
-                </div>
                 <div class="col-lg-3 col-md-3 col-sm-6">
                     <nav>
                         <ul class="mid-nav g-nav">
@@ -249,7 +218,7 @@ $sections = \App\Models\Section::sections();
                     <div class="v-menu v-close">
                         <span class="v-title">
                             <i class="ion ion-md-menu"></i>
-                            All Categories
+                            All Categories Books
                             <i class="fas fa-angle-down"></i>
                         </span>
                         <nav>

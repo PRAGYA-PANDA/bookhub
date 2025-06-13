@@ -22,6 +22,7 @@ use App\Models\User;
 use App\Models\Country;
 use App\Models\ShippingCharge;
 use App\Models\OrdersProduct;
+use App\Models\Section;
 
 class ProductsController extends Controller
 {
@@ -360,6 +361,14 @@ $condition = session('condition', 'new');
         if (!in_array($condition, ['new', 'old'])) {
             $condition = 'new';
         }
+          $category = Category::limit(10)->get();
+          $sections = Section::all();
+        $footerProducts = Product::orderBy('id', 'Desc')
+            ->where('condition', $condition)
+            ->where('status', 1)
+            ->take(3)
+            ->get()
+            ->toArray();
         $productDetails = Product::with([
             'section',
             'category',
@@ -493,7 +502,7 @@ $condition = session('condition', 'new');
         $meta_keywords    = $productDetails['meta_keywords'];
 
 
-        return view('front.products.detail')->with(compact('productDetails', 'categoryDetails', 'totalStock', 'similarProducts', 'recentlyViewedProducts', 'groupProducts', 'meta_title', 'meta_description', 'meta_keywords', 'ratings', 'avgRating', 'avgStarRating', 'ratingOneStarCount', 'ratingTwoStarCount', 'ratingThreeStarCount', 'ratingFourStarCount', 'ratingFiveStarCount', 'condition'));
+        return view('front.products.detail')->with(compact('productDetails', 'categoryDetails', 'totalStock', 'similarProducts', 'recentlyViewedProducts', 'groupProducts', 'meta_title', 'meta_description', 'meta_keywords', 'ratings', 'avgRating', 'avgStarRating', 'ratingOneStarCount', 'ratingTwoStarCount', 'ratingThreeStarCount', 'ratingFourStarCount', 'ratingFiveStarCount', 'condition', 'category', 'footerProducts','sections'));
     }
 
 
