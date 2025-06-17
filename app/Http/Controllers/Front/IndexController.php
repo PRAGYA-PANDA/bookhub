@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\Category;
+use App\Models\Language;
 use App\Models\Product;
 use App\Models\Section;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class IndexController extends Controller
         // if (!in_array($condition, ['new', 'old'])) {
         //     $condition = 'new';
         // }
+        $language = Language::get();
         $condition   = session('condition', 'new');
         $sections    = Section::all();
         $newProducts = Product::with(['authors', 'publisher'])
@@ -94,7 +96,8 @@ class IndexController extends Controller
             'meta_keywords',
             'condition',
             'category',
-            'sections'
+            'sections',
+            'language'
         ));
     }
 

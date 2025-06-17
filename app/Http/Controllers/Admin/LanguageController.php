@@ -47,19 +47,15 @@ class LanguageController extends Controller
 
             $rules = [
                 'name' => 'required',
-                'code' => 'required|unique:languages,code,' . $id,
             ];
 
             $customMessages = [
                 'name.required' => 'Language Name is required',
-                'code.required' => 'Language Code is required',
-                'code.unique' => 'Language Code already exists',
             ];
 
             $this->validate($request, $rules, $customMessages);
 
             $language->name = $data['name'];
-            $language->code = $data['code'];
             $language->status = 1;
             $language->save();
 

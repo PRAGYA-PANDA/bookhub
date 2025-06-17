@@ -213,11 +213,13 @@
                                                 <i class="fas fa-globe me-2"></i>Language
                                             </a>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#"><i
-                                                            class="fas fa-flag me-2"></i>English</a></li>
-                                                <li><a class="dropdown-item" href="#"><i
-                                                            class="fas fa-flag me-2"></i>Odia</a></li>
+                                                @foreach ($language as $data)
+                                                    <li><a class="dropdown-item" href="#"><i
+                                                                class="fas fa-flag me-2"></i>{{ $data->name }}</a>
+                                                    </li>
+                                                @endforeach
                                             </ul>
+
                                         </li>
                                     </ul>
                                 </nav>

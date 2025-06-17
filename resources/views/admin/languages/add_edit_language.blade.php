@@ -40,10 +40,12 @@
                                 <label for="name">Language Name</label>
                                 <input type="text" class="form-control" id="name" placeholder="Enter Language Name" name="name" @if(!empty($language['name'])) value="{{ $language['name'] }}" @else value="{{ old('name') }}" @endif>
                             </div>
-                            <div class="form-group">
+
+                            {{-- <div class="form-group">
                                 <label for="code">Language Code</label>
                                 <input type="text" class="form-control" id="code" placeholder="Enter Language Code (e.g., en, es, fr)" name="code" @if(!empty($language['code'])) value="{{ $language['code'] }}" @else value="{{ old('code') }}" @endif>
-                            </div>
+                            </div> --}}
+                            
                             <button type="submit" class="btn btn-primary mr-2">Submit</button>
                             <button type="reset" class="btn btn-light">Cancel</button>
                         </form>
