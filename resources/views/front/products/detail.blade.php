@@ -286,6 +286,11 @@
                                             <label class="text-muted mb-1">ISBN</label>
                                             <div class="font-weight-bold">{{ $productDetails['product_isbn'] }}</div>
                                         </div>
+                                        <div class="info-item mb-3">
+                                            <label class="text-muted mb-1">Language</label>
+                                            <div class="font-weight-bold">{{ $productDetails->language->name ?? 'N/A' }}</div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

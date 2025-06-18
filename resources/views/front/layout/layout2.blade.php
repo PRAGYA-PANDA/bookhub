@@ -208,19 +208,23 @@
 
                                         <!-- Language Menu -->
                                         <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle" href="#" role="button"
-                                                data-bs-toggle="dropdown">
-                                                <i class="fas fa-globe me-2"></i>Language
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                @foreach ($language as $data)
-                                                    <li><a class="dropdown-item" href="#"><i
-                                                                class="fas fa-flag me-2"></i>{{ $data->name }}</a>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
+    <a class="nav-link dropdown-toggle" href="#" role="button"
+        data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-globe me-2"></i>
+        Language ({{ ucfirst($selectedLanguage->name ?? 'Select') }})
+    </a>
+    <ul class="dropdown-menu">
+        @foreach ($language as $lang)
+            <li>
+                <a class="dropdown-item" href="javascript:void(0);" onclick="setLanguage('{{ $lang->id }}')">
+                    <i class="fas fa-flag me-2"></i>{{ $lang->name }}
+                </a>
+            </li>
+        @endforeach
+    </ul>
+</li>
 
-                                        </li>
+
                                     </ul>
                                 </nav>
                             </div>
@@ -458,6 +462,27 @@
                 });
         }
     </script>
+
+   <script>
+    function setLanguage(languageId) {
+        fetch("{{ url('/set-language') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({ language: languageId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                location.reload(); // or redirect if needed
+            }
+        });
+    }
+</script>
+
+
 
     @include('front.layout.scripts')
 

@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Country;
 use App\Models\Coupon;
 use App\Models\DeliveryAddress;
+use App\Models\Language;
 use App\Models\Order;
 use App\Models\OrdersProduct;
 use App\Models\Product;
@@ -334,10 +335,7 @@ class ProductsController extends Controller
                                                     // Render Single Product Detail Page in front/products/detail.blade.php
     public function detail($id, Request $request)
     { // Required Parameters: https://laravel.com/docs/9.x/routing#required-parameters
-        $condition = $request->query('condition');
-        if (! in_array($condition, ['new', 'old'])) {
-            $condition = 'new';
-        }
+        $condition   = session('condition', 'new');
         $category       = Category::limit(10)->get();
         $sections       = Section::all();
         $footerProducts = Product::orderBy('id', 'Desc')
@@ -349,6 +347,7 @@ class ProductsController extends Controller
         $productDetails = Product::with([
             'section',
             'category',
+            'language',
             'publisher',
             'authors', // add this if not already present
             'attributes' => function ($query) {
@@ -470,8 +469,13 @@ class ProductsController extends Controller
         $meta_title       = $productDetails['meta_title'];
         $meta_description = $productDetails['meta_description'];
         $meta_keywords    = $productDetails['meta_keywords'];
+        $language = Language::get();
 
-        return view('front.products.detail')->with(compact('productDetails', 'categoryDetails', 'totalStock', 'similarProducts', 'recentlyViewedProducts', 'groupProducts', 'meta_title', 'meta_description', 'meta_keywords', 'ratings', 'avgRating', 'avgStarRating', 'ratingOneStarCount', 'ratingTwoStarCount', 'ratingThreeStarCount', 'ratingFourStarCount', 'ratingFiveStarCount', 'condition', 'category', 'footerProducts', 'sections'));
+        return view('front.products.detail', [
+            'languages'        => Language::all(),
+            'selectedLanguage' => Language::find(session('language')),
+            // or based on session
+        ])->with(compact('productDetails', 'categoryDetails', 'totalStock', 'similarProducts', 'recentlyViewedProducts', 'groupProducts', 'meta_title', 'meta_description', 'meta_keywords', 'ratings', 'avgRating', 'avgStarRating', 'ratingOneStarCount', 'ratingTwoStarCount', 'ratingThreeStarCount', 'ratingFourStarCount', 'ratingFiveStarCount', 'condition', 'category', 'footerProducts', 'sections','language'));
     }
 
     // The AJAX call from front/js/custom.js file, to show the the correct related `price` and `stock` depending on the selected `size` (from the `products_attributes` table)) by clicking the size <select> box in front/products/detail.blade.php

@@ -34,10 +34,11 @@ class Product extends Model
         return $this->belongsTo(Subject::class, 'subject_id');
     }
 
-    public function language()
-    {
-        return $this->belongsTo(Language::class, 'language_id');
-    }
+   public function language()
+{
+    return $this->belongsTo(Language::class, 'language_id');
+}
+
 
     public function authors()
     {

@@ -21,11 +21,14 @@ class IndexController extends Controller
         // if (!in_array($condition, ['new', 'old'])) {
         //     $condition = 'new';
         // }
-        $language = Language::get();
+        $language    = Language::get();
         $condition   = session('condition', 'new');
         $sections    = Section::all();
         $newProducts = Product::with(['authors', 'publisher'])
             ->where('condition', $condition)
+            ->when(session('language'), function ($query) {
+                $query->where('language_id', session('language'));
+            })
             ->where('status', 1)
             ->orderBy('id', 'desc')
             ->limit(8)
@@ -83,7 +86,11 @@ class IndexController extends Controller
         //     'condition'
         // ));
 
-        return view('front.index2')->with(compact(
+        return view('front.index2', [
+            'languages'        => Language::all(),
+            'selectedLanguage' => Language::find(session('language')),
+            // or based on session
+        ])->with(compact(
             'sliderBanners',
             'fixBanners',
             'newProducts',
@@ -99,6 +106,11 @@ class IndexController extends Controller
             'sections',
             'language'
         ));
+    }
+    public function setLanguage(Request $request)
+    {
+        session(['language' => $request->language]);
+        return response()->json(['success' => true]);
     }
 
     public function setCondition(Request $request)
@@ -119,7 +131,7 @@ class IndexController extends Controller
             ->get()
             ->toArray();
         $category = Category::limit(10)->get();
-
+        $language = Language::get();
         // Apply search term
         if ($request->filled('search')) {
             $search = $request->search;
@@ -151,6 +163,6 @@ class IndexController extends Controller
         // Get the results
         $products = $query->paginate(12);
 
-        return view('front.products.search', compact('products', 'request', 'condition', 'sections', 'footerProducts', 'category'));
+        return view('front.products.search', compact('products', 'request', 'condition', 'sections', 'footerProducts', 'category', 'language'));
     }
 }

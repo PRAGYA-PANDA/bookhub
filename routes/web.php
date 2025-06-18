@@ -216,6 +216,7 @@ Route::get('orders/invoice/download/{id}', 'App\Http\Controllers\Admin\OrderCont
 Route::namespace('App\Http\Controllers\Front')->group(function() {
     Route::get('/', 'IndexController@index');
     Route::post('set-condition', [IndexController::class, 'setCondition'])->name('set.condition');
+    Route::post('/set-language', [IndexController::class, 'setLanguage']);
 
 
 
