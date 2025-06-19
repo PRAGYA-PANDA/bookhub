@@ -132,6 +132,11 @@ class IndexController extends Controller
             ->toArray();
         $category = Category::limit(10)->get();
         $language = Language::get();
+        // Filter by language
+        if ($request->filled('language_id')) {
+            $query->where('language_id', $request->language_id);
+        }
+
         // Apply search term
         if ($request->filled('search')) {
             $search = $request->search;
@@ -162,7 +167,11 @@ class IndexController extends Controller
 
         // Get the results
         $products = $query->paginate(12);
-
-        return view('front.products.search', compact('products', 'request', 'condition', 'sections', 'footerProducts', 'category', 'language'));
+        $language = Language::get();
+        return view('front.products.search', compact('products', 'request', 'condition', 'sections', 'footerProducts', 'category', 'language'), [
+            'languages'        => Language::all(),
+            'selectedLanguage' => Language::find(session('language')),
+            // or based on session
+        ]);
     }
 }

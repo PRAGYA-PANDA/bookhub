@@ -740,15 +740,15 @@
                                                 </p> --}}
 
                                                 <p class="text-muted small mb-2">Publisher: {{ $product['publisher']['name'] ?? 'N/A' }}</p>
-<p class="text-muted small mb-2">Authors:
-    @if (!empty($product['authors']))
-        @foreach ($product['authors'] as $author)
-            {{ $author['name'] }}@if (!$loop->last), @endif
-        @endforeach
-    @else
-        N/A
-    @endif
-</p>
+                                                <p class="text-muted small mb-2">Authors:
+                                                    @if (!empty($product['authors']))
+                                                        @foreach ($product['authors'] as $author)
+                                                            {{ $author['name'] }}@if (!$loop->last), @endif
+                                                        @endforeach
+                                                    @else
+                                                        N/A
+                                                    @endif
+                                                    </p>
 
 
                                                 <div class="d-flex justify-content-between align-items-center">
