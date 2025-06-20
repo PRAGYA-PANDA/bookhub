@@ -111,6 +111,31 @@
             transform: scale(1.02);
             box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
         }
+
+        /* Multi-level dropdowns for Bootstrap 5 */
+        .dropdown-submenu {
+            position: relative;
+        }
+        .dropdown-submenu > .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-top: -1px;
+            display: none;
+        }
+        .dropdown-submenu:hover > .dropdown-menu,
+        .dropdown-submenu:focus-within > .dropdown-menu {
+            display: block;
+        }
+        .dropdown-submenu > a:after {
+            content: "\f105";
+            float: right;
+            font-family: 'FontAwesome';
+            margin-left: 8px;
+            font-weight: normal;
+        }
+        .dropdown-menu > li > a.dropdown-toggle:after {
+            display: inline-block;
+        }
     </style>
 
 </head>
@@ -173,12 +198,35 @@
                                                     <hr class="dropdown-divider">
                                                 </li>
                                                 @foreach ($sections as $section)
-                                                    <li>
-                                                        <a class="dropdown-item"
-                                                            href="{{ url('/search-products?section_id=' . $section->id) }}">
-                                                            {{ $section->name }}
-                                                        </a>
-                                                    </li>
+                                                    @if (!empty($section['categories']) && count($section['categories']) > 0)
+                                                        <li class="dropdown-submenu position-relative">
+                                                            <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">{{ $section['name'] }}</a>
+                                                            <ul class="dropdown-menu">
+                                                                @foreach ($section['categories'] as $category)
+                                                                    @if (!empty($category['sub_categories']) && count($category['sub_categories']) > 0)
+                                                                        <li class="dropdown-submenu position-relative">
+                                                                            <a class="dropdown-item dropdown-toggle" href="{{ url('/search-products?category_id=' . $category['id']) }}">{{ $category['category_name'] }}</a>
+                                                                            <ul class="dropdown-menu">
+                                                                                @foreach ($category['sub_categories'] as $subcategory)
+                                                                                    <li>
+                                                                                        <a class="dropdown-item" href="{{ url('/search-products?category_id=' . $subcategory['id']) }}">{{ $subcategory['category_name'] }}</a>
+                                                                                    </li>
+                                                                                @endforeach
+                                                                            </ul>
+                                                                        </li>
+                                                                    @else
+                                                                        <li>
+                                                                            <a class="dropdown-item" href="{{ url('/search-products?category_id=' . $category['id']) }}">{{ $category['category_name'] }}</a>
+                                                                        </li>
+                                                                    @endif
+                                                                @endforeach
+                                                            </ul>
+                                                        </li>
+                                                    @else
+                                                        <li>
+                                                            <a class="dropdown-item" href="{{ url('/search-products?section_id=' . $section['id']) }}">{{ $section['name'] }}</a>
+                                                        </li>
+                                                    @endif
                                                 @endforeach
                                             </ul>
                                         </li>
@@ -364,21 +412,39 @@
                     <div class="col-lg-4">
                         <div class="widget widget-categories">
                             <div class="widget-content">
-                                <ul>
+                                <h5 class="text-white mb-3">Categories</h5>
+                                <hr class="bg-light mb-3 mt-0" style="opacity:0.2;">
+                                <ul class="list-unstyled footer-category-list">
                                     @foreach ($category as $cat)
-                                        <p>
-                                            {{ $cat['category_name'] }}
-                                        </p>
+                                        @if (is_array($cat) && isset($cat['category_name'], $cat['id']))
+                                            <li class="cat-item mb-2">
+                                                <a href="{{ url('/search-products?category_id=' . $cat['id']) }}" class="text-decoration-none text-light d-flex align-items-center">
+                                                    <i class="fas fa-book me-2" style="min-width:18px;"></i>
+                                                    <span>{{ $cat['category_name'] }}</span>
+                                                </a>
+                                            </li>
+                                        @endif
                                     @endforeach
-                                    {{-- @foreach (FooterCats() as $FooterCat)
-                                        <li class="cat-item">
-                                            <a href="{!! url('Cat') !!}/{!! $FooterCat->slug !!}">
-                                                {!! $FooterCat->{'Title_' . $Locale} !!}<span
-                                                    class="count">{!! $FooterCat->id !!}</span>
-                                            </a>
-                                        </li>
-                                    @endforeach --}}
                                 </ul>
+                                <style>
+                                    .footer-category-list .cat-item a {
+                                        color: #fff;
+                                        transition: color 0.2s;
+                                        font-size: 1rem;
+                                        padding: 4px 0;
+                                    }
+                                    .footer-category-list .cat-item a:hover {
+                                        color: #6c5dd4;
+                                        text-decoration: underline;
+                                    }
+                                    .footer-category-list .cat-item {
+                                        border-radius: 4px;
+                                        transition: background 0.2s;
+                                    }
+                                    .footer-category-list .cat-item:hover {
+                                        background: rgba(108, 93, 212, 0.08);
+                                    }
+                                </style>
                             </div>
                         </div>
                     </div>
@@ -671,6 +737,27 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Enable submenu on click for mobile
+        document.querySelectorAll('.dropdown-submenu > a').forEach(function(element) {
+            element.addEventListener('click', function(e) {
+                var submenu = this.nextElementSibling;
+                if (submenu && submenu.classList.contains('dropdown-menu')) {
+                    e.preventDefault();
+                    submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+                }
+            });
+        });
+        // Optional: Close submenus when clicking outside
+        document.addEventListener('click', function(e) {
+            document.querySelectorAll('.dropdown-submenu > .dropdown-menu').forEach(function(menu) {
+                if (!menu.parentElement.contains(e.target)) {
+                    menu.style.display = '';
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
