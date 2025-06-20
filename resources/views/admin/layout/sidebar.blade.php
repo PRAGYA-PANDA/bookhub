@@ -110,6 +110,10 @@
                                 @if (Session::get('page') == 'update_admin_details') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
                                 class="nav-link" href="{{ url('admin/update-admin-details') }}">Update Admin Details</a>
                         </li>
+                        <li class="nav-item"> <a
+                                @if (Session::get('page') == 'logo') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
+                                class="nav-link" href="{{ route('logo') }}">Logo</a>
+                        </li>
                     </ul>
                 </div>
             </li>

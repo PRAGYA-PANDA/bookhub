@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Country;
 use App\Models\Coupon;
 use App\Models\DeliveryAddress;
+use App\Models\HeaderLogo;
 use App\Models\Language;
 use App\Models\Order;
 use App\Models\OrdersProduct;
@@ -470,12 +471,13 @@ class ProductsController extends Controller
         $meta_description = $productDetails['meta_description'];
         $meta_keywords    = $productDetails['meta_keywords'];
         $language = Language::get();
+        $logos = HeaderLogo::first();
 
         return view('front.products.detail', [
             'languages'        => Language::all(),
             'selectedLanguage' => Language::find(session('language')),
             // or based on session
-        ])->with(compact('productDetails', 'categoryDetails', 'totalStock', 'similarProducts', 'recentlyViewedProducts', 'groupProducts', 'meta_title', 'meta_description', 'meta_keywords', 'ratings', 'avgRating', 'avgStarRating', 'ratingOneStarCount', 'ratingTwoStarCount', 'ratingThreeStarCount', 'ratingFourStarCount', 'ratingFiveStarCount', 'condition', 'category', 'footerProducts', 'sections','language'));
+        ])->with(compact('productDetails', 'categoryDetails', 'totalStock', 'similarProducts', 'recentlyViewedProducts', 'groupProducts', 'meta_title', 'meta_description', 'meta_keywords', 'ratings', 'avgRating', 'avgStarRating', 'ratingOneStarCount', 'ratingTwoStarCount', 'ratingThreeStarCount', 'ratingFourStarCount', 'ratingFiveStarCount', 'condition', 'category', 'footerProducts', 'sections','language','logos'));
     }
 
     // The AJAX call from front/js/custom.js file, to show the the correct related `price` and `stock` depending on the selected `size` (from the `products_attributes` table)) by clicking the size <select> box in front/products/detail.blade.php

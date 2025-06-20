@@ -46,10 +46,19 @@
 <body>
     <div class="container-scroller">
 
-
-
-
         @include('admin.layout.header')
+
+        @php
+            use App\Models\HeaderLogo;
+            $headerLogo = HeaderLogo::first();
+        @endphp
+
+        <div class="navbar-brand-wrapper">
+            <a class="navbar-brand" href="{{ url('admin/dashboard') }}">
+                <img src="{{ asset('uploads/logos/' . ($headerLogo->logo ?? 'default.png')) }}" alt="logo"
+                    height="50">
+            </a>
+        </div>
 
 
 
@@ -126,7 +135,7 @@
 
     {{-- Start: Our Custom Admin JS --}}
     <script src="{{ url('admin/js/custom.js') }}"></script>
-   
+
     {{-- End: Our Custom Admin JS --}}
 
 </body>

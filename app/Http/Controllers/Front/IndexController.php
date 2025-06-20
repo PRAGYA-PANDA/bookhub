@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\Category;
+use App\Models\HeaderLogo;
 use App\Models\Language;
 use App\Models\Product;
 use App\Models\Section;
@@ -21,6 +22,8 @@ class IndexController extends Controller
         // if (!in_array($condition, ['new', 'old'])) {
         //     $condition = 'new';
         // }
+
+        $logos = HeaderLogo::first();
         $language    = Language::get();
         $condition   = session('condition', 'new');
         $sections    = Section::all();
@@ -89,7 +92,7 @@ class IndexController extends Controller
         return view('front.index2', [
             'languages'        => Language::all(),
             'selectedLanguage' => Language::find(session('language')),
-            // or based on session
+
         ])->with(compact(
             'sliderBanners',
             'fixBanners',
@@ -104,7 +107,8 @@ class IndexController extends Controller
             'condition',
             'category',
             'sections',
-            'language'
+            'language',
+            'logos'
         ));
     }
     public function setLanguage(Request $request)
@@ -121,6 +125,7 @@ class IndexController extends Controller
 
     public function searchProducts(Request $request)
     {
+
         $condition      = session('condition', 'new');
         $query          = Product::where('status', 1);
         $sections       = Section::all();
@@ -132,6 +137,7 @@ class IndexController extends Controller
             ->toArray();
         $category = Category::limit(10)->get();
         $language = Language::get();
+        $logos = HeaderLogo::first();
         // Filter by language
         if ($request->filled('language_id')) {
             $query->where('language_id', $request->language_id);
@@ -168,7 +174,7 @@ class IndexController extends Controller
         // Get the results
         $products = $query->paginate(12);
         $language = Language::get();
-        return view('front.products.search', compact('products', 'request', 'condition', 'sections', 'footerProducts', 'category', 'language'), [
+        return view('front.products.search', compact('products', 'request', 'condition', 'sections', 'footerProducts', 'category', 'language','logos'), [
             'languages'        => Language::all(),
             'selectedLanguage' => Language::find(session('language')),
             // or based on session

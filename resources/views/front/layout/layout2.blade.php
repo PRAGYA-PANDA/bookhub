@@ -149,7 +149,7 @@
                             <!-- Site Logo -->
                             <div class="site-logo-block">
                                 <a class="navbar-brand site-logo" href="{{ url('/') }}">
-                                    <img alt="logo" src="{{ asset('front/images/main-logo/logo.png') }}">
+                                    <img alt="logo" src="{{ asset('uploads/logos/' . $logos->logo) }}" style="width: 150px; height: 50px;">
                                 </a>
                             </div>
 
