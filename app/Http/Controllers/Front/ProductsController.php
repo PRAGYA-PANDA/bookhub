@@ -25,8 +25,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class ProductsController extends Controller
-{
-                                                // match() method is used for the HTTP 'GET' requests to render listing.blade.php page and the HTTP 'POST' method for the AJAX request of the Sorting Filter or the HTML Form submission and jQuery for the Sorting Filter WITHOUT AJAX, AND ALSO for submitting the Search Form in listing.blade.php    // e.g.    /men    or    /computers
+{                                                // match() method is used for the HTTP 'GET' requests to render listing.blade.php page and the HTTP 'POST' method for the AJAX request of the Sorting Filter or the HTML Form submission and jQuery for the Sorting Filter WITHOUT AJAX, AND ALSO for submitting the Search Form in listing.blade.php    // e.g.    /men    or    /computers
                                                 // Search Form
     public function listing(Request $request)
     { // using the Dynamic Routes with the foreach loop
@@ -331,6 +330,120 @@ class ProductsController extends Controller
                 }
             }
         }
+    }
+
+    public function categoryProducts(Request $request, $category_id = null)
+    {
+        $condition = session('condition', 'new');
+        $sections = Section::all();
+        $footerProducts = Product::orderBy('id', 'Desc')
+            ->where('condition', $condition)
+            ->where('status', 1)
+            ->take(3)
+            ->get()
+            ->toArray();
+        $category = Category::limit(10)->get();
+        $language = Language::get();
+        $logos = HeaderLogo::first();
+
+        // Get category details
+        $categoryDetails = null;
+        $products = collect();
+
+        if ($category_id) {
+            // Get category by ID
+            $categoryDetails = Category::find($category_id);
+
+            if ($categoryDetails) {
+                // Get all subcategories if this is a parent category
+                $subCategories = Category::where('parent_id', $category_id)->pluck('id')->toArray();
+                $categoryIds = array_merge([$category_id], $subCategories);
+
+                // Get products for this category and its subcategories
+                $products = Product::with(['publisher', 'authors'])
+                    ->whereIn('category_id', $categoryIds)
+                    ->where('status', 1);
+            }
+        } else {
+            // If no category_id provided, show all products
+            $products = Product::with(['publisher', 'authors'])
+                ->where('status', 1);
+        }
+
+        // Apply filters
+        if ($products instanceof \Illuminate\Database\Eloquent\Builder) {
+            // Condition filter
+            if ($request->filled('condition')) {
+                $products->where('condition', $request->condition);
+            }
+            else {
+                $products->where('condition', $condition);
+            }
+
+            // Language filter
+            if ($request->filled('language_id')) {
+                $products->where('language_id', $request->language_id);
+            }
+             else {
+                $products->when(session('language'), function ($query) {
+                    $query->where('language_id', session('language'));
+                });
+            }
+
+            // Section filter (for when no specific category is selected)
+            if (!$category_id && $request->filled('section_id')) {
+                $products->where('section_id', $request->section_id);
+            }
+
+            // Get the results first
+            $products = $products->orderBy('id', 'desc')->get();
+
+            // Apply price range filter using discounted prices
+            if ($request->filled('min_price') || $request->filled('max_price')) {
+                $minPrice = $request->filled('min_price') ? (float)$request->min_price : 0;
+                $maxPrice = $request->filled('max_price') ? (float)$request->max_price : PHP_FLOAT_MAX;
+
+                $products = $products->filter(function ($product) use ($minPrice, $maxPrice) {
+                    $discountedPrice = Product::getDiscountPrice($product->id);
+                    $finalPrice = $discountedPrice > 0 ? $discountedPrice : $product->product_price;
+
+                    return $finalPrice >= $minPrice && $finalPrice <= $maxPrice;
+                });
+            }
+
+            // Convert back to pagination
+            $perPage = 12;
+            $currentPage = $request->get('page', 1);
+            $products = new \Illuminate\Pagination\LengthAwarePaginator(
+                $products->forPage($currentPage, $perPage),
+                $products->count(),
+                $perPage,
+                $currentPage,
+                ['path' => $request->url(), 'query' => $request->query()]
+            );
+        }
+
+        // SEO meta tags
+        $meta_title = $categoryDetails ? $categoryDetails->meta_title : 'All Books';
+        $meta_description = $categoryDetails ? $categoryDetails->meta_description : 'Browse all books in our collection';
+        $meta_keywords = $categoryDetails ? $categoryDetails->meta_keywords : 'books, literature, reading';
+
+        return view('front.products.category_products', compact(
+            'products',
+            'categoryDetails',
+            'condition',
+            'sections',
+            'footerProducts',
+            'category',
+            'language',
+            'logos',
+            'meta_title',
+            'meta_description',
+            'meta_keywords'
+        ), [
+            'languages' => Language::all(),
+            'selectedLanguage' => Language::find(session('language')),
+        ]);
     }
 
                                                     // Render Single Product Detail Page in front/products/detail.blade.php

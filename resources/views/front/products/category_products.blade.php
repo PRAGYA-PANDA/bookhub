@@ -8,26 +8,8 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title mb-4">Filters</h5>
-                        <form action="{{ url('/search-products') }}" method="get" id="filterForm">
-                            <!-- Preserve search term -->
-                            @if (request('search'))
-                                <input type="hidden" name="search" value="{{ request('search') }}">
-                            @endif
-
-                            <!-- Category Filter -->
-                            <div class="mb-4">
-                                <label class="form-label">Category</label>
-                                <select class="form-select" name="section_id" onchange="this.form.submit()">
-                                    <option value="">All Categories</option>
-                                    @foreach ($sections as $section)
-                                        <option value="{{ $section->id }}"
-                                            {{ request('section_id') == $section->id ? 'selected' : '' }}>
-                                            {{ $section->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
+                        <form action="{{ url('/category-products' . ($categoryDetails ? '/' . $categoryDetails->id : '')) }}"
+                            method="get" id="filterForm">
                             <!-- Condition Filter -->
                             <div class="mb-4">
                                 <label class="form-label">Condition</label>
@@ -56,7 +38,7 @@
 
                             <!-- Price Range Filter -->
                             <div class="mb-4">
-                                <label class="form-label">Price Range (After Discount)</label>
+                                <label class="form-label">Price Range</label>
                                 <div class="price-range-display mb-2 text-center">
                                     ₹<span id="currentMinPrice">{{ request('min_price', 0) }}</span> -
                                     ₹<span id="currentMaxPrice">{{ request('max_price', 10000) }}</span>
@@ -88,8 +70,8 @@
                             </div>
 
                             <!-- Clear All Filters -->
-                            @if (request('search') || request('section_id') || request('condition') || request('language_id') || request('min_price') || request('max_price'))
-                                <a href="{{ url('/search-products') }}{{ request('search') ? '?search=' . request('search') : '' }}"
+                            @if (request('condition') || request('language_id') || request('min_price') || request('max_price'))
+                                <a href="{{ url('/category-products' . ($categoryDetails ? '/' . $categoryDetails->id : '')) }}"
                                     class="btn btn-outline-secondary btn-sm w-100">
                                     Clear All Filters
                                 </a>
@@ -99,15 +81,21 @@
                 </div>
             </div>
 
-            <!-- Search Results -->
+            <!-- Category Products -->
             <div class="col-lg-9">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h4 class="mb-1">Search Results</h4>
+                        <h4 class="mb-1">
+                            @if ($categoryDetails)
+                                {{ $categoryDetails->category_name }}
+                            @else
+                                All Books
+                            @endif
+                        </h4>
                         <div class="text-muted">
                             Found {{ $products->total() }} results
-                            @if (request('search'))
-                                for "{{ request('search') }}"
+                            @if ($categoryDetails)
+                                in {{ $categoryDetails->category_name }}
                             @endif
                         </div>
                     </div>
@@ -117,19 +105,9 @@
                 </div>
 
                 <!-- Active Filters -->
-                @if (request('search') || request('section_id') || request('condition') || request('language_id') || request('min_price') || request('max_price'))
+                @if (request('condition') || request('language_id') || request('min_price') || request('max_price'))
                     <div class="mb-4">
                         <div class="d-flex flex-wrap gap-2">
-                            @if (request('search'))
-                                <span class="badge bg-light text-dark p-2">
-                                    Search: {{ request('search') }}
-                                </span>
-                            @endif
-                            @if (request('section_id'))
-                                <span class="badge bg-light text-dark p-2">
-                                    Category: {{ \App\Models\Section::find(request('section_id'))->name }}
-                                </span>
-                            @endif
                             @if (request('condition'))
                                 <span class="badge bg-light text-dark p-2">
                                     Condition: {{ ucfirst(request('condition')) }}
@@ -158,88 +136,90 @@
                     </div>
                 @endif
 
-                <!-- Products Grid -->
-                <div class="row g-4">
-                    @forelse($products as $product)
-                        <div class="col-md-4">
-                            <div class="card h-100 border-0 shadow-sm product-card">
-                                <div class="position-relative">
-                                    <a href="{{ url('product/' . $product->id) }}">
-                                        <img src="{{ asset('front/images/product_images/small/' . $product->product_image) }}"
-                                            class="card-img-top" alt="{{ $product->product_name }}"
-                                            style="height: 200px; object-fit: cover;">
-                                    </a>
-                                    @php
-                                        $discountedPrice = \App\Models\Product::getDiscountPrice($product->id);
-                                        $hasDiscount = $discountedPrice > 0;
-                                    @endphp
-                                    @if ($hasDiscount)
-                                        <div class="position-absolute top-0 end-0 m-2">
-                                            <span class="badge bg-danger">
-                                                -{{ round((($product->product_price - $discountedPrice) / $product->product_price) * 100) }}%
-                                            </span>
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title mb-1">
-                                        <a href="{{ url('product/' . $product->id) }}"
-                                            class="text-decoration-none text-dark">
-                                            {{ Str::limit($product->product_name, 50) }}
-                                        </a>
-                                    </h5>
-                                    {{-- <p class="text-muted small mb-2">
-                                    {{ Str::limit($product->description, 80) }}
-                                </p> --}}
 
-                                    <p class="text-muted small mb-2">Publisher: {{ $product->publisher->name ?? 'N/A' }}
-                                    </p>
-                                    <p class="text-muted small mb-2">Authors:
-                                        @if ($product->authors->isNotEmpty())
-                                            @foreach ($product->authors as $author)
-                                                {{ $author->name }}@if (!$loop->last)
-                                                    ,
-                                                @endif
-                                            @endforeach
-                                        @else
-                                            N/A
-                                        @endif
-                                    </p>
 
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="price-block">
-                                            @if ($hasDiscount)
-                                                <span class="text-danger"><del>₹{{ $product->product_price }}</del></span>
-                                                <span class="h5 mb-0 ms-2">₹{{ $discountedPrice }}</span>
-                                            @else
-                                                <span class="h5 mb-0">₹{{ $product->product_price }}</span>
-                                            @endif
-                                        </div>
-                                        <span class="badge" style="background-color: #6c5dd4;">
-                                            {{ ucfirst($product->condition) }}
+            <!-- Products Grid -->
+            <div class="row g-4">
+                @forelse($products as $product)
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm product-card">
+                            <div class="position-relative">
+                                <a href="{{ url('product/' . $product->id) }}">
+                                    <img src="{{ asset('front/images/product_images/small/' . $product->product_image) }}"
+                                        class="card-img-top" alt="{{ $product->product_name }}"
+                                        style="height: 200px; object-fit: cover;">
+                                </a>
+                                @php
+                                    $discountedPrice = \App\Models\Product::getDiscountPrice($product->id);
+                                    $hasDiscount = $discountedPrice > 0;
+                                @endphp
+                                @if ($hasDiscount)
+                                    <div class="position-absolute top-0 end-0 m-2">
+                                        <span class="badge bg-danger">
+                                            -{{ round((($product->product_price - $discountedPrice) / $product->product_price) * 100) }}%
                                         </span>
                                     </div>
+                                @endif
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title mb-1">
+                                    <a href="{{ url('product/' . $product->id) }}" class="text-decoration-none text-dark">
+                                        {{ Str::limit($product->product_name, 50) }}
+                                    </a>
+                                </h5>
+
+                                <p class="text-muted small mb-2">Publisher: {{ $product->publisher->name ?? 'N/A' }}
+                                </p>
+                                <p class="text-muted small mb-2">Authors:
+                                    @if ($product->authors->isNotEmpty())
+                                        @foreach ($product->authors as $author)
+                                            {{ $author->name }}@if (!$loop->last)
+                                                ,
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        N/A
+                                    @endif
+                                </p>
+
+                                @php
+                                    $discountedPrice = \App\Models\Product::getDiscountPrice($product->id);
+                                @endphp
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="price-block">
+                                        @if ($hasDiscount)
+                                            <span class="text-danger"><del>₹{{ $product->product_price }}</del></span>
+                                            <span class="h5 mb-0 ms-2">₹{{ $discountedPrice }}</span>
+                                        @else
+                                            <span class="h5 mb-0">₹{{ $product->product_price }}</span>
+                                        @endif
+                                    </div>
+                                    <span class="badge" style="background-color: #6c5dd4;">
+                                        {{ ucfirst($product->condition) }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                        @empty
-                            <div class="col-12">
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    No products found matching your criteria. Try adjusting your search filters.
-                                </div>
+                    </div>
+                    @empty
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                No products found in this category. Try adjusting your filters.
                             </div>
-                        @endforelse
-                    </div>
+                        </div>
+                    @endforelse
+                </div>
 
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-center mt-4">
-                        {{ $products->links() }}
-                    </div>
+                <!-- Pagination -->
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $products->links() }}
                 </div>
             </div>
         </div>
-
+        </div>
+    </div>
         <style>
             .product-card {
                 transition: transform 0.2s;

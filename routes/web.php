@@ -356,6 +356,9 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
         Route::get('iyzipay/pay', 'IyzipayController@pay');
     });
 
+    // Category Products Route
+    Route::get('/category-products/{category_id?}', 'ProductsController@categoryProducts');
+
     // Add this route with your other front-end routes
     Route::get('/search-products', [App\Http\Controllers\Front\IndexController::class, 'searchProducts']);
 

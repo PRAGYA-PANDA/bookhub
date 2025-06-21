@@ -190,7 +190,7 @@
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ url('/search-products') }}">
+                                                    <a class="dropdown-item" href="{{ url('/category-products') }}">
                                                         <i class="fas fa-list me-2"></i>All Books
                                                     </a>
                                                 </li>
@@ -200,23 +200,23 @@
                                                 @foreach ($sections as $section)
                                                     @if (!empty($section['categories']) && count($section['categories']) > 0)
                                                         <li class="dropdown-submenu position-relative">
-                                                            <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">{{ $section['name'] }}</a>
+                                                            <a class="dropdown-item " href="#" data-bs-toggle="dropdown">{{ $section['name'] }}</a>
                                                             <ul class="dropdown-menu">
                                                                 @foreach ($section['categories'] as $category)
                                                                     @if (!empty($category['sub_categories']) && count($category['sub_categories']) > 0)
                                                                         <li class="dropdown-submenu position-relative">
-                                                                            <a class="dropdown-item dropdown-toggle" href="{{ url('/search-products?category_id=' . $category['id']) }}">{{ $category['category_name'] }}</a>
+                                                                            <a class="dropdown-item dropdown-toggle" href="{{ url('/category-products/' . $category['id']) }}">{{ $category['category_name'] }}</a>
                                                                             <ul class="dropdown-menu">
                                                                                 @foreach ($category['sub_categories'] as $subcategory)
                                                                                     <li>
-                                                                                        <a class="dropdown-item" href="{{ url('/search-products?category_id=' . $subcategory['id']) }}">{{ $subcategory['category_name'] }}</a>
+                                                                                        <a class="dropdown-item" href="{{ url('/category-products/' . $subcategory['id']) }}">{{ $subcategory['category_name'] }}</a>
                                                                                     </li>
                                                                                 @endforeach
                                                                             </ul>
                                                                         </li>
                                                                     @else
                                                                         <li>
-                                                                            <a class="dropdown-item" href="{{ url('/search-products?category_id=' . $category['id']) }}">{{ $category['category_name'] }}</a>
+                                                                            <a class="dropdown-item" href="{{ url('/category-products/' . $category['id']) }}">{{ $category['category_name'] }}</a>
                                                                         </li>
                                                                     @endif
                                                                 @endforeach
@@ -224,7 +224,7 @@
                                                         </li>
                                                     @else
                                                         <li>
-                                                            <a class="dropdown-item" href="{{ url('/search-products?section_id=' . $section['id']) }}">{{ $section['name'] }}</a>
+                                                            <a class="dropdown-item" href="{{ url('/category-products?section_id=' . $section['id']) }}">{{ $section['name'] }}</a>
                                                         </li>
                                                     @endif
                                                 @endforeach
@@ -418,7 +418,7 @@
                                     @foreach ($category as $cat)
                                         @if (is_array($cat) && isset($cat['category_name'], $cat['id']))
                                             <li class="cat-item mb-2">
-                                                <a href="{{ url('/search-products?category_id=' . $cat['id']) }}" class="text-decoration-none text-light d-flex align-items-center">
+                                                <a href="{{ url('/category-products/' . $cat['id']) }}" class="text-decoration-none text-light d-flex align-items-center">
                                                     <i class="fas fa-book me-2" style="min-width:18px;"></i>
                                                     <span>{{ $cat['category_name'] }}</span>
                                                 </a>

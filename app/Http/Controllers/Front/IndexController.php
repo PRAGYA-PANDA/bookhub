@@ -125,9 +125,8 @@ class IndexController extends Controller
 
     public function searchProducts(Request $request)
     {
-
         $condition      = session('condition', 'new');
-        $query          = Product::where('status', 1);
+        $query          = Product::with(['publisher', 'authors'])->where('status', 1);
         $sections       = Section::all();
         $footerProducts = Product::orderBy('id', 'Desc')
             ->where('condition', $condition)
@@ -138,9 +137,22 @@ class IndexController extends Controller
         $category = Category::limit(10)->get();
         $language = Language::get();
         $logos = HeaderLogo::first();
+
+        // Filter by condition (default to session condition if not specified)
+        if ($request->filled('condition')) {
+            $query->where('condition', $request->condition);
+        } else {
+            $query->where('condition', $condition);
+        }
+
         // Filter by language
         if ($request->filled('language_id')) {
             $query->where('language_id', $request->language_id);
+        } else {
+            // Apply session language filter if available
+            $query->when(session('language'), function ($q) {
+                $q->where('language_id', session('language'));
+            });
         }
 
         // Apply search term
@@ -149,7 +161,10 @@ class IndexController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('product_name', 'like', '%' . $search . '%')
                     ->orWhere('description', 'like', '%' . $search . '%')
-                    ->orWhere('product_isbn', 'like', '%' . $search . '%');
+                    ->orWhere('product_isbn', 'like', '%' . $search . '%')
+                    ->orWhereHas('category', function ($categoryQuery) use ($search) {
+                        $categoryQuery->where('category_name', 'like', '%' . $search . '%');
+                    });
             });
         }
 
@@ -158,26 +173,36 @@ class IndexController extends Controller
             $query->where('section_id', $request->section_id);
         }
 
-        // Filter by condition
-        if ($request->filled('condition')) {
-            $query->where('condition', $request->condition);
+        // Get the results first
+        $products = $query->get();
+
+        // Apply price range filter using discounted prices
+        if ($request->filled('min_price') || $request->filled('max_price')) {
+            $minPrice = $request->filled('min_price') ? (float)$request->min_price : 0;
+            $maxPrice = $request->filled('max_price') ? (float)$request->max_price : PHP_FLOAT_MAX;
+
+            $products = $products->filter(function ($product) use ($minPrice, $maxPrice) {
+                $discountedPrice = Product::getDiscountPrice($product->id);
+                $finalPrice = $discountedPrice > 0 ? $discountedPrice : $product->product_price;
+                
+                return $finalPrice >= $minPrice && $finalPrice <= $maxPrice;
+            });
         }
 
-        // Filter by price range
-        if ($request->filled('min_price')) {
-            $query->where('product_price', '>=', $request->min_price);
-        }
-        if ($request->filled('max_price')) {
-            $query->where('product_price', '<=', $request->max_price);
-        }
+        // Convert back to pagination
+        $perPage = 12;
+        $currentPage = $request->get('page', 1);
+        $products = new \Illuminate\Pagination\LengthAwarePaginator(
+            $products->forPage($currentPage, $perPage),
+            $products->count(),
+            $perPage,
+            $currentPage,
+            ['path' => $request->url(), 'query' => $request->query()]
+        );
 
-        // Get the results
-        $products = $query->paginate(12);
-        $language = Language::get();
         return view('front.products.search', compact('products', 'request', 'condition', 'sections', 'footerProducts', 'category', 'language','logos'), [
             'languages'        => Language::all(),
             'selectedLanguage' => Language::find(session('language')),
-            // or based on session
         ]);
     }
 }

@@ -65,25 +65,41 @@ class Product extends Model
                                                            // A static method (to be able to be called directly without instantiating an object in index.blade.php) to determine the final price of a product because a product can have a discount from TWO things: either a `CATEGORY` discount or `PRODUCT` discout
     public static function getDiscountPrice($product_id)
     { // this method is called in front/index.blade.php
-                                                               // Get the product PRICE, DISCOUNT and CATEGORY ID
+        // Get the product PRICE, DISCOUNT and CATEGORY ID
         $productDetails = Product::select('product_price', 'product_discount', 'category_id')->where('id', $product_id)->first();
+
+        if (!$productDetails) {
+            return 0; // Return 0 if product not found
+        }
+
         $productDetails = json_decode(json_encode($productDetails), true); // convert the object to an array
 
         // Get the product category discount `category_discount` from `categories` table using its `category_id` in `products` table
         $categoryDetails = Category::select('category_discount')->where('id', $productDetails['category_id'])->first();
-        $categoryDetails = json_decode(json_encode($categoryDetails), true); // convert the object to an array
 
-        if ($productDetails['product_discount'] > 0) { // if there's a 'product_discount' (in `products` table) (i.e. discount is not zero 0)
-                                                           // if there's a PRODUCT discount on the product itself
-            $discounted_price = $productDetails['product_price'] - ($productDetails['product_price'] * $productDetails['product_discount'] / 100);
-        } else if ($categoryDetails['category_discount'] > 0) { // if there's a `category_discount` (in `categories` table) (i.e. discount is not zero 0) (if there's a discount on the whole category of that product)
-                                                                    // if there's NO a PRODUCT discount, but there's a CATEGORY discount
-            $discounted_price = $productDetails['product_price'] - ($productDetails['product_price'] * $categoryDetails['category_discount'] / 100);
-        } else { // there's no discount on neither `product_discount` (in `products` table) nor `category_discount` (in `categories` table)
+        if (!$categoryDetails) {
+            $categoryDetails = ['category_discount' => 0];
+        } else {
+            $categoryDetails = json_decode(json_encode($categoryDetails), true); // convert the object to an array
+        }
+
+        $originalPrice = $productDetails['product_price'];
+        $productDiscount = $productDetails['product_discount'] ?? 0;
+        $categoryDiscount = $categoryDetails['category_discount'] ?? 0;
+
+        // Calculate the highest discount (product discount takes precedence over category discount)
+        if ($productDiscount > 0) {
+            // if there's a PRODUCT discount on the product itself
+            $discounted_price = $originalPrice - ($originalPrice * $productDiscount / 100);
+        } else if ($categoryDiscount > 0) {
+            // if there's NO a PRODUCT discount, but there's a CATEGORY discount
+            $discounted_price = $originalPrice - ($originalPrice * $categoryDiscount / 100);
+        } else {
+            // there's no discount on neither `product_discount` (in `products` table) nor `category_discount` (in `categories` table)
             $discounted_price = 0;
         }
 
-        return $discounted_price;
+        return round($discounted_price, 2); // Round to 2 decimal places
     }
 
     public static function getDiscountAttributePrice($product_id, $size)

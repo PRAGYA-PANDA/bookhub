@@ -27,7 +27,7 @@
 
 
 
-                {{-- Displaying The Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors AND https://laravel.com/docs/9.x/blade#validation-errors --}} 
+                {{-- Displaying The Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors AND https://laravel.com/docs/9.x/blade#validation-errors --}}
                 {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
                 {{-- Our Bootstrap success message in case of updating admin password is successful: --}}
                 {{-- Displaying Success Message --}}
@@ -65,7 +65,7 @@
 
 
 
-                    
+
                     <div id="appendCartItems"> {{-- We 'include'-ed this file to allow the AJAX call in front/js/custom.js when updating orders quantities in the Cart --}}
                         @include('front.products.cart_items')
                     </div>
@@ -84,7 +84,7 @@
 
 
                                 {{-- Note: For Coupons, user must be logged in (authenticated) to be able to redeem them. Both 'admins' and 'vendors' can add Coupons. Coupons added by 'vendor' will be available for their products ONLY, but ones added by 'admins' will be available for ALL products. --}}
-                                
+
                                 <form id="applyCoupon" method="post" action="javascript:void(0)"  @if (\Illuminate\Support\Facades\Auth::check()) user=1 @endif> {{-- Created an id for this <form> to use it as a handle in jQuery for submission via AJAX. Check front/js/custom.js --}} {{-- Only logged in (authenticated) users can redeem the coupon, so we make a condition, if the user is logged in (authenticated), we create that Custom HTML attribute 'user = 1' so that jQuery can use it to submit the form. Check front/js/custom.js --}} {{-- Note: We need to deactivate the 'action' HTML attribute (using    action="javascript:void(0)"    ) as we'r going to submit using an AJAX call. Check front/js/custom.js --}}
                                     <label class="sr-only" for="coupon-code">Apply Coupon</label>
                                     <input type="text" class="text-field" placeholder="Enter Coupon Code" id="code" name="code">
