@@ -1,12 +1,131 @@
 @extends('front.layout.layout2')
 
 @section('content')
+
+
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
+/* code by sumit */
+
+.frontpage-slider-posts.slider-style-two #frontpage-slider{
+    height:350px;
+    margin-top:50px;
+}
+
+.frontpage-slider-posts.slider-style-two #frontpage-slider .owl-stage-outer{
+    height:100% !important;
+}
+
+.frontpage-slider-posts.slider-style-two #frontpage-slider .slider-item
+ {
+    background-color:unset !important;
+    border-radius:20px;
+    border:3px solid rgb(75, 59, 59);
+    box-shadow:5px 5px 10px 0px #aea3a3;
+
+ }
+
+ .frontpage-slider-posts.slider-style-two #frontpage-slider .slider-item figure{
+    margin-bottom:0px !important;
+
+ }
+
+ .site-content{
+    /* background:#FFD4C5;
+    background:#F5F2EC; */
+    /* background:#FDF1DD; */
+    background:#f0f0f0;
+ }
+
+ .top-stories-block{
+    margin-top:100px;
+    margin-bottom:150px;
+ }
+
+.top-stories-block .container{
+    /* background:conic-gradient(at 0% 100%, rgb(255, 0, 242) 5%,rgb(92, 92, 226) 30%,orangered);     */
+    /* background:rgb(213, 139, 255); */
+    background:#e6e4e4;
+    width:fit-content;
+    margin:40px auto;
+    padding-inline:30px;
+    border-radius:30px;
+    /* box-shadow:5px 5px 10px 0px #aea3a3; */
+    box-shadow:5px 5px 10px 0px #757373;
+
+}
+
+.top-stories-block h2{
+    /* color:rgb(255, 238, 0); */
+    /* color:rgb(154, 236, 216); */
+    color:black;
+    /* text-shadow:3px 3px 3px black; */
+}
+
+.entry-category span{
+    color:rgb(119, 119, 119) !important;
+    font-weight:bold !important;
+}
+
+.content-entry-wrap .entry-title a{
+    color: black;
+    /* text-shadow:3px 3px 3px black; */
+}
+.content-entry-wrap .entry-title a:hover{
+    color:black !important;
+}
+
+.frontpage-popular-posts{
+    width:100%;
+    position:relative;
+
+}
+
+
+.frontpage-popular-posts h2{
+
+
+     color:black !important;
+    font-weight:bolder;
+  text-align: left;
+}
+
+.frontpage-popular-posts .card{
+    border:2px solid #C0C0C0;
+    transition:all 0.4s ease-in-out;
+    height:55vh !important;
+
+    /* transform:scale(0.9,0.8); */
+}
+
+.frontpage-popular-posts .card img{
+    height:200px !important;
+}
+
+.frontpage-popular-posts .card:hover{
+    scale:1.03;
+    cursor:pointer;
+}
+
+.oswald-title {
+  font-family: "Oswald", sans-serif !important;
+  font-optical-sizing: auto !important;
+  font-weight: 700 !important;
+  font-style: normal !important;
+}
+
+
+</style>
+
+
     <div class="site-content">
         <!-- Frontpage Slider -->
         <div class="frontpage-slider-posts slider-style-two mb-5">
             <div id="frontpage-slider" class="owl-carousel frontpage-slider-two carousel-nav-align-center">
                 @foreach ($newProducts as $product)
-                    <article class="slider-item text-center">
+                    <div class="slider-item text-center">
                         <figure class="slider-thumb glass-effect">
                             @if (!empty($product['product_image']))
                                 <img src="{{ asset('front/images/product_images/small/' . $product['product_image']) }}"
@@ -36,17 +155,17 @@
                             </div>
                         </div>
 
-                    </article>
+                    </div>
                 @endforeach
             </div>
         </div>
 
         <!-- Top Stories -->
-        <section class="top-stories-block style-two py-5">
-            <div class="container">
+        <section class="top-stories-block style-two ">
+            <div class="container" style="padding-block:40px;">
                 <div class="row mb-4">
                     <div class="col-12 text-center">
-                        <h2 class="section-title"><b>Recommended for You</b></h2>
+                        <h2 class="section-title oswald-title"><b>Recommended for You</b></h2>
                     </div>
                 </div>
                 <div class="row">
@@ -76,7 +195,7 @@
                                 <!--./ entry-content -->
                                 <div class="entry-meta-content">
                                     <div class="entry-category">
-                                        <span>we swing into action, ensuring that your package reaches your doorstep in the
+                                        <span class="text-light">we swing into action, ensuring that your package reaches your doorstep in the
                                             shortest possible time.</span>
                                     </div>
                                 </div>
@@ -102,14 +221,14 @@
                             <div class="content-entry-wrap">
                                 <div class="entry-content">
                                     <h3 class="entry-title">
-                                        <a>Secure Payment</a>
+                                        <a >Secure Payment</a>
                                     </h3>
                                     <!--./ ================= entry-title ========= -->
                                 </div>
                                 <!--./ ============== entry-content ============== -->
                                 <div class="entry-meta-content">
                                     <div class="entry-category">
-                                        <span>This encryption process safeguards your information from unauthorized access,
+                                        <span class="text-light">This encryption process safeguards your information from unauthorized access,
                                             ensuring that your data.</span>
                                     </div>
                                 </div>
@@ -134,13 +253,13 @@
                             <div class="content-entry-wrap">
                                 <div class="entry-content">
                                     <h3 class="entry-title">
-                                        <a>Best Quality</a>
+                                        <a >Best Quality</a>
                                     </h3><!--./ entry-title -->
                                 </div>
                                 <!--./ entry-content -->
                                 <div class="entry-meta-content">
                                     <div class="entry-category">
-                                        <span>We have relationships with trusted suppliers who share our commitment to
+                                        <span class="text-light">We have relationships with trusted suppliers who share our commitment to
                                             excellence.</span>
                                     </div>
                                 </div>
@@ -156,13 +275,13 @@
             <div class="container">
                 <div class="row mb-4">
                     <div class="col-12 text-center">
-                        <h2 class="section-title"><b>Latest Book</b></h2>
+                        <h2 class="section-title oswald-title"><b>Latest Book</b></h2>
                     </div>
                 </div>
                 <div class="row g-4">
                     @foreach ($newProducts as $product)
                         <div class="col-lg-3 col-md-4 col-sm-6">
-                            <article class="card h-100">
+                            <div class="card h-100">
                                 @if (!empty($product['product_image']))
                                     <a href="{{ url('product/' . $product['id']) }}">
                                         <img src="{{ asset('front/images/product_images/small/' . $product['product_image']) }}"
@@ -197,7 +316,7 @@
                                     <span class="fw-bold">Rs.
                                         {{ \App\Models\Product::getDiscountPrice($product['id']) }}</span>
                                 </div>
-                            </article>
+                            </div>
                         </div>
                     @endforeach
                 </div>
