@@ -136,6 +136,15 @@
         .dropdown-menu > li > a.dropdown-toggle:after {
             display: inline-block;
         }
+
+
+        /* code by sumit */
+
+        .dropdown-menu li{
+            width:100% !important;
+        }
+
+
     </style>
 
 </head>
@@ -188,7 +197,7 @@
                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fas fa-book me-2"></i>Books
                                             </a>
-                                            <ul class="dropdown-menu">
+                                            <ul class="dropdown-menu" style="width:200px !important;">
                                                 <li>
                                                     <a class="dropdown-item" href="{{ url('/category-products') }}">
                                                         <i class="fas fa-list me-2"></i>All Books
