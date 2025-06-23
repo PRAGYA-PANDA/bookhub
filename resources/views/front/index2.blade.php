@@ -95,7 +95,7 @@
 .frontpage-popular-posts .card{
     border:2px solid #C0C0C0;
     transition:all 0.4s ease-in-out;
-    height:55vh !important;
+    /* height:55vh !important; */
 
     /* transform:scale(0.9,0.8); */
 }
@@ -115,6 +115,30 @@
   font-weight: 700 !important;
   font-style: normal !important;
 }
+
+@media only screen and (min-width:1400px) {
+            .frontpage-popular-posts .card {
+
+                height: 425px !important;
+
+            }
+        }
+
+         @media only screen and (max-width:1200px) {
+            .frontpage-popular-posts .card {
+
+                height: 460px !important;
+
+            }
+        }
+
+        @media only screen and (max-width:768px) {
+            .frontpage-popular-posts .card {
+
+                height: fit-content !important;
+
+            }
+        }
 
 
 </style>
