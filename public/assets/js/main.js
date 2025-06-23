@@ -188,16 +188,17 @@
                     singleItem : true,
                     dots: false,
                     nav: true,
+                    stagePadding:0,
                     navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
                     responsive: {
                         280: {
-                            items: 4
+                            items: 1
                         },
                         576: {
-                            items: 4
+                            items: 1
                         },
                         768: {
-                            items: 4
+                            items: 3
                         }
                     }
                 });   
