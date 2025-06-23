@@ -29,14 +29,17 @@
                             </div>
 
                             <!-- Condition Filter -->
+                            @php
+                                use Illuminate\Support\Facades\Session;
+                                $sessionCondition = Session::get('condition', 'new');
+                                $selectedCondition = request('condition', $sessionCondition);
+                            @endphp
                             <div class="mb-4">
                                 <label class="form-label">Condition</label>
                                 <select class="form-select" name="condition" onchange="this.form.submit()">
-                                    <option value="">All Conditions</option>
-                                    <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>New
-                                    </option>
-                                    <option value="old" {{ request('condition') == 'old' ? 'selected' : '' }}>Old
-                                    </option>
+                                    <option value="" {{ $selectedCondition == '' ? 'selected' : '' }}>All Conditions</option>
+                                    <option value="new" {{ $selectedCondition == 'new' ? 'selected' : '' }}>New</option>
+                                    <option value="old" {{ $selectedCondition == 'old' ? 'selected' : '' }}>Old</option>
                                 </select>
                             </div>
 
