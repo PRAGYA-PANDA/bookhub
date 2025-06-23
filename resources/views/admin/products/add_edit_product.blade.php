@@ -319,6 +319,14 @@
                                     </select>
                                 </div>
 
+
+                                <div class="form-group">
+                                    <label for="total_stock">Total Stock</label>
+                                    <input type="number" class="form-control" id="total_stock"
+                                        placeholder="Enter Total Stock" name="total_stock"
+                                        @if (!empty($products_attributes['total_stock'])) value="{{ $product['total_stock'] }}" @else value="{{ old('total_stock') }}" @endif>
+                                </div>
+
                                 <div class="form-group">
                                     <label for="product_isbn">ISBN number</label>
                                     <input type="text" class="form-control" id="product_isbn"

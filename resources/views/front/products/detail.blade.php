@@ -246,7 +246,7 @@
                             </nav>
 
                             {{-- Product Rating Summary --}}
-                            <div class="product-rating mb-4">
+                            {{-- <div class="product-rating mb-4">
                                 <div class="d-flex align-items-center">
                                     <div class="rating-stars mr-2">
                                         @if ($avgStarRating > 0)
@@ -266,6 +266,12 @@
                                         <span class="text-muted">({{ count($ratings) }} Reviews)</span>
                                     </div>
                                 </div>
+                            </div> --}}
+
+                            {{-- Product Stock --}}
+                            <div class="product-stock mb-3">
+                                <span class="font-weight-bold">Stock:</span>
+                                <span class="text-muted">{{ $totalStock > 0 ? $totalStock : 'Out of Stock' }}</span>
                             </div>
 
                             {{-- Product Key Information --}}

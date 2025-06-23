@@ -18,7 +18,7 @@ use Omnipay\Omnipay;
 class PaypalController extends Controller
 {
 
-    private $gateway; 
+    private $gateway;
 
     public function __construct(Request $request) {
         $condition = $request->query('condition');
@@ -26,7 +26,7 @@ class PaypalController extends Controller
             $condition = 'new';
         }
         // Setup payment gateway
-        $this->gateway = Omnipay::create('PayPal_Rest'); // https://github.com/thephpleague/omnipay-paypal#:~:text=PayPal_Rest%20(Paypal%20Rest%20API)
+        $this->gateway = \Omnipay\Omnipay::create('PayPal_Rest'); // https://github.com/thephpleague/omnipay-paypal#:~:text=PayPal_Rest%20(Paypal%20Rest%20API)
         // dd($this->gateway);
 
         $this->gateway->setClientId(env('PAYPAL_CLIENT_ID'));   // We get the "PayPal Client ID" from our project's .env file using the env() method    // env(): https://laravel.com/docs/9.x/helpers#method-env
@@ -56,7 +56,7 @@ class PaypalController extends Controller
             // Process response
             if ($response->isRedirect()) { // $response comes from PayPal website (i.e. API / backend)
                 // Redirect to offsite payment gateway
-                $response->redirect(); // $response comes from PayPal website (i.e. API / backend)
+                return $response->redirect();
             } else {
                 // payment failed: display message to customer
                 return $response->getMessage(); // $response comes from PayPal website (i.e. API / backend)    // the message comes from PayPal website (i.e. API / backend)

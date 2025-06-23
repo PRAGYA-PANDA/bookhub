@@ -130,7 +130,7 @@
                                                             Rs . {{ $product['product_price'] }}
                                                         </div>
                                                     </div>
-                                                @else 
+                                                @else
                                                     <div class="price-template">
                                                         <div class="item-new-price">
                                                             Rs . {{ $product['product_price'] }}
