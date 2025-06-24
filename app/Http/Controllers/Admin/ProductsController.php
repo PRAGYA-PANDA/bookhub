@@ -255,6 +255,18 @@ class ProductsController extends Controller
             // \Log::info('Syncing authors: ', $request->author_id);
             $product->authors()->sync($request->author_id ?? []);
             // dd($request->author_id);
+
+            if ($id == '') { // Only add attribute on product creation
+                $attribute = new ProductsAttribute();
+                $attribute->product_id = $product->id;
+                $attribute->size = 'Default'; // or any default value, or get from form if you want to support sizes
+                $attribute->price = 00;
+                $attribute->stock = $request->input('total_stock', 0); // from your form
+                $attribute->sku = 'null'; // or generate as needed
+                $attribute->status = 1;
+                $attribute->save();
+            }
+
             return redirect('admin/products')->with('success_message', $message);
         }
 

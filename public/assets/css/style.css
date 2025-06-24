@@ -833,9 +833,9 @@ select {
   -moz-appearance: none;
 }
 
-select option[selected] {
+/* select option[selected] {
   color: white;
-}
+} */
 
 input:-webkit-autofill,
 textarea:-webkit-autofill,

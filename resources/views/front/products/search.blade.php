@@ -36,10 +36,10 @@
                             @endphp
                             <div class="mb-4">
                                 <label class="form-label">Condition</label>
-                                <select class="form-select" name="condition" onchange="this.form.submit()">
-                                    <option value="" {{ $selectedCondition == '' ? 'selected' : '' }}>All Conditions</option>
-                                    <option value="new" {{ $selectedCondition == 'new' ? 'selected' : '' }}>New</option>
-                                    <option value="old" {{ $selectedCondition == 'old' ? 'selected' : '' }}>Old</option>
+                                <select class="form-select" name="condition" onchange="updateConditionSessionAndSubmit(this)">
+                                    <option class="text-dark" value="" {{ $selectedCondition == '' ? 'selected' : '' }}>All Conditions</option>
+                                    <option class="text-dark" value="new" {{ $selectedCondition == 'new' ? 'selected' : '' }}>New</option>
+                                    <option class="text-dark"value="old" {{ $selectedCondition == 'old' ? 'selected' : '' }}>Old</option>
                                 </select>
                             </div>
 
@@ -320,5 +320,24 @@
                 // Initialize display
                 updateDisplay();
             });
+
+            function updateConditionSessionAndSubmit(select) {
+                fetch("{{ route('set.condition') }}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector('meta[name=\'csrf-token\']').getAttribute('content'),
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        condition: select.value
+                    }),
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        select.form.submit();
+                    }
+                });
+            }
         </script>
     @endsection
