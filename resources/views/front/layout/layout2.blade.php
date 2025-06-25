@@ -124,15 +124,13 @@
             display: none;
         }
 
-        .dropdown-submenu:hover>.dropdown-menu,
-        .dropdown-submenu:focus-within>.dropdown-menu {
 
         .dropdown-submenu:hover>.dropdown-menu,
         .dropdown-submenu:focus-within>.dropdown-menu {
             display: block;
         }
 
-        .dropdown-submenu>a:after {
+
 
         .dropdown-submenu>a:after {
             content: "\f105";
@@ -142,7 +140,7 @@
             font-weight: normal;
         }
 
-        .dropdown-menu>li>a.dropdown-toggle:after {
+
 
         .dropdown-menu>li>a.dropdown-toggle:after {
             display: inline-block;
@@ -151,13 +149,10 @@
 
         /* code by sumit */
 
-        .dropdown-menu li {
-            width: 100% !important;
+
         .dropdown-menu li {
             width: 100% !important;
         }
-
-
     </style>
 
 </head>
@@ -196,7 +191,8 @@
                             <!-- Site Logo -->
                             <div class="site-logo-block">
                                 <a class="navbar-brand site-logo" href="{{ url('/') }}">
-                                    <img alt="logo" src="{{ asset('uploads/logos/' . $logos->logo) }}" style="width: 150px; height: 50px;">
+                                    <img alt="logo" src="{{ asset('uploads/logos/' . $logos->logo) }}"
+                                        style="width: 150px; height: 50px;">
                                 </a>
                             </div>
 
@@ -283,21 +279,22 @@
 
                                         <!-- Language Menu -->
                                         <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" role="button"
-        data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fas fa-globe me-2"></i>
-        Language ({{ ucfirst($selectedLanguage->name ?? 'Select') }})
-    </a>
-    <ul class="dropdown-menu">
-        @foreach ($language as $lang)
-            <li>
-                <a class="dropdown-item" href="javascript:void(0);" onclick="setLanguage('{{ $lang->id }}')">
-                    <i class="fas fa-flag me-2"></i>{{ $lang->name }}
-                </a>
-            </li>
-        @endforeach
-    </ul>
-</li>
+                                            <a class="nav-link dropdown-toggle" href="#" role="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-globe me-2"></i>
+                                                Language ({{ ucfirst($selectedLanguage->name ?? 'Select') }})
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                @foreach ($language as $lang)
+                                                    <li>
+                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                            onclick="setLanguage('{{ $lang->id }}')">
+                                                            <i class="fas fa-flag me-2"></i>{{ $lang->name }}
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </li>
 
 
                                     </ul>
@@ -792,18 +789,16 @@
         });
 
 
-        const header=document.querySelector(".header-style-two");
+        const header = document.querySelector(".header-style-two");
 
-        window.addEventListener("scroll",function(){
+        window.addEventListener("scroll", function() {
 
-            if(document.documentElement.scrollTop>100){
+            if (document.documentElement.scrollTop > 100) {
                 header.classList.add("sticky");
-            }else{
+            } else {
                 header.classList.remove("sticky");
             }
         });
-
-
     </script>
 </body>
 
