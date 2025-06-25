@@ -7,34 +7,44 @@
             <div class="col-lg-3 mb-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title mb-4">Filters</h5>
+                        <h5 class="card-title mb-4"><b>Filters</b></h5>
                         <form action="{{ url('/category-products' . ($categoryDetails ? '/' . $categoryDetails->id : '')) }}"
                             method="get" id="filterForm">
+
                             <!-- Condition Filter -->
+                            {{-- @php
+                                use Illuminate\Support\Facades\Session;
+                                $sessionCondition = Session::get('condition', 'new');
+                                $selectedCondition = request('condition', $sessionCondition);
+                            @endphp
                             <div class="mb-4">
                                 <label class="form-label">Condition</label>
                                 <select class="form-select" name="condition" onchange="this.form.submit()">
                                     <option value="">All Conditions</option>
-                                    <option value="new" {{ request('condition') == 'new' ? 'selected' : '' }}>New
+                                    <option value="new" {{ $selectedCondition == 'new' ? 'selected' : '' }}>New
                                     </option>
-                                    <option value="old" {{ request('condition') == 'old' ? 'selected' : '' }}>Old
+                                    <option value="old" {{ $selectedCondition == 'old' ? 'selected' : '' }}>Old
                                     </option>
                                 </select>
-                            </div>
+                            </div> --}}
 
                             <!-- Language Filter -->
+                            {{-- @php
+                                $sessionLanguageId = Session::get('language_id', '');
+                                $selectedLanguageId = request('language_id', $sessionLanguageId);
+                            @endphp
                             <div class="mb-4">
                                 <label class="form-label">Language</label>
                                 <select class="form-select" name="language_id" onchange="this.form.submit()">
                                     <option value="">All Languages</option>
                                     @foreach ($language as $lang)
                                         <option value="{{ $lang->id }}"
-                                            {{ request('language_id') == $lang->id ? 'selected' : '' }}>
+                                            {{ $selectedLanguageId == $lang->id ? 'selected' : '' }}>
                                             {{ $lang->name }}
                                         </option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
 
                             <!-- Price Range Filter -->
                             <div class="mb-4">
@@ -219,7 +229,7 @@
             </div>
         </div>
         </div>
-    </div>
+        </div>
         <style>
             .product-card {
                 transition: transform 0.2s;
@@ -245,6 +255,7 @@
                 background: #6c5dd4;
             }
         </style>
+
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {

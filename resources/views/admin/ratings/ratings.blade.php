@@ -10,8 +10,8 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Ratings</h4>
-                        
-                            
+
+
 
                             {{-- Displaying The Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors AND https://laravel.com/docs/9.x/blade#validation-errors --}}
                             {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
@@ -45,9 +45,13 @@
                                             <tr>
                                                 <td>{{ $rating['id'] }}</td>
                                                 <td>
-                                                    <a target="_blank" href="{{ url('product/' . $rating['product']['id']) }}">
-                                                        {{ $rating['product']['product_name'] }}
-                                                    </a>
+                                                    @if (!empty($rating['product']))
+                                                        <a target="_blank" href="{{ url('product/' . $rating['product']['id']) }}">
+                                                            {{ $rating['product']['product_name'] }}
+                                                        </a>
+                                                    @else
+                                                        <span class="text-danger">Product not found</span>
+                                                    @endif
                                                 </td>
                                                 <td>{{ $rating['user']['email'] }}</td>
                                                 <td>{{ $rating['review'] }}</td>

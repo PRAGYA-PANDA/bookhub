@@ -1,8 +1,6 @@
 @extends('front.layout.layout2')
 
 @section('content')
-
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
 
@@ -10,8 +8,42 @@
 
 
 
-        .frontpage-slider-posts.slider-style-two #frontpage-slider .owl-stage-outer {
-            height: 100% !important;
+
+        #frontpage-slider .owl-item {
+            width: 200px !important;
+            margin-right: 10px;
+        }
+
+        #frontpage-slider .owl-stage {
+            display: flex;
+            align-items: stretch;
+        }
+
+        #frontpage-slider .slider-item {
+            width: 100%;
+        }
+
+
+        .frontpage-slider-posts.slider-style-two #frontpage-slider .owl-item.center .slider-item .content-entry-wrap {
+            bottom: 9px !important;
+            width: 86%;
+            left: 8%;
+            padding: unset !important;
+            height: 160px !important;
+        }
+
+
+        .frontpage-slider-posts.slider-style-two #frontpage-slider .owl-item.center .slider-item .content-entry-wrap .entry-content {
+            height: 160px !important;
+        }
+
+        .frontpage-slider-posts.slider-style-two #frontpage-slider .owl-item.center .slider-item .content-entry-wrap .entry-content h3 {
+            font-size: 17px;
+        }
+
+        .frontpage-slider-posts.slider-style-two #frontpage-slider .owl-item.center .slider-item .content-entry-wrap .entry-content p {
+            font-size: 13px;
+            line-height: 16px;
         }
 
         .frontpage-slider-posts.slider-style-two #frontpage-slider .slider-item {
@@ -28,9 +60,7 @@
         }
 
         .site-content {
-            /* background:#FFD4C5;
-                                    background:#F5F2EC; */
-            /* background:#FDF1DD; */
+
             background: #f0f0f0;
         }
 
@@ -40,23 +70,20 @@
         }
 
         .top-stories-block .container {
-            /* background:conic-gradient(at 0% 100%, rgb(255, 0, 242) 5%,rgb(92, 92, 226) 30%,orangered);     */
-            /* background:rgb(213, 139, 255); */
+
             background: #e6e4e4;
             width: fit-content;
             margin: 40px auto;
             padding-inline: 30px;
             border-radius: 30px;
-            /* box-shadow:5px 5px 10px 0px #aea3a3; */
             box-shadow: 5px 5px 10px 0px #757373;
 
         }
 
         .top-stories-block h2 {
-            /* color:rgb(255, 238, 0); */
-            /* color:rgb(154, 236, 216); */
+
             color: black;
-            /* text-shadow:3px 3px 3px black; */
+
         }
 
         .entry-category span {
@@ -66,7 +93,7 @@
 
         .content-entry-wrap .entry-title a {
             color: black;
-            /* text-shadow:3px 3px 3px black; */
+
         }
 
         .content-entry-wrap .entry-title a:hover {
@@ -93,7 +120,7 @@
             transition: all 0.4s ease-in-out;
             height: 460px !important;
 
-            /* transform:scale(0.9,0.8); */
+
         }
 
         .frontpage-popular-posts .card img {
@@ -124,6 +151,10 @@
         }
 
 
+        .author {
+            line-height: 18px;
+        }
+
         @media only screen and (min-width:1400px) {
             .frontpage-popular-posts .card {
 
@@ -140,8 +171,8 @@
             }
         }
 
-        @media only screen and (min-width:1024px) and (max-width:1200px){
-             .featured-badge-list {
+        @media only screen and (min-width:1024px) and (max-width:1200px) {
+            .featured-badge-list {
                 margin-top: -9px;
                 scale: 0.8;
             }
@@ -153,25 +184,25 @@
                 margin: 4px auto 100px;
             }
 
-           
+
 
         }
 
         @media only screen and (min-width:768px) and (max-width:1200px) {
-            .frontpage-slider-posts.slider-style-two #frontpage-slider {
-                height: 500px !important;
-                margin-top: 50px;
-            }
+            /* .frontpage-slider-posts.slider-style-two #frontpage-slider {
+                                        height: 500px !important;
+                                        margin-top: 50px;
+                                    }
 
-            .frontpage-slider-posts.slider-style-two #frontpage-slider .slider-item {
+                                    .frontpage-slider-posts.slider-style-two #frontpage-slider .slider-item {
 
-                height: 480px !important;
-            }
+                                        height: 480px !important;
+                                    }
 
-            .frontpage-slider-posts.slider-style-two .owl-item {
+                                    .frontpage-slider-posts.slider-style-two .owl-item {
 
-                scale: 0.96 !important;
-            }
+                                        scale: 0.96 !important;
+                                    } */
 
 
 
@@ -186,15 +217,12 @@
         }
 
 
-        @media only screen and (max-width:768px) {
-            .frontpage-slider-posts.slider-style-two #frontpage-slider {
-                height: 430px;
-                margin-top: 50px;
-            }
 
-            #frontpage-slider .owl-item {
-                scale: 0.8;
-            }
+
+
+        @media only screen and (max-width:768px) {
+
+
 
             .frontpage-popular-posts .card {
 
@@ -219,8 +247,21 @@
 
 
         }
-    </style>
 
+
+
+        @media (max-width: 767px) {
+            #frontpage-slider .owl-item {
+                width: 100% !important;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 991px) {
+            #frontpage-slider .owl-item {
+                width: 33.3333% !important;
+            }
+        }
+    </style>
 
     <div class="site-content">
         <!-- Frontpage Slider -->
@@ -398,13 +439,14 @@
                                         @for ($i = 0; $i < 5; $i++)
                                             <span class="star">&#9733;</span>
                                         @endfor
-                                    </div> --}}
+                                    </div>
+
                                     <h5 class="card-title">
                                         <a href="{{ url('product/' . $product['id']) }}"
                                             class="text-dark">{{ $product['product_name'] }}
                                             ({{ $product['condition'] }})
                                         </a>
-                                    </h5>
+                                    </h5> --}}
                                     <p class="card-text text-muted">{{ $product->Category->title_en ?? '' }}</p>
                                     <p>Publisher: {{ $product->publisher->name ?? 'N/A' }}</p>
                                     <p class="author">Authors:
@@ -420,6 +462,9 @@
                                     </p>
                                     <span class="fw-bold">Rs.
                                         {{ \App\Models\Product::getDiscountPrice($product['id']) }}</span>
+                                    <span class="badge" style="background-color: #6c5dd4;">
+                                        {{ ucfirst($product->condition) }}
+                                    </span>
                                 </div>
                             </div>
                         </div>

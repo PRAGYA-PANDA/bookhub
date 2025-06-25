@@ -10,11 +10,11 @@
                     <div class="bread-crumb-wrapper bg-white d-inline-block py-2 px-4 rounded shadow-sm">
                         <ul class="bread-crumb d-inline-block">
                             <li class="has-separator d-inline-block mx-2">
-                                <a href="{{ url('/') }}" class="text-decoration-none font-weight-bold"
+                                <a href="{{ url('/') }}" class="btn btn-light text-decoration-none font-weight-bold"
                                     style="color: #6c5dd4; border: none;">Home</a>
                             </li>
                             <li class="is-marked d-inline-block mx-2">
-                                <a href="" class="text-decoration-none font-weight-bold"
+                                <a href="" class="btn btn-light text-decoration-none font-weight-bold"
                                     style="color: #6c5dd4; border: none;">Account</a>
                             </li>
                         </ul>

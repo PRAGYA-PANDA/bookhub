@@ -449,7 +449,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="detail-tabs-wrapper u-s-p-t-80">
                         <div class="detail-nav-wrapper u-s-m-b-30">
@@ -459,15 +459,15 @@
                                     <a class="nav-link active" data-toggle="tab" href="#detail">Product Details</a>
                                 </li>
                                 <li class="nav-item">
-                                    {{-- <a class="nav-link" data-toggle="tab" href="#review">Reviews (15)</a> --}}
+
                                     <a class="nav-link" data-toggle="tab" href="#review">Reviews {{ count($ratings) }}</a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> --}}
 
                             <!-- Description-Tab /- -->
                             <!-- Details-Tab -->
-                            <div class="tab-pane fade" id="detail">
+                            {{-- <div class="tab-pane fade" id="detail">
                                 <div class="specification-whole-container">
                                     <div class="spec-table u-s-m-b-50">
                                         <h4 class="spec-heading">Product Details</h4>
@@ -478,38 +478,38 @@
                                             @endphp
 
                                             @foreach ($productFilters as $filter) {{-- show ALL the (enabled/active) Filters --}}
-                                                @php
+                                                {{-- @php
                                                     // echo '<pre>', var_dump($product), '</pre>';
                                                     // exit;
                                                     // echo '<pre>', var_dump($filter), '</pre>';
                                                     // exit;
                                                     // dd($filter);
-                                                @endphp
+                                                @endphp --}}
 
-                                                @if (isset($productDetails['category_id']))
+                                                {{-- @if (isset($productDetails['category_id']))
                                                     @php
                                                         // dd($filter);
 
                                                         $filterAvailable = \App\Models\ProductsFilter::filterAvailable($filter['id'], $productDetails['category_id']);
                                                     @endphp
 
-                                                    @if ($filterAvailable == 'Yes') {{-- if the filter has the current productDetails['category_id'] in its `cat_ids` --}}
+                                                    @if ($filterAvailable == 'Yes') if the filter has the current productDetails['category_id'] in its `cat_ids` --}}
 
-                                                        <tr>
+                                                        {{-- <tr>
                                                             <td>{{ $filter['filter_name'] }}</td>
                                                             <td>
                                                                 @foreach ($filter['filter_values'] as $value) {{-- show the related values of the filter of the product --}}
-                                                                    @php
+                                                                    {{-- @php
                                                                         // echo '<pre>', var_dump($value), '</pre>'; exit;
-                                                                    @endphp
-                                                                    @if (!empty($productDetails[$filter['filter_column']]) && $productDetails[$filter['filter_column']] == $value['filter_value']) {{-- $value['filter_value'] is like '4GB' --}} {{-- $productDetails[$filter['filter_column']]    is like    $productDetails['screen_size']    which in turn, may be equal to    '5 to 5.4 in' --}}
-                                                                        {{ ucwords($value['filter_value']) }}
+                                                                    @endphp --}}
+                                                                    {{-- @if (!empty($productDetails[$filter['filter_column']]) && $productDetails[$filter['filter_column']] == $value['filter_value']) {{-- $value['filter_value'] is like '4GB' --}} {{-- $productDetails[$filter['filter_column']]    is like    $productDetails['screen_size']    which in turn, may be equal to    '5 to 5.4 in' --}}
+                                                                        {{-- {{ ucwords($value['filter_value']) }}
                                                                     @endif
                                                                 @endforeach
                                                             </td>
-                                                        </tr>
+                                                        </tr> --}}
 
-                                                    @endif
+                                                    {{-- @endif
                                                 @endif
                                             @endforeach
 
@@ -518,10 +518,10 @@
                                         </table>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <!-- Specifications-Tab /- -->
                             <!-- Reviews-Tab -->
-                            <div class="tab-pane fade" id="review">
+                            {{-- <div class="tab-pane fade" id="review">
                                 <div class="review-whole-container">
                                     <div class="row r-1 u-s-m-b-26 u-s-p-b-22">
                                         <div class="col-lg-6 col-md-6">
@@ -578,18 +578,18 @@
 
 
                                             {{-- Star Rating (of a Product) (in the "Reviews" tab). --}}
-                                            <form method="POST" action="{{ url('add-rating') }}" name="formRating" id="formRating">
+                                            {{-- <form method="POST" action="{{ url('add-rating') }}" name="formRating" id="formRating"> --}}
                                                 @csrf {{-- Preventing CSRF Requests: https://laravel.com/docs/9.x/csrf#preventing-csrf-requests --}}
-
+{{--
                                                 <input type="hidden" name="product_id" value="{{ $productDetails['id'] }}">
                                                 <div class="your-rating-wrapper">
                                                     <h6 class="review-h6">Your Review matters.</h6>
                                                     <h6 class="review-h6">Have you used this product before?</h6>
-                                                    <div class="star-wrapper u-s-m-b-8">
+                                                    <div class="star-wrapper u-s-m-b-8"> --}}
 
 
                                                         {{-- Star Rating (of a Product) (in the "Reviews" tab). --}}
-                                                        <div class="rate">
+                                                        {{-- <div class="rate">
                                                             <input style="display: none" type="radio" id="star5" name="rating" value="5" />
                                                             <label for="star5" title="text">5 stars</label>
 
@@ -611,14 +611,14 @@
                                                         <textarea class="text-area u-s-m-b-8" id="review-text-area" placeholder="Your Review" name="review" required></textarea>
                                                         <button class="button button-outline-secondary">Submit Review</button>
                                                     {{-- </form> --}}
-                                                </div>
+                                                {{-- </div>
                                             </form>
 
 
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <!-- Get-Reviews -->
-                                    <div class="get-reviews u-s-p-b-22">
+                                    {{-- <div class="get-reviews u-s-p-b-22">
                                         <!-- Review-Options -->
                                         <div class="review-options u-s-m-b-16">
                                             <div class="review-option-heading">
@@ -626,14 +626,14 @@
                                                     <span> ({{ count($ratings) }}) </span>
                                                 </h6>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <!-- Review-Options /- -->
                                         <!-- All-Reviews -->
-                                        <div class="reviewers">
+                                        {{-- <div class="reviewers">
 
                                             {{-- Display/Show user's Ratings --}}
-                                            @if (count($ratings) > 0) {{-- if there're any ratings for the product --}}
-                                                @foreach($ratings as $rating)
+                                            {{-- @if (count($ratings) > 0) {{-- if there're any ratings for the product --}}
+                                                {{-- @foreach($ratings as $rating)
                                                     <div class="review-data">
                                                         <div class="reviewer-name-and-date">
                                                             <h6 class="reviewer-name">{{ $rating['user']['name'] }}</h6>
@@ -644,23 +644,22 @@
 
 
                                                                 {{-- Show/Display the Star Rating of the Review/Rating --}}
-                                                                @php
+                                                                {{-- @php
                                                                     $count = 0;
 
                                                                     // Show the stars
                                                                     while ($count < $rating['rating']): // while $count is 0, 1, 2, 3, 4, or 5 Stars
-                                                                @endphp
+                                                                @endphp --}}
+                                                                        {{-- <span style="color: gold">&#9733;</span> {{-- "BLACK STAR" HTML Entity --}} {{-- HTML Entities: https://www.w3schools.com/html/html_entities.asp --}}
 
-                                                                        <span style="color: gold">&#9733;</span> {{-- "BLACK STAR" HTML Entity --}} {{-- HTML Entities: https://www.w3schools.com/html/html_entities.asp --}}
-
-                                                                @php
+                                                                {{-- @php
                                                                         $count++;
                                                                     endwhile;
                                                                 @endphp
 
-
-                                                            </div>
-                                                            <p class="review-body">
+{{--
+                                                            </div> --}}
+                                                            {{-- <p class="review-body">
                                                                 {{ $rating['review'] }}
                                                             </p>
                                                         </div>
@@ -668,20 +667,20 @@
                                                 @endforeach
                                             @endif
 
-                                        </div>
+                                        </div> --}}
                                         <!-- All-Reviews /- -->
                                         <!-- Pagination-Review -->
 
                                         <!-- Pagination-Review /- -->
-                                    </div>
+                                    {{-- </div> --}}
                                     <!-- Get-Reviews /- -->
-                                </div>
+                                {{-- </div>
                             </div>
                             <!-- Reviews-Tab /- -->
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <!-- Detail-Tabs /- -->
             <!-- Different-Product-Section -->
             <div class="detail-different-product-section u-s-p-t-80">

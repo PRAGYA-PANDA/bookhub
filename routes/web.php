@@ -361,5 +361,5 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
 
     // Add this route with your other front-end routes
     Route::get('/search-products', [App\Http\Controllers\Front\IndexController::class, 'searchProducts']);
-
+    
 });

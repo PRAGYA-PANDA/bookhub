@@ -6,6 +6,8 @@ use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Section;
+use App\Models\HeaderLogo;
+use App\Models\Language;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +23,9 @@ class UserController extends Controller
     {
         $condition = session('condition', 'new');
         $sections = Section::all();
+        $logos = HeaderLogo::all();
+        $language    = Language::get();
+
 
         if (! in_array($condition, ['new', 'old'])) {
             $condition = 'new';
@@ -33,7 +38,7 @@ class UserController extends Controller
             ->get()
             ->toArray();
         $category = Category::limit(10)->get();
-        return view('front.users.login_register', compact('condition', 'footerProducts', 'category','sections'));
+        return view('front.users.login_register', compact('condition', 'footerProducts', 'category','sections','language','logos'));
     }
 
     // User Registration (in front/users/login_register.blade.php) <form> submission using an AJAX request. Check front/js/custom.js

@@ -116,35 +116,37 @@
         .dropdown-submenu {
             position: relative;
         }
-        .dropdown-submenu > .dropdown-menu {
+
+        .dropdown-submenu>.dropdown-menu {
             top: 0;
             left: 100%;
             margin-top: -1px;
             display: none;
         }
-        .dropdown-submenu:hover > .dropdown-menu,
-        .dropdown-submenu:focus-within > .dropdown-menu {
+
+        .dropdown-submenu:hover>.dropdown-menu,
+        .dropdown-submenu:focus-within>.dropdown-menu {
             display: block;
         }
-        .dropdown-submenu > a:after {
+
+        .dropdown-submenu>a:after {
             content: "\f105";
             float: right;
             font-family: 'FontAwesome';
             margin-left: 8px;
             font-weight: normal;
         }
-        .dropdown-menu > li > a.dropdown-toggle:after {
+
+        .dropdown-menu>li>a.dropdown-toggle:after {
             display: inline-block;
         }
 
 
         /* code by sumit */
 
-        .dropdown-menu li{
-            width:100% !important;
+        .dropdown-menu li {
+            width: 100% !important;
         }
-
-
     </style>
 
 </head>
@@ -183,7 +185,10 @@
                             <!-- Site Logo -->
                             <div class="site-logo-block">
                                 <a class="navbar-brand site-logo" href="{{ url('/') }}">
-                                    <img alt="logo" src="{{ asset('uploads/logos/' . $logos->logo) }}" style="width: 150px; height: 50px;">
+                                    {{-- @if ($logos->isNotEmpty()) --}}
+                                        <img src="{{ asset('uploads/logos/' . $logos->first()->logo) }}">
+                                    {{-- @endif --}}
+
                                 </a>
                             </div>
 
@@ -209,23 +214,27 @@
                                                 @foreach ($sections as $section)
                                                     @if (!empty($section['categories']) && count($section['categories']) > 0)
                                                         <li class="dropdown-submenu position-relative">
-                                                            <a class="dropdown-item " href="#" data-bs-toggle="dropdown">{{ $section['name'] }}</a>
+                                                            <a class="dropdown-item " href="#"
+                                                                data-bs-toggle="dropdown">{{ $section['name'] }}</a>
                                                             <ul class="dropdown-menu">
                                                                 @foreach ($section['categories'] as $category)
                                                                     @if (!empty($category['sub_categories']) && count($category['sub_categories']) > 0)
                                                                         <li class="dropdown-submenu position-relative">
-                                                                            <a class="dropdown-item dropdown-toggle" href="{{ url('/category-products/' . $category['id']) }}">{{ $category['category_name'] }}</a>
+                                                                            <a class="dropdown-item dropdown-toggle"
+                                                                                href="{{ url('/category-products/' . $category['id']) }}">{{ $category['category_name'] }}</a>
                                                                             <ul class="dropdown-menu">
                                                                                 @foreach ($category['sub_categories'] as $subcategory)
                                                                                     <li>
-                                                                                        <a class="dropdown-item" href="{{ url('/category-products/' . $subcategory['id']) }}">{{ $subcategory['category_name'] }}</a>
+                                                                                        <a class="dropdown-item"
+                                                                                            href="{{ url('/category-products/' . $subcategory['id']) }}">{{ $subcategory['category_name'] }}</a>
                                                                                     </li>
                                                                                 @endforeach
                                                                             </ul>
                                                                         </li>
                                                                     @else
                                                                         <li>
-                                                                            <a class="dropdown-item" href="{{ url('/category-products/' . $category['id']) }}">{{ $category['category_name'] }}</a>
+                                                                            <a class="dropdown-item"
+                                                                                href="{{ url('/category-products/' . $category['id']) }}">{{ $category['category_name'] }}</a>
                                                                         </li>
                                                                     @endif
                                                                 @endforeach
@@ -233,7 +242,8 @@
                                                         </li>
                                                     @else
                                                         <li>
-                                                            <a class="dropdown-item" href="{{ url('/category-products?section_id=' . $section['id']) }}">{{ $section['name'] }}</a>
+                                                            <a class="dropdown-item"
+                                                                href="{{ url('/category-products?section_id=' . $section['id']) }}">{{ $section['name'] }}</a>
                                                         </li>
                                                     @endif
                                                 @endforeach
@@ -265,21 +275,22 @@
 
                                         <!-- Language Menu -->
                                         <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" role="button"
-        data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fas fa-globe me-2"></i>
-        Language ({{ ucfirst($selectedLanguage->name ?? 'Select') }})
-    </a>
-    <ul class="dropdown-menu">
-        @foreach ($language as $lang)
-            <li>
-                <a class="dropdown-item" href="javascript:void(0);" onclick="setLanguage('{{ $lang->id }}')">
-                    <i class="fas fa-flag me-2"></i>{{ $lang->name }}
-                </a>
-            </li>
-        @endforeach
-    </ul>
-</li>
+                                            <a class="nav-link dropdown-toggle" href="#" role="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-globe me-2"></i>
+                                                Language ({{ ucfirst($selectedLanguage->name ?? 'Select') }})
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                @foreach ($language as $lang)
+                                                    <li>
+                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                            onclick="setLanguage('{{ $lang->id }}')">
+                                                            <i class="fas fa-flag me-2"></i>{{ $lang->name }}
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </li>
 
 
                                     </ul>
@@ -427,7 +438,8 @@
                                     @foreach ($category as $cat)
                                         @if (is_array($cat) && isset($cat['category_name'], $cat['id']))
                                             <li class="cat-item mb-2">
-                                                <a href="{{ url('/category-products/' . $cat['id']) }}" class="text-decoration-none text-light d-flex align-items-center">
+                                                <a href="{{ url('/category-products/' . $cat['id']) }}"
+                                                    class="text-decoration-none text-light d-flex align-items-center">
                                                     <i class="fas fa-book me-2" style="min-width:18px;"></i>
                                                     <span>{{ $cat['category_name'] }}</span>
                                                 </a>
@@ -442,14 +454,17 @@
                                         font-size: 1rem;
                                         padding: 4px 0;
                                     }
+
                                     .footer-category-list .cat-item a:hover {
                                         color: #6c5dd4;
                                         text-decoration: underline;
                                     }
+
                                     .footer-category-list .cat-item {
                                         border-radius: 4px;
                                         transition: background 0.2s;
                                     }
+
                                     .footer-category-list .cat-item:hover {
                                         background: rgba(108, 93, 212, 0.08);
                                     }
@@ -538,24 +553,26 @@
         }
     </script>
 
-   <script>
-    function setLanguage(languageId) {
-        fetch("{{ url('/set-language') }}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({ language: languageId })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                location.reload(); // or redirect if needed
-            }
-        });
-    }
-</script>
+    <script>
+        function setLanguage(languageId) {
+            fetch("{{ url('/set-language') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        language: languageId
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload(); // or redirect if needed
+                    }
+                });
+        }
+    </script>
 
 
 

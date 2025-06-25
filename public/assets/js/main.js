@@ -1,7 +1,7 @@
 (function($) {
     'use strict';
-    
-    var meteorsApp = { 
+
+    var meteorsApp = {
         /* ---------------------------------------------
             01. Scroll top
          --------------------------------------------- */
@@ -26,7 +26,7 @@
                 return false;
             });
         },
-        
+
         /* ---------------------------------------------
             02. Background Fit Image
         --------------------------------------------- */
@@ -39,9 +39,9 @@
                     $(this).css('backgroundImage', 'url(' + imageSource + ')');
                     if(!$image.length) {
                         $(this).css('backgroundImage', 'none');
-                    }                    
+                    }
                 });
-            }; 
+            };
             $('.frontpage-featured-posts.featured-style-one .featured-item .featured-media').bgImage();
             $('.frontpage-featured-posts.featured-style-two .featured-item .featured-media').bgImage();
             $('.post-grid.style-five .thumb-wrap').bgImage();
@@ -49,7 +49,7 @@
             $('.slider-item .slider-thumb').bgImage();
             $('.singlePost-item .slider-thumb').bgImage();
         },
-        
+
         /* ---------------------------------------------
             03. Sidebar Menu And Right Search
         --------------------------------------------- */
@@ -68,7 +68,7 @@
                 $(this).siblings('.dropdown-content').slideToggle(500);
                 $(this).toggleClass("active");
             });
-            
+
             // Sidebar Posts
             //-------------------------------
             $('#bt-show-sidebar').on('click', function(){
@@ -81,7 +81,7 @@
                 return false;
             });
         },
-        
+
         /* ---------------------------------------------
             04. Mobile Menu
         --------------------------------------------- */
@@ -97,8 +97,8 @@
                 meanMenuContainer: '.mobile-menu'
             });
         },
-        
-       
+
+
         /*-------------------------------------------
             06. All Scroll Bar
         --------------------------------------------- */
@@ -114,7 +114,7 @@
                     }, 250);
                 });
             }
-            
+
             // Sidebar Menu Scroll
             //-------------------------------
             if ($('.video-channels-inner').length) {
@@ -126,7 +126,7 @@
                     }, 250);
                 });
             }
-            
+
             // Sidebar Menu Scroll
             //-------------------------------
             if ($('.sidebar-menu').length) {
@@ -139,8 +139,8 @@
                 });
             }
         },
-        
-        
+
+
         /*-------------------------------------------
             07. Sticky Sidebar
         --------------------------------------------- */
@@ -151,9 +151,9 @@
                     'additionalMarginTop': 0,
                     'minWidth': 992,
                 });
-            } 
+            }
         },
-        
+
         /*-------------------------------------------
             08. Frontpage Slider
         --------------------------------------------- */
@@ -173,36 +173,81 @@
                     thumbsPrerendered: true,
                     animateIn: 'fadeIn',
                     animateOut: 'fadeOut'
-                }); 
+                });
             }
-            // frontpage-slider.frontpage-slider-two 
-            if ($('#frontpage-slider.frontpage-slider-two').length) {
-                $('#frontpage-slider.frontpage-slider-two').owlCarousel({
-                    center: true,
-                    items: 2,
-                    autoplay: true,
-                    autoplayTimeout: 3000,
-                    smartSpeed: 800,
-                    loop: true,
-                    margin: 10,
-                    singleItem : true,
-                    dots: false,
-                    nav: true,
-                    stagePadding:0,
-                    navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
-                    responsive: {
-                        280: {
-                            items: 1
-                        },
-                        576: {
-                            items: 1
-                        },
-                        768: {
-                            items: 3
-                        }
-                    }
-                });   
-            }
+            // frontpage-slider.frontpage-slider-two
+            // if ($('#frontpage-slider.frontpage-slider-two').length) {
+            //     $('#frontpage-slider.frontpage-slider-two').owlCarousel({
+            //         center: true,
+            //         items: 2,
+            //         autoplay: true,
+            //         autoplayTimeout: 3000,
+            //         smartSpeed: 800,
+            //         loop: true,
+            //         margin: 10,
+            //         singleItem : true,
+            //         dots: false,
+            //         nav: true,
+            //         stagePadding:0,
+            //         navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
+            //         responsive: {
+            //             280: {
+            //                 items: 1
+            //             },
+            //             576: {
+            //                 items: 1
+            //             },
+            //             768: {
+            //                 items: 3
+            //             }
+            //         }
+            //     });
+            // }
+
+
+          
+
+
+    $("#frontpage-slider.frontpage-slider-two").owlCarousel({
+        center: true,
+        autoplay: false,
+        autoplayTimeout: 3000,
+        smartSpeed: 800,
+        loop: true,
+        margin: 10,
+        dots: false,
+        nav: true,
+        navText: [
+            "<i class='fa fa-angle-left'></i>",
+            "<i class='fa fa-angle-right'></i>",
+        ],
+        responsive: {
+            0: {
+                items: 1,
+                autoWidth: false, // Show 1 item on all mobile devices
+            },
+            576: {
+                items: 1,
+                autoWidth: false,
+            },
+            768: {
+                items: 3,
+                autoWidth: false, // Show 3 items on tablets
+            },
+            992: {
+                items: 4,
+                autoWidth: true, // Optional for larger screens
+            },
+            1200: {
+                items: 5,
+                autoWidth: true,
+            },
+        },
+    });
+
+
+
+
             if ($('#frontpage-slider.frontpage-slider-three').length) {
                 $('#frontpage-slider.frontpage-slider-three').owlCarousel({
                     center: true,
@@ -216,10 +261,10 @@
                     dots: false,
                     nav: true,
                     navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
-                }); 
+                });
             }
         },
-        
+
         /*-------------------------------------------
             09. Widget Posts Slider
         --------------------------------------------- */
@@ -235,12 +280,12 @@
                     margin: 0,
                     nav: true,
                     dots: false,
-                    singleItem: true, 
+                    singleItem: true,
                     navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
-                });  
+                });
             }
         },
-        
+
         /*-------------------------------------------
             10. Popular Posts Carousel
         --------------------------------------------- */
@@ -256,7 +301,7 @@
                     margin: 30,
                     nav: true,
                     dots: false,
-                    singleItem: false, 
+                    singleItem: false,
                     navText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
                     responsive: {
                         280: {
@@ -278,11 +323,11 @@
                             items: 3
                         }
                     }
-                });     
+                });
             }
         },
-        
-        
+
+
         /*-------------------------------------------
             11. Trending Posts Carousel
         --------------------------------------------- */
@@ -298,7 +343,7 @@
                     margin: 1,
                     nav: false,
                     dots: true,
-                    singleItem: false, 
+                    singleItem: false,
                     responsive: {
                         280: {
                             items: 1
@@ -319,11 +364,11 @@
                             items: 3
                         }
                     }
-                });   
+                });
             }
         },
-        
-        
+
+
         /* ---------------------------------------------
             12. Featured Carousel
          --------------------------------------------- */
@@ -360,9 +405,9 @@
                             items: 4
                         }
                     }
-                });  
+                });
             }
-            
+
             if ($('#featured-carousel-two').length) {
                 $('#featured-carousel-two').owlCarousel({
                     center: false,
@@ -394,10 +439,10 @@
                             items: 5
                         }
                     }
-                });  
+                });
             }
         },
-        
+
         /* ---------------------------------------------
             13. Category Carousel
          --------------------------------------------- */
@@ -436,10 +481,10 @@
                             items: 6
                         }
                     }
-                });  
+                });
             }
         },
-        
+
         /*-------------------------------------------
             14. Single Post Slider
         --------------------------------------------- */
@@ -471,7 +516,7 @@
                 });
             }
         },
-        
+
         /* ---------------------------------------------
             15. Posts Load More
         --------------------------------------------- */
@@ -480,7 +525,7 @@
                 var $show_post = 5;
                 var $post_count = $(".site-main .load-post").length;
                 $(".site-main .load-post").slice(0, $show_post).show();
-                
+
                 if($show_post < $post_count) {
                     if( $show_post < $post_count ){
                         $(".load-more-area .loadmore").addClass('active');
@@ -502,7 +547,7 @@
                 }
             });
         },
-        
+
         /* ---------------------------------------------
             16. Masonry
         --------------------------------------------- */
@@ -513,7 +558,7 @@
                 });
             }
         },
-        
+
         /* ---------------------------------------------
             16. Search
         --------------------------------------------- */
@@ -532,29 +577,29 @@
                 }
             });
         },
-        
-        
-    
+
+
+
         /* ---------------------------------------------
          function initializ
          --------------------------------------------- */
-        initializ: function() {          
-            meteorsApp.scroll_top();         
-            meteorsApp.background_fit_image();         
-            meteorsApp.sidebar_menu_and_search();         
-            meteorsApp.mobile_menu();                  
-            meteorsApp.scroll_bar();         
-            meteorsApp.sticky_sidebar(); 
-            meteorsApp.frontpage_slider();       
-            meteorsApp.widget_posts_slider();        
-            meteorsApp.popular_posts_carousel();        
-            meteorsApp.trending_posts_carousel();          
-            meteorsApp.featured_slider();         
+        initializ: function() {
+            meteorsApp.scroll_top();
+            meteorsApp.background_fit_image();
+            meteorsApp.sidebar_menu_and_search();
+            meteorsApp.mobile_menu();
+            meteorsApp.scroll_bar();
+            meteorsApp.sticky_sidebar();
+            meteorsApp.frontpage_slider();
+            meteorsApp.widget_posts_slider();
+            meteorsApp.popular_posts_carousel();
+            meteorsApp.trending_posts_carousel();
+            meteorsApp.featured_slider();
             meteorsApp.category_carousel();
-            meteorsApp.single_post_slider();  
-            meteorsApp.posts_load_more(); 
-            meteorsApp.grid_masonry();        
-            meteorsApp.search();        
+            meteorsApp.single_post_slider();
+            meteorsApp.posts_load_more();
+            meteorsApp.grid_masonry();
+            meteorsApp.search();
         }
     };
 
@@ -563,7 +608,7 @@
      --------------------------------------------- */
     $(function() {
         meteorsApp.initializ();
-    }); 
-    
+    });
+
 
 })(jQuery);
