@@ -147,11 +147,27 @@
         }
 
 
-        /* code by sumit */
-
+      /* code by sumit */
 
         .dropdown-menu li {
             width: 100% !important;
+        }
+
+        .sticky{
+
+            position:fixed ;
+            top:0px ;
+            left:0 ;
+            z-index:10000 ;
+            width:100%;
+            /* background:#faf1dc !important; */
+            border-bottom:1px solid #C0C0C0;
+        }
+
+        header{
+            background:#FFFFFF;
+
+
         }
     </style>
 
@@ -191,7 +207,7 @@
                             <!-- Site Logo -->
                             <div class="site-logo-block">
                                 <a class="navbar-brand site-logo" href="{{ url('/') }}">
-                                    <img alt="logo" src="{{ asset('uploads/logos/' . $logos->logo) }}"
+                                    <img alt="logo" src="{{ asset('uploads/logos/' . $logos->first()->logo) }}"
                                         style="width: 150px; height: 50px;">
                                 </a>
                             </div>

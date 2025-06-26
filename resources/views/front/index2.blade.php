@@ -155,21 +155,17 @@
             line-height: 18px;
         }
 
-        @media only screen and (min-width:1400px) {
-            .frontpage-popular-posts .card {
 
-                height: 425px !important;
-
-            }
+        .frontpage-popular-posts .card {
+            width: 300px;
+            height: 350px !important;
         }
 
-        @media only screen and (max-width:1200px) {
-            .frontpage-popular-posts .card {
 
-                height: 460px !important;
 
-            }
-        }
+
+
+
 
         @media only screen and (min-width:1024px) and (max-width:1200px) {
             .featured-badge-list {
@@ -188,41 +184,29 @@
 
         }
 
-        @media only screen and (min-width:768px) and (max-width:1200px) {
-            /* .frontpage-slider-posts.slider-style-two #frontpage-slider {
-                                        height: 500px !important;
-                                        margin-top: 50px;
-                                    }
 
-                                    .frontpage-slider-posts.slider-style-two #frontpage-slider .slider-item {
-
-                                        height: 480px !important;
-                                    }
-
-                                    .frontpage-slider-posts.slider-style-two .owl-item {
-
-                                        scale: 0.96 !important;
-                                    } */
-
-
-
-
-        }
 
         @media only screen and (min-width:768px) and (max-width:1023px) {
             .top-stories-block {
                 width: 65vw !important;
                 margin: 4px auto 100px;
             }
+
+
+
+        }
+
+
+        @media only screen and (max-width:1024px) {
+            .oswald-title {
+                text-align: center !important;
+
+            }
         }
 
 
 
-
-
         @media only screen and (max-width:768px) {
-
-
 
             .frontpage-popular-posts .card {
 
@@ -246,6 +230,11 @@
             }
 
 
+            .frontpage-popular-posts .card {
+                height: 350px !important;
+            }
+
+
         }
 
 
@@ -262,6 +251,7 @@
             }
         }
     </style>
+
 
     <div class="site-content">
         <!-- Frontpage Slider -->
@@ -424,7 +414,8 @@
                         <h2 class="section-title oswald-title"><b>Latest Book</b></h2>
                     </div>
                 </div>
-                <div class="row g-4">
+                {{-- old valid code --}}
+                {{-- <div class="row g-4">
                     @foreach ($newProducts as $product)
                         <div class="col-lg-3 col-md-4 col-sm-6 col-6">
                             <div class="card h-100">
@@ -435,18 +426,13 @@
                                     </a>
                                 @endif
                                 <div class="card-body">
-                                    {{-- <div class="text-warning mb-2">
-                                        @for ($i = 0; $i < 5; $i++)
-                                            <span class="star">&#9733;</span>
-                                        @endfor
-                                    </div>
 
                                     <h5 class="card-title">
                                         <a href="{{ url('product/' . $product['id']) }}"
                                             class="text-dark">{{ $product['product_name'] }}
                                             ({{ $product['condition'] }})
                                         </a>
-                                    </h5> --}}
+                                    </h5>
                                     <p class="card-text text-muted">{{ $product->Category->title_en ?? '' }}</p>
                                     <p>Publisher: {{ $product->publisher->name ?? 'N/A' }}</p>
                                     <p class="author">Authors:
@@ -462,17 +448,106 @@
                                     </p>
                                     <span class="fw-bold">Rs.
                                         {{ \App\Models\Product::getDiscountPrice($product['id']) }}</span>
-                                    <span class="badge" style="background-color: #6c5dd4;">
-                                        {{ ucfirst($product->condition) }}
-                                    </span>
                                 </div>
                             </div>
                         </div>
                     @endforeach
+                </div> --}}
+                {{-- old valid code ends --}}
+
+                <div class="row g-4 flex-wrap">
+                    @forelse($newProducts as $product)
+                        <div class="col-md-6 col-lg-3 d-flex justify-content-center">
+                            <div class="card h-100 border-0 shadow-sm product-card">
+                                <div class="position-relative">
+                                    @if (!empty($product['product_image']))
+                                        <a href="{{ url('product/' . $product['id']) }}">
+                                            <img src="{{ asset('front/images/product_images/small/' . $product['product_image']) }}"
+                                                class="card-img-top" alt="product_name"
+                                                style="height: 200px; object-fit: cover;">
+                                        </a>
+                                    @endif
+                                    @php
+                                        $discountedPrice = \App\Models\Product::getDiscountPrice($product->id);
+                                        $hasDiscount = $discountedPrice > 0;
+                                    @endphp
+                                    @if ($hasDiscount)
+                                        <div class="position-absolute top-0 end-0 m-2">
+                                            <span class="badge bg-danger">
+                                                -{{ $product['product_discount'] }}%
+                                            </span>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title mb-1">
+                                        <a href="{{ url('product/' . $product['id']) }}"
+                                            class="text-decoration-none text-dark">
+                                            {{ $product['product_name'] }}
+                                        </a>
+                                    </h5>
+
+                                    <p class="text-muted small mb-2">Publisher: {{ $product->publisher->name ?? 'N/A' }}
+                                    </p>
+                                    @php
+                                        $allAuthorNames = $product->authors->pluck('name')->join(', ');
+                                    @endphp
+
+                                    <p class="text-muted small mb-2" title="{{ $allAuthorNames }}">
+                                        Authors:
+                                        @if ($product->authors->isNotEmpty())
+                                            {{ $product->authors->first()->name }}
+                                            @if ($product->authors->count() > 1)
+                                                ...
+                                            @endif
+                                        @else
+                                            N/A
+                                        @endif
+                                    </p>
+
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="price-block">
+
+                                            <span class="text-danger"><del>₹{{ $product['product_price'] }}</del></span>
+                                            <span
+                                                class="h5 mb-0 ms-2">₹{{ \App\Models\Product::getDiscountPrice($product['id']) }}</span>
+
+
+
+                                        </div>
+                                        <span class="badge" style="background-color: #6c5dd4;">
+                                            {{ $product['condition'] }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    @empty
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                No products found in this category. Try adjusting your filters.
+                            </div>
+                        </div>
+                    @endforelse
                 </div>
 
-                <!-- Advertisements -->
-                {{-- <div class="row my-4 g-3">
+                <!-- Pagination -->
+                {{-- <div class="d-flex justify-content-center mt-4">
+                    {{ $newProducts->links() }}
+                </div> --}}
+            </div>
+
+
+
+
+            <!-- Advertisements -->
+            {{-- <div class="row my-4 g-3">
                 <div class="col-md-4">
                     <a href="{{ url('') }}">
                         <img src="{{ asset('assets/images/s1.jpg') }}" class="img-fluid" alt="Ad">
@@ -489,7 +564,7 @@
                     </a>
                 </div>
             </div> --}}
-            </div>
-        </section>
+    </div>
+    </section>
     </div>
 @endsection
