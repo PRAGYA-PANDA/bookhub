@@ -270,8 +270,8 @@
 
                             {{-- Product Stock --}}
                             <div class="product-stock mb-3">
-                                <span class="font-weight-bold">Stock:</span>
-                                <span class="text-muted">{{ $totalStock > 0 ? $totalStock : 'Out of Stock' }}</span>
+                                <span class="text-muted mb-1">Stock:</span>
+                                <span class="font-weight-bold">{{ $totalStock > 0 ? $totalStock : 'Out of Stock' }}</span>
                             </div>
 
                             {{-- Product Key Information --}}

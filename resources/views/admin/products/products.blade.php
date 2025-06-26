@@ -63,8 +63,8 @@
                                                         {{-- Show the 'no-image' Dummy Image: If you have for example a table with an 'images' column (that can exist or not exist), use a 'Dummy Image' in case there's no image. Example: https://dummyimage.com/  --}}
                                                     @endif
                                                 </td>
-                                                <td>{{ $product['category']['category_name'] }}</td> {{-- Through the relationship --}}
-                                                <td>{{ $product['section']['name'] }}</td> {{-- Through the relationship --}}
+                                                <td>{{ $product['category']['category_name'] ?? 'N/A'}}</td> {{-- Through the relationship --}}
+                                                <td>{{ $product['section']['name'] ?? 'N/A'}}</td> {{-- Through the relationship --}}
                                                 <td>
                                                     @if ($product['admin_type'] == 'vendor')
                                                         <a target="_blank"

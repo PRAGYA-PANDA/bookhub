@@ -54,7 +54,7 @@
                                                 <td>{{ __($key+1)}}</td>
                                                 <td>{{ $category['category_name'] }}</td>
                                                 <td>{{ $parent_category }}</td> {{-- Through the relationship --}}
-                                                <td>{{ $category['section']['name'] }}</td> {{-- Through the relationship --}}
+                                                <td>{{ $category['section']['name']   ?? 'N/A'}}</td>
                                                 <td>{{ $category['url'] }}</td>
                                                 <td>
                                                     @if ($category['status'] == 1)
@@ -76,7 +76,7 @@
                                                     {{-- <a title="Category" class="confirmDelete" href="{{ url('admin/delete-category/' . $category['id']) }}"> --}}
                                                         {{-- <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i> --}} {{-- Icons from Skydash Admin Panel Template --}}
                                                     {{-- </a> --}}
-                                                    <a href="JavaScript:void(0)" class="confirmDelete" module="category" moduleid="{{ $category['id'] }}"> {{-- Check admin/js/custom.js and web.php (routes) --}}
+                                                    <a href="{{ url('admin/delete-category/' .$category['id']) }}"  > {{-- Check admin/js/custom.js and web.php (routes) --}}
                                                         <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i> {{-- Icons from Skydash Admin Panel Template --}}
                                                     </a>
                                                 </td>

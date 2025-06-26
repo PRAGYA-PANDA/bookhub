@@ -76,12 +76,12 @@ class SectionController extends Controller
 
             // Laravel's Validation    // Customizing Laravel's Validation Error Messages: https://laravel.com/docs/9.x/validation#customizing-the-error-messages    // Customizing Validation Rules: https://laravel.com/docs/9.x/validation#custom-validation-rules
             $rules = [
-                'section_name' => 'required|regex:/^[\pL\s\-]+$/u', // only alphabetical characters and spaces
+                'section_name' => 'required', // only alphabetical characters and spaces
             ];
 
             $customMessages = [ // Specifying A Custom Message For A Given Attribute: https://laravel.com/docs/9.x/validation#specifying-a-custom-message-for-a-given-attribute
                 'section_name.required' => 'Section Name is required',
-                'section_name.regex'    => 'Valid Section Name is required',
+
             ];
 
             $this->validate($request, $rules, $customMessages);
@@ -93,7 +93,7 @@ class SectionController extends Controller
             $section->save(); // Save all data in the database
 
 
-            return redirect('admin/products')->with('success_message', $message);
+            return redirect('admin/sections')->with('success_message', $message);
         }
 
 
