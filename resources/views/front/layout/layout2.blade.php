@@ -279,6 +279,11 @@
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li>
+                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="set('all')">
+                                                        <i class="fas fa-th-large me-2"></i>All
+                                                    </a>
+                                                </li>
+                                                <li>
                                                     <a class="dropdown-item" href="javascript:void(0);"
                                                         onclick="set('new')">
                                                         <i class="fas fa-star me-2"></i>New
@@ -298,9 +303,14 @@
                                             <a class="nav-link dropdown-toggle" href="#" role="button"
                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                 <i class="fas fa-globe me-2"></i>
-                                                Language ({{ ucfirst($selectedLanguage->name ?? 'Select') }})
+                                                Language ({{ ucfirst($selectedLanguage->name ?? 'All') }})
                                             </a>
                                             <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="setLanguage('all')">
+                                                        <i class="fas fa-th-large me-2"></i>All
+                                                    </a>
+                                                </li>
                                                 @foreach ($language as $lang)
                                                     <li>
                                                         <a class="dropdown-item" href="javascript:void(0);"

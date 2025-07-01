@@ -374,18 +374,22 @@ class ProductsController extends Controller
         if ($products instanceof \Illuminate\Database\Eloquent\Builder) {
             // Condition filter
             if ($request->filled('condition')) {
-                $products->where('condition', $request->condition);
-            }
-            else {
-                $products->where('condition', $condition);
+                if ($request->condition !== 'all') {
+                    $products->where('condition', $request->condition);
+                }
+            } else {
+                if ($condition !== 'all') {
+                    $products->where('condition', $condition);
+                }
             }
 
             // Language filter
             if ($request->filled('language_id')) {
-                $products->where('language_id', $request->language_id);
-            }
-             else {
-                $products->when(session('language'), function ($query) {
+                if ($request->language_id !== 'all') {
+                    $products->where('language_id', $request->language_id);
+                }
+            } else {
+                $products->when(session('language') && session('language') !== 'all', function ($query) {
                     $query->where('language_id', session('language'));
                 });
             }

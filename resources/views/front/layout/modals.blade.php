@@ -252,7 +252,11 @@
                     </button>
 
                     <button class="btn px-4 py-2 rounded-pill shadow-sm border-1"
-                        style="background-color: #738161; color: #152c04;" onclick="set('old')">OLD
+                        style="background-color: #738161; color: #152c04; margin-right: 1rem;" onclick="set('old')">OLD
+                    </button>
+
+                    <button class="btn px-4 py-2 rounded-pill shadow-sm border-1"
+                        style="background-color: #b09cb3; color: #6d4477;" onclick="set('old')">ALL
                     </button>
                 </div>
 

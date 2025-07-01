@@ -16,7 +16,18 @@ class IndexController extends Controller
     {
         $sliderBanners = Banner::where('type', 'Slider')->where('status', 1)->get()->toArray();
         $fixBanners    = Banner::where('type', 'Fix')->where('status', 1)->get()->toArray();
-
+        $condition   = session('condition', 'new');
+        $sliderProducts = Product::with(['authors', 'publisher'])
+            ->when($condition !== 'all', function ($query) use ($condition) {
+                $query->where('condition', $condition);
+            })
+            ->when(session('language') && session('language') !== 'all', function ($query) {
+                $query->where('language_id', session('language'));
+            })
+            ->where('status', 1)
+            ->orderBy('id', 'desc')
+            ->limit(10)
+            ->get();
         // // Get 'condition' from query string (default to 'new' if not set or invalid)
         // $condition = $request->query('condition');
         // if (!in_array($condition, ['new', 'old'])) {
@@ -25,22 +36,25 @@ class IndexController extends Controller
 
         $logos = HeaderLogo::first();
         $language    = Language::get();
-        $condition   = session('condition', 'new');
         $sections    = Section::all();
         $newProducts = Product::with(['authors', 'publisher'])
-            ->where('condition', $condition)
-            ->when(session('language'), function ($query) {
+            ->when($condition !== 'all', function ($query) use ($condition) {
+                $query->where('condition', $condition);
+            })
+            ->when(session('language') && session('language') !== 'all', function ($query) {
                 $query->where('language_id', session('language'));
             })
             ->where('status', 1)
             ->orderBy('id', 'desc')
-            ->limit(8)
+            // ->limit(8)
             ->get();
 
         $category = Category::limit(10)->get();
 
         $footerProducts = Product::orderBy('id', 'Desc')
-            ->where('condition', $condition)
+            ->when($condition !== 'all', function ($query) use ($condition) {
+                $query->where('condition', $condition);
+            })
             ->where('status', 1)
             ->take(3)
             ->get()
@@ -50,13 +64,17 @@ class IndexController extends Controller
             'is_bestseller' => 'Yes',
             'status'        => 1,
         ])
-            ->where('condition', $condition)
+            ->when($condition !== 'all', function ($query) use ($condition) {
+                $query->where('condition', $condition);
+            })
             ->inRandomOrder()
             ->get()
             ->toArray();
 
         $discountedProducts = Product::where('product_discount', '>', 0)
-            ->where('condition', $condition)
+            ->when($condition !== 'all', function ($query) use ($condition) {
+                $query->where('condition', $condition);
+            })
             ->where('status', 1)
             ->limit(6)
             ->inRandomOrder()
@@ -67,7 +85,9 @@ class IndexController extends Controller
             'is_featured' => 'Yes',
             'status'      => 1,
         ])
-            ->where('condition', $condition)
+            ->when($condition !== 'all', function ($query) use ($condition) {
+                $query->where('condition', $condition);
+            })
             ->limit(6)
             ->get()
             ->toArray();
@@ -108,7 +128,8 @@ class IndexController extends Controller
             'category',
             'sections',
             'language',
-            'logos'
+            'logos',
+            'sliderProducts'
         ));
     }
     public function setLanguage(Request $request)
@@ -129,7 +150,9 @@ class IndexController extends Controller
         $query          = Product::with(['publisher', 'authors'])->where('status', 1);
         $sections       = Section::all();
         $footerProducts = Product::orderBy('id', 'Desc')
-            ->where('condition', $condition)
+            ->when($condition !== 'all', function ($query) use ($condition) {
+                $query->where('condition', $condition);
+            })
             ->where('status', 1)
             ->take(3)
             ->get()
@@ -142,15 +165,18 @@ class IndexController extends Controller
         if ($request->filled('condition')) {
             $query->where('condition', $request->condition);
         } else {
-            $query->where('condition', $condition);
+            if ($condition !== 'all') {
+                $query->where('condition', $condition);
+            }
         }
 
         // Filter by language
         if ($request->filled('language_id')) {
-            $query->where('language_id', $request->language_id);
+            if ($request->language_id !== 'all') {
+                $query->where('language_id', $request->language_id);
+            }
         } else {
-            // Apply session language filter if available
-            $query->when(session('language'), function ($q) {
+            $query->when(session('language') && session('language') !== 'all', function ($q) {
                 $q->where('language_id', session('language'));
             });
         }
@@ -184,7 +210,7 @@ class IndexController extends Controller
             $products = $products->filter(function ($product) use ($minPrice, $maxPrice) {
                 $discountedPrice = Product::getDiscountPrice($product->id);
                 $finalPrice = $discountedPrice > 0 ? $discountedPrice : $product->product_price;
-                
+
                 return $finalPrice >= $minPrice && $finalPrice <= $maxPrice;
             });
         }

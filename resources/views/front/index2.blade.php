@@ -257,7 +257,7 @@
         <!-- Frontpage Slider -->
         <div class="frontpage-slider-posts slider-style-two mb-5">
             <div id="frontpage-slider" class="owl-carousel frontpage-slider-two carousel-nav-align-center">
-                @foreach ($newProducts as $product)
+                @foreach ($sliderProducts as $product)
                     <div class="slider-item text-center">
                         <figure class="slider-thumb glass-effect">
                             @if (!empty($product['product_image']))
