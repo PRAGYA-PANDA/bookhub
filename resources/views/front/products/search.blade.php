@@ -3,7 +3,7 @@
 @section('content')
     <div class="container py-5">
         <div class="row">
-            <!-- Filters Sidebar -->
+            {{-- <!-- Filters Sidebar -->
             <div class="col-lg-3 mb-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
@@ -100,7 +100,7 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Search Results -->
             <div class="col-lg-9">
@@ -120,7 +120,7 @@
                 </div>
 
                 <!-- Active Filters -->
-                @if (request('search') || request('section_id') || request('condition') || request('language_id') || request('min_price') || request('max_price'))
+                {{-- @if (request('search') || request('section_id') || request('condition') || request('language_id') || request('min_price') || request('max_price'))
                     <div class="mb-4">
                         <div class="d-flex flex-wrap gap-2">
                             @if (request('search'))
@@ -159,7 +159,7 @@
                             @endif
                         </div>
                     </div>
-                @endif
+                @endif --}}
 
                 <!-- Products Grid -->
                 <div class="row g-4">
