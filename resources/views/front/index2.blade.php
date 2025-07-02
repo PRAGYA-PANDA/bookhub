@@ -414,46 +414,6 @@
                         <h2 class="section-title oswald-title"><b>Latest Book</b></h2>
                     </div>
                 </div>
-                {{-- old valid code --}}
-                {{-- <div class="row g-4">
-                    @foreach ($newProducts as $product)
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-6">
-                            <div class="card h-100">
-                                @if (!empty($product['product_image']))
-                                    <a href="{{ url('product/' . $product['id']) }}">
-                                        <img src="{{ asset('front/images/product_images/small/' . $product['product_image']) }}"
-                                            class="card-img-top" alt="{{ $product['product_name'] }}">
-                                    </a>
-                                @endif
-                                <div class="card-body">
-
-                                    <h5 class="card-title">
-                                        <a href="{{ url('product/' . $product['id']) }}"
-                                            class="text-dark">{{ $product['product_name'] }}
-                                            ({{ $product['condition'] }})
-                                        </a>
-                                    </h5>
-                                    <p class="card-text text-muted">{{ $product->Category->title_en ?? '' }}</p>
-                                    <p>Publisher: {{ $product->publisher->name ?? 'N/A' }}</p>
-                                    <p class="author">Authors:
-                                        @if ($product->authors->isNotEmpty())
-                                            @foreach ($product->authors as $author)
-                                                {{ $author->name }}@if (!$loop->last)
-                                                    ,
-                                                @endif
-                                            @endforeach
-                                        @else
-                                            N/A
-                                        @endif
-                                    </p>
-                                    <span class="fw-bold">Rs.
-                                        {{ \App\Models\Product::getDiscountPrice($product['id']) }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div> --}}
-                {{-- old valid code ends --}}
 
                 <div class="row g-4 flex-wrap">
                     @forelse($newProducts as $product)
@@ -505,16 +465,12 @@
                                         @endif
                                     </p>
 
-
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="price-block">
 
                                             <span class="text-danger"><del>₹{{ $product['product_price'] }}</del></span>
                                             <span
                                                 class="h5 mb-0 ms-2">₹{{ \App\Models\Product::getDiscountPrice($product['id']) }}</span>
-
-
-
                                         </div>
                                         <span class="badge" style="background-color: #6c5dd4;">
                                             {{ $product['condition'] }}
@@ -523,10 +479,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-
-
                     @empty
                         <div class="col-12">
                             <div class="alert alert-info">
@@ -542,28 +494,6 @@
                     {{ $newProducts->links() }}
                 </div> --}}
             </div>
-
-
-
-
-            <!-- Advertisements -->
-            {{-- <div class="row my-4 g-3">
-                <div class="col-md-4">
-                    <a href="{{ url('') }}">
-                        <img src="{{ asset('assets/images/s1.jpg') }}" class="img-fluid" alt="Ad">
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a href="{{ url('') }}">
-                        <img src="{{ asset('assets/images/s4.jpg') }}" class="img-fluid" alt="Ad">
-                    </a>
-                </div>
-                <div class="col-md-4">
-                    <a href="{{ url('') }}">
-                        <img src="{{ asset('assets/images/s3.jpg') }}" class="img-fluid" alt="Ad">
-                    </a>
-                </div>
-            </div> --}}
     </section>
     </div>
 @endsection
