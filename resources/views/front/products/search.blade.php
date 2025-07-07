@@ -226,12 +226,46 @@
                             </div>
                         </div>
                         @empty
-                            <div class="col-12">
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    No products found matching your criteria. Try adjusting your search filters.
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                No products found matching your criteria.
+                            </div>
+
+                            <div class="card border-0 shadow-sm mt-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Request a Book</h5>
+
+                                    @auth
+                                        @if(session('success'))
+                                            <div class="alert alert-success">{{ session('success') }}</div>
+                                        @endif
+
+                                        <form method="POST" action="{{ route('book.request') }}">
+                                            @csrf
+                                            <div class="mb-3">
+                                                <label class="form-label">Book Title *</label>
+                                                <input type="text" name="book_title" class="form-control" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Author Name</label>
+                                                <input type="text" name="author_name" class="form-control">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Message (optional)</label>
+                                                <textarea name="message" rows="3" class="form-control"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary" style="background-color: #6c5dd4;">Submit Request</button>
+                                        </form>
+                                    @else
+                                        <div class="alert alert-warning">
+                                            Please <a href="{{ route('login') }}">login</a> or <a href="{{ route('register') }}">register</a> to request a book.
+                                        </div>
+                                    @endauth
                                 </div>
                             </div>
+                        </div>
+
                         @endforelse
                     </div>
 

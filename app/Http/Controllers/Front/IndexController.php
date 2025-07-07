@@ -14,9 +14,9 @@ class IndexController extends Controller
 {
     public function index(Request $request)
     {
-        $sliderBanners = Banner::where('type', 'Slider')->where('status', 1)->get()->toArray();
-        $fixBanners    = Banner::where('type', 'Fix')->where('status', 1)->get()->toArray();
-        $condition   = session('condition', 'new');
+        $sliderBanners  = Banner::where('type', 'Slider')->where('status', 1)->get()->toArray();
+        $fixBanners     = Banner::where('type', 'Fix')->where('status', 1)->get()->toArray();
+        $condition      = session('condition', 'new');
         $sliderProducts = Product::with(['authors', 'publisher'])
             ->when($condition !== 'all', function ($query) use ($condition) {
                 $query->where('condition', $condition);
@@ -34,9 +34,20 @@ class IndexController extends Controller
         //     $condition = 'new';
         // }
 
-        $logos = HeaderLogo::first();
-        $language    = Language::get();
-        $sections    = Section::all();
+        $logos    = HeaderLogo::first();
+        $language = Language::get();
+        $sections = Section::all();
+        // $newProducts = Product::with(['authors', 'publisher'])
+        //     ->when($condition !== 'all', function ($query) use ($condition) {
+        //         $query->where('condition', $condition);
+        //     })
+        //     ->when(session('language') && session('language') !== 'all', function ($query) {
+        //         $query->where('language_id', session('language'));
+        //     })
+        //     ->where('status', 1)
+        //     ->orderBy('id', 'desc')
+        //     ->get();
+
         $newProducts = Product::with(['authors', 'publisher'])
             ->when($condition !== 'all', function ($query) use ($condition) {
                 $query->where('condition', $condition);
@@ -46,8 +57,7 @@ class IndexController extends Controller
             })
             ->where('status', 1)
             ->orderBy('id', 'desc')
-            // ->limit(8)
-            ->get();
+            ->paginate(8);
 
         $category = Category::limit(10)->get();
 
@@ -96,18 +106,9 @@ class IndexController extends Controller
         $meta_description = 'Online Shopping Website which deals in Clothing, Electronics & Appliances Products';
         $meta_keywords    = 'eshop website, online shopping, multi vendor e-commerce';
 
-        // return view('front.index')->with(compact(
-        //     'sliderBanners',
-        //     'fixBanners',
-        //     'newProducts',
-        //     'bestSellers',
-        //     'discountedProducts',
-        //     'featuredProducts',
-        //     'meta_title',
-        //     'meta_description',
-        //     'meta_keywords',
-        //     'condition'
-        // ));
+        if ($request->ajax()) {
+            return view('front.partials.new_products', compact('newProducts'))->render();
+        }
 
         return view('front.index2', [
             'languages'        => Language::all(),
@@ -132,6 +133,7 @@ class IndexController extends Controller
             'sliderProducts'
         ));
     }
+
     public function setLanguage(Request $request)
     {
         session(['language' => $request->language]);
@@ -159,7 +161,7 @@ class IndexController extends Controller
             ->toArray();
         $category = Category::limit(10)->get();
         $language = Language::get();
-        $logos = HeaderLogo::first();
+        $logos    = HeaderLogo::first();
 
         // Filter by condition (default to session condition if not specified)
         if ($request->filled('condition')) {
@@ -204,21 +206,21 @@ class IndexController extends Controller
 
         // Apply price range filter using discounted prices
         if ($request->filled('min_price') || $request->filled('max_price')) {
-            $minPrice = $request->filled('min_price') ? (float)$request->min_price : 0;
-            $maxPrice = $request->filled('max_price') ? (float)$request->max_price : PHP_FLOAT_MAX;
+            $minPrice = $request->filled('min_price') ? (float) $request->min_price : 0;
+            $maxPrice = $request->filled('max_price') ? (float) $request->max_price : PHP_FLOAT_MAX;
 
             $products = $products->filter(function ($product) use ($minPrice, $maxPrice) {
                 $discountedPrice = Product::getDiscountPrice($product->id);
-                $finalPrice = $discountedPrice > 0 ? $discountedPrice : $product->product_price;
+                $finalPrice      = $discountedPrice > 0 ? $discountedPrice : $product->product_price;
 
                 return $finalPrice >= $minPrice && $finalPrice <= $maxPrice;
             });
         }
 
         // Convert back to pagination
-        $perPage = 12;
+        $perPage     = 12;
         $currentPage = $request->get('page', 1);
-        $products = new \Illuminate\Pagination\LengthAwarePaginator(
+        $products    = new \Illuminate\Pagination\LengthAwarePaginator(
             $products->forPage($currentPage, $perPage),
             $products->count(),
             $perPage,
@@ -226,7 +228,7 @@ class IndexController extends Controller
             ['path' => $request->url(), 'query' => $request->query()]
         );
 
-        return view('front.products.search', compact('products', 'request', 'condition', 'sections', 'footerProducts', 'category', 'language','logos'), [
+        return view('front.products.search', compact('products', 'request', 'condition', 'sections', 'footerProducts', 'category', 'language', 'logos'), [
             'languages'        => Language::all(),
             'selectedLanguage' => Language::find(session('language')),
         ]);

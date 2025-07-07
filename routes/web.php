@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Front\IndexController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Front\BookRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -286,6 +287,8 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
 
     // Website Search Form (to search for all website products). Check the HTML Form in front/layout/header.blade.php
     Route::get('search-products', 'ProductsController@listing');
+
+    Route::post('/book-request', [BookRequestController::class, 'store'])->name('book.request')->middleware('auth');
 
     // PIN code Availability Check: check if the PIN code of the user's Delivery Address exists in our database (in both `cod_pincodes` and `prepaid_pincodes`) or not in front/products/detail.blade.php via AJAX. Check front/js/custom.js
     Route::post('check-pincode', 'ProductsController@checkPincode');

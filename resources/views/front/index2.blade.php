@@ -250,6 +250,11 @@
                 width: 33.3333% !important;
             }
         }
+
+
+        #scroll-loader {
+            display: none;
+        }
     </style>
 
 
@@ -415,8 +420,8 @@
                     </div>
                 </div>
 
-                <div class="row g-4 flex-wrap">
-                    @forelse($newProducts as $product)
+                <div id="new-products-container" class="row g-4 flex-wrap">
+                    {{-- @forelse($newProducts as $product)
                         <div class="col-md-6 col-lg-3 d-flex justify-content-center">
                             <div class="card h-100 border-0 shadow-sm product-card">
                                 <div class="position-relative">
@@ -486,7 +491,13 @@
                                 No products found in this category. Try adjusting your filters.
                             </div>
                         </div>
-                    @endforelse
+                    @endforelse --}}
+
+                    @include('front.partials.new_products')
+                </div>
+
+                <div id="scroll-loader" class="text-center mt-4">
+                    <p class="text-muted">Loading more books...</p>
                 </div>
 
                 <!-- Pagination -->
@@ -494,6 +505,79 @@
                     {{ $newProducts->links() }}
                 </div> --}}
             </div>
-    </section>
+        </section>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#load-more-btn').on('click', function() {
+                let button = $(this);
+                let page = button.data('page');
+
+                $.ajax({
+                    url: "{{ url('/') }}" + "?page=" + page,
+                    type: "GET",
+                    beforeSend: function() {
+                        button.text('Loading...');
+                    },
+                    success: function(data) {
+                        if (data.trim() === '') {
+                            button.hide(); // No more products
+                        } else {
+                            $('#new-products-container').append(data);
+                            button.data('page', page + 1).text('Load More');
+                        }
+                    },
+                    error: function() {
+                        button.text('Try Again');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+let page = 2;
+let loading = false;
+let endOfData = false;
+
+function loadMoreProducts() {
+    if (loading || endOfData) return;
+
+    loading = true;
+    $('#scroll-loader').show();
+
+    $.ajax({
+        url: "{{ url('/') }}" + "?page=" + page,
+        type: "GET",
+        success: function(data) {
+            if (data.trim() === '') {
+                endOfData = true;
+                $('#scroll-loader').html("<p class='text-muted'>No more books to load.</p>");
+            } else {
+                $('#new-products-container').append(data);
+                page++;
+                $('#scroll-loader').hide();
+                loading = false;
+            }
+        },
+        error: function() {
+            $('#scroll-loader').html("<p class='text-danger'>Error loading more products.</p>");
+            loading = false;
+        }
+    });
+}
+
+$(window).on('scroll', function() {
+    let scrollTop = $(window).scrollTop();
+    let windowHeight = $(window).height();
+    let documentHeight = $(document).height();
+
+    if (scrollTop + windowHeight + 100 >= documentHeight) {
+        loadMoreProducts();
+    }
+});
+</script>
+
 @endsection
