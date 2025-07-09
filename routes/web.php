@@ -8,6 +8,7 @@ use App\Http\Controllers\Front\IndexController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Front\BookRequestController;
+use App\Http\Controllers\Admin\BookRequestsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -80,6 +81,12 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         Route::get('author_edit/{id}', [AuthorController::class, 'edit'])->name('edit.author');
         Route::post('author_update/{id}', [AuthorController::class, 'update'])->name('update.author');
         Route::get('author_delete/{id}', [AuthorController::class, 'delete'])->name('delete.author');
+
+        //RequestedBooks
+        Route::get('requestedbooks',[BookRequestsController::class, 'index'])->name('requestbook.index');
+        Route::delete('book-requests/{id}', [BookRequestsController::class, 'delete'])->name('bookrequests.delete');
+
+
 
         //Subject
         Route::get('subjects', [SubjectController::class, 'index'])->name('subject');
@@ -200,6 +207,8 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         Route::post('update-language-status', 'App\Http\Controllers\Admin\LanguageController@updateLanguageStatus');
         Route::match(['get', 'post'], 'add-edit-language/{id?}', 'App\Http\Controllers\Admin\LanguageController@addEditLanguage');
         Route::get('delete-language/{id}', 'App\Http\Controllers\Admin\LanguageController@deleteLanguage');
+
+
     });
 
 });
@@ -366,3 +375,5 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
     Route::get('/search-products', [App\Http\Controllers\Front\IndexController::class, 'searchProducts']);
 
 });
+
+Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');

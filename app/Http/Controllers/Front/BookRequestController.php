@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class BookRequestController extends Controller
 {
+    public function index()
+    {
+        // You can return a view or just a placeholder for now
+        return view('front.requestedbooks.index');
+    }
+
     public function store(Request $request)
     {
         $request->validate([

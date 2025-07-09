@@ -15,4 +15,9 @@ class BookRequest extends Model
         'requested_by_user',
         'status',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id');
+    }
 }
