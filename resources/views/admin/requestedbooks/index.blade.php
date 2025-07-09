@@ -25,7 +25,7 @@
                                         <th>Name</th>
                                         <th>Author Name</th>
                                         <th>Message</th>
-                                        <th>Requested By </th>
+                                        <th>Requested By User</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
