@@ -259,7 +259,10 @@
                                         </form>
                                     @else
                                         <div class="alert alert-warning">
-                                            Please <a href="{{ route('login') }}">login</a> or <a href="{{ route('register') }}">register</a> to request a book.
+                                            Please
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">login</a> or
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">register</a>
+                                            to request a book.
                                         </div>
                                     @endauth
                                 </div>
@@ -375,3 +378,73 @@
             }
         </script>
     @endsection
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="loginForm" method="POST" action="{{ route('user.login') }}">
+        @csrf
+        <div class="modal-header">
+          <h5 class="modal-title" id="loginModalLabel">Login</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Email -->
+          <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" required>
+          </div>
+          <!-- Password -->
+          <div class="mb-3">
+            <label>Password</label>
+            <input type="password" name="password" class="form-control" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="registerForm" method="POST" action="{{ route('user.register') }}">
+        @csrf
+        <div class="modal-header">
+          <h5 class="modal-title" id="registerModalLabel">Register</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Name -->
+          <div class="mb-3">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <!-- Email -->
+          <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" required>
+          </div>
+          <!-- Password -->
+          <div class="mb-3">
+            <label>Password</label>
+            <input type="password" name="password" class="form-control" required>
+          </div>
+          <!-- Mobile -->
+          <div class="mb-3">
+            <label>Mobile</label>
+            <input type="text" name="mobile" class="form-control" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

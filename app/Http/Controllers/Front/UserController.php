@@ -82,7 +82,7 @@ class UserController extends Controller
         //     $message->to($email)->subject('Confirm your Multi-vendor E-commerce Application Account');
         // });
 
-        return redirect('user/login-register')->with('success_message','Registration successfully!!');
+        return redirect(url()->previous())->with('success_message','Registration successfully!!');
     }
 
     // User Login (in front/users/login_register.blade.php) <form> submission using an AJAX request. Check front/js/custom.js
@@ -119,7 +119,7 @@ class UserController extends Controller
             }
 
             // Redirect to cart or dashboard
-            return redirect(url('/'));
+            return redirect(url()->previous());
         } else {
             // Incorrect credentials
             return redirect()->back()->with('error_message', 'Incorrect Email or Password!');
