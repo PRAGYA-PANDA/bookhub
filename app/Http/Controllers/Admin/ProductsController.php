@@ -173,6 +173,9 @@ class ProductsController extends Controller
             $product->subject_id    = $data['subject_id'];
             $product->language_id    = $data['language_id'];
 
+            // Save location field
+            $product->location = $data['location'] ?? null;
+
 
             // Saving the seleted filter for a product
             $productFilters = ProductsFilter::productFilters(); // Get ALL the (enabled/active) Filters

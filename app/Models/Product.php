@@ -12,6 +12,11 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        // add other fillable fields as needed
+        'location',
+    ];
+
     // Every 'product' belongs to a 'section'
     public function section()
     {

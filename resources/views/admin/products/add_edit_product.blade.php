@@ -181,6 +181,16 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="location">Location (Latitude,Longitude)</label>
+                                    <div class="input-group mb-2">
+                                        <input type="text" class="form-control" id="location" name="location" placeholder="e.g. 28.6139,77.2090" value="{{ old('location', $product->location ?? '') }}">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" id="getLocationBtn">Get Current Location</button>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-muted">You can enter manually or use the button to auto-detect.</small>
+                                </div>
+                                <div class="form-group">
                                     <label for="category_id">Select Category</label>
                                     {{-- <input type="text" class="form-control" id="category_id" placeholder="Enter Category Name" name="category_id" @if (!empty($product['name'])) value="{{ $product['category_id'] }}" @else value="{{ old('category_id') }}" @endif>  --}} {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
                                     <select name="category_id" id="category_id" class="form-control text-dark">
@@ -604,5 +614,21 @@
 
         renderSelected();
     </script>
-
+<script>
+    document.getElementById('getLocationBtn').addEventListener('click', function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                document.getElementById('location').value = position.coords.latitude + ',' + position.coords.longitude;
+            }, function(error) {
+                alert('Unable to retrieve your location.');
+            });
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
+    });
+</script>
 @endsection
+
+@push('scripts')
+
+@endpush
