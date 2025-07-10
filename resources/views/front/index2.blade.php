@@ -158,7 +158,7 @@
 
         .frontpage-popular-posts .card {
             width: 300px;
-            height: 350px !important;
+            height: 400px !important;
         }
 
 

@@ -50,7 +50,7 @@
                                             <tr>
                                                 <td>{{ __($key + 1) }}</td>
                                                 <td>{{ $product['product_name'] }}</td>
-                                                <td>{{ $product['product_isbn'] }}</td>
+                                                <td>ISBN-{{ $product['product_isbn'] }}</td>
 
                                                 <td>
                                                     @if (!empty($product['product_image']))

@@ -231,6 +231,7 @@ Route::namespace('App\Http\Controllers\Front')->group(function() {
     Route::get('/', 'IndexController@index');
     Route::post('set-condition', [IndexController::class, 'setCondition'])->name('set.condition');
     Route::post('/set-language', [IndexController::class, 'setLanguage']);
+    Route::post('/set-location-session', [App\Http\Controllers\Front\LocationController::class, 'setLocationSession']);
 
 
 

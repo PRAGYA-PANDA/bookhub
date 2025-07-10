@@ -222,7 +222,7 @@ class ProductsController extends Controller
 
             $product->condition     = $data['condition'];
             $product->product_name     = $data['product_name'];
-            $product->product_isbn     = "ISBN-".$data['product_isbn'];
+            $product->product_isbn     = $data['product_isbn'];
             $product->product_price    = $data['product_price'];
             $product->product_discount = $data['product_discount'];
             $product->product_weight   = $data['product_weight'] . "Kg";

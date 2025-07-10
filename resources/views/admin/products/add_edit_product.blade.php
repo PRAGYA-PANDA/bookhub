@@ -188,7 +188,8 @@
                                             <button class="btn btn-outline-secondary" type="button" id="getLocationBtn">Get Current Location</button>
                                         </div>
                                     </div>
-                                    <small class="form-text text-muted">You can enter manually or use the button to auto-detect.</small>
+                                    <small class="form-text text-muted">You can enter manually, use the button, or pick on the map below.</small>
+                                    <div id="map" style="height: 300px; margin-top: 10px;"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="category_id">Select Category</label>
@@ -339,8 +340,8 @@
 
                                 <div class="form-group">
                                     <label for="product_isbn">ISBN number</label>
-                                    <input type="text" class="form-control" id="product_isbn"
-                                        placeholder="Enter ISBN" name="product_isbn"
+                                    <input type="number" class="form-control" id="product_isbn"
+                                        placeholder="Enter ISBN-" name="product_isbn"
                                         @if (!empty($product['product_isbn'])) value="{{ $product['product_isbn'] }}" @else value="{{ old('product_isbn') }}" @endif>
                                     {{-- Repopulating  Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
                                 </div>
@@ -614,16 +615,56 @@
 
         renderSelected();
     </script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script>
+    // Existing geolocation button
     document.getElementById('getLocationBtn').addEventListener('click', function() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 document.getElementById('location').value = position.coords.latitude + ',' + position.coords.longitude;
+                updateMapMarker(position.coords.latitude, position.coords.longitude);
             }, function(error) {
                 alert('Unable to retrieve your location.');
             });
         } else {
             alert('Geolocation is not supported by this browser.');
+        }
+    });
+
+    // Leaflet map integration
+    var defaultLatLng = [28.6139, 77.2090]; // Default to New Delhi
+    var locationInput = document.getElementById('location');
+    var initialLatLng = locationInput.value ? locationInput.value.split(',').map(Number) : defaultLatLng;
+    var map = L.map('map').setView(initialLatLng, 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    var marker = L.marker(initialLatLng, {draggable:true}).addTo(map);
+
+    function updateMapMarker(lat, lng) {
+        marker.setLatLng([lat, lng]);
+        map.setView([lat, lng], 13);
+    }
+
+    marker.on('dragend', function(e) {
+        var latlng = marker.getLatLng();
+        locationInput.value = latlng.lat.toFixed(6) + ',' + latlng.lng.toFixed(6);
+    });
+
+    map.on('click', function(e) {
+        marker.setLatLng(e.latlng);
+        locationInput.value = e.latlng.lat.toFixed(6) + ',' + e.latlng.lng.toFixed(6);
+    });
+
+    locationInput.addEventListener('change', function() {
+        var val = locationInput.value.split(',');
+        if(val.length === 2) {
+            var lat = parseFloat(val[0]);
+            var lng = parseFloat(val[1]);
+            if(!isNaN(lat) && !isNaN(lng)) {
+                updateMapMarker(lat, lng);
+            }
         }
     });
 </script>
