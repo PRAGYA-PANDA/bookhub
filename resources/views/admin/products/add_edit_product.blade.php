@@ -56,6 +56,14 @@
         .options-list div:hover {
             background: #f1f1f1;
         }
+        #searchResults {
+            max-height: 200px;
+            overflow-y: auto;
+            cursor: pointer;
+        }
+        #searchResults .list-group-item {
+            padding: 8px 12px;
+        }
     </style>
     <div class="main-panel">
         <div class="content-wrapper">
@@ -191,6 +199,7 @@
                                     <small class="form-text text-muted">You can enter manually, use the button, or pick on the map below.</small>
                                     <div id="map" style="height: 300px; margin-top: 10px;"></div>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="category_id">Select Category</label>
                                     {{-- <input type="text" class="form-control" id="category_id" placeholder="Enter Category Name" name="category_id" @if (!empty($product['name'])) value="{{ $product['category_id'] }}" @else value="{{ old('category_id') }}" @endif>  --}} {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
@@ -271,13 +280,10 @@
 
                                 {{-- <div class="form-group">
                                     <label for="authors">Select Authors</label>
-                                    <small class="text-muted">(Search and select multiple authors.)</small>
-
+                                    <small class="text-muted">(Search and select mul
                                     <div class="multi-select-wrapper">
                                       <div class="selected-options"  id="selectedOptions"></div>
-
                                       <input type="text" id="searchInput" class="search-input form-control mb-2" placeholder="Search Authors">
-
                                       <div class="options-list" id="optionsList"></div>
                                     </div>
                                   </div> --}}
@@ -305,9 +311,6 @@
                                         </option>
                                     @endforeach
                                 </select>
-
-
-
 
                                 <div class="form-group">
                                     <label for="product_name">Book Name</label>

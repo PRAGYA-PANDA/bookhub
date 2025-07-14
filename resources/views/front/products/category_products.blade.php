@@ -4,12 +4,12 @@
     <div class="container py-5">
         <div class="row">
             <!-- Filters Sidebar -->
-            <div class="col-lg-3 mb-4">
+            {{-- <div class="col-lg-3 mb-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title mb-4"><b>Filters</b></h5>
                         <form action="{{ url('/category-products' . ($categoryDetails ? '/' . $categoryDetails->id : '')) }}"
-                            method="get" id="filterForm">
+                            method="get" id="filterForm"> --}}
 
                             <!-- Condition Filter -->
                             {{-- @php
@@ -47,7 +47,7 @@
                             </div> --}}
 
                             <!-- Price Range Filter -->
-                            <div class="mb-4">
+                            {{-- <div class="mb-4">
                                 <label class="form-label">Price Range</label>
                                 <div class="price-range-display mb-2 text-center">
                                     ₹<span id="currentMinPrice">{{ request('min_price', 0) }}</span> -
@@ -77,10 +77,10 @@
                                     style="background-color: #6c5dd4; border-color: #6c5dd4;">
                                     Apply Price Filter
                                 </button>
-                            </div>
+                            </div> --}}
 
                             <!-- Clear All Filters -->
-                            @if (request('condition') || request('language_id') || request('min_price') || request('max_price'))
+                            {{-- @if (request('condition') || request('language_id') || request('min_price') || request('max_price'))
                                 <a href="{{ url('/category-products' . ($categoryDetails ? '/' . $categoryDetails->id : '')) }}"
                                     class="btn btn-outline-secondary btn-sm w-100">
                                     Clear All Filters
@@ -89,10 +89,10 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Category Products -->
-            <div class="col-lg-9">
+            <div class="col-lg-12 mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h4 class="mb-1">
