@@ -254,6 +254,10 @@ class UserController extends Controller
             ->toArray();
 
              $category = Category::limit(10)->get();
+             $sections = Section::all();
+             $logos = HeaderLogo::all();
+             $language    = Language::get();
+
 
         if ($request->ajax()) {
             $data = $request->all();
@@ -294,7 +298,7 @@ class UserController extends Controller
         } else {
             // GET request: load the account view
             $countries = \App\Models\Country::where('status', 1)->get()->toArray();
-            return view('front.users.user_account')->with(compact('countries', 'condition', 'footerProducts','category'));
+            return view('front.users.user_account')->with(compact('countries', 'condition', 'footerProducts','category', 'logos', 'sections', 'language'));
         }
     }
 

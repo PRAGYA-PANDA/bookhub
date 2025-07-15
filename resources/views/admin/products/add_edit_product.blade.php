@@ -188,17 +188,55 @@
                                         <label class="" for="old">Old</label>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="location">Location (Latitude,Longitude)</label>
-                                    <div class="input-group mb-2">
-                                        <input type="text" class="form-control" id="location" name="location" placeholder="e.g. 28.6139,77.2090" value="{{ old('location', $product->location ?? '') }}">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary" type="button" id="getLocationBtn">Get Current Location</button>
-                                        </div>
+                                <div class="card mb-4">
+                                    <div class="card-header bg-primary text-white">
+                                        <i class="mdi mdi-map-marker"></i> Location
                                     </div>
-                                    <small class="form-text text-muted">You can enter manually, use the button, or pick on the map below.</small>
-                                    <div id="map" style="height: 300px; margin-top: 10px;"></div>
+                                    <div class="card-body">
+                                        <div class="form-group mb-3">
+                                            <label for="location">Coordinates (Latitude,Longitude)</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="location" name="location" placeholder="e.g. 28.6139,77.2090" value="{{ old('location', $product->location ?? '') }}">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-secondary" type="button" id="getLocationBtn">
+                                                        <i class="mdi mdi-crosshairs-gps"></i> Get Current Location
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <small class="form-text text-muted">Enter manually, use the button, or search below.</small>
+                                        </div>
+                                        <div class="form-group mb-3" style="position:relative;">
+                                            <label for="searchLocation">Search Location</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="mdi mdi-magnify"></i></span>
+                                                </div>
+                                                <input type="text" class="form-control" id="searchLocation" placeholder="Type a place, address, or city...">
+                                            </div>
+                                            <div class="list-group" id="searchResults" style="position:absolute;z-index:1000;width:100%;display:none;"></div>
+                                            <small class="form-text text-muted">Start typing to search for a location.</small>
+                                        </div>
+                                        <div id="map" style="height: 300px; margin-top: 10px; border-radius: 8px; overflow: hidden;"></div>
+                                    </div>
                                 </div>
+                                <style>
+                                    #searchResults {
+                                        max-height: 200px;
+                                        overflow-y: auto;
+                                        cursor: pointer;
+                                        border-radius: 0 0 0.25rem 0.25rem;
+                                        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                                    }
+                                    #searchResults .list-group-item {
+                                        padding: 10px 16px;
+                                        font-size: 15px;
+                                        transition: background 0.2s;
+                                    }
+                                    #searchResults .list-group-item:hover, #searchResults .list-group-item.active {
+                                        background: #f1f1f1;
+                                        color: #007bff;
+                                    }
+                                </style>
 
                                 <div class="form-group">
                                     <label for="category_id">Select Category</label>
@@ -668,6 +706,49 @@
             if(!isNaN(lat) && !isNaN(lng)) {
                 updateMapMarker(lat, lng);
             }
+        }
+    });
+
+    // Search Location Geocoding
+    const searchInput = document.getElementById('searchLocation');
+    const searchResults = document.getElementById('searchResults');
+
+    searchInput.addEventListener('input', function() {
+        const query = this.value.trim();
+        if (query.length < 3) {
+            searchResults.style.display = 'none';
+            searchResults.innerHTML = '';
+            return;
+        }
+        searchResults.innerHTML = '<div class="list-group-item">Searching...</div>';
+        searchResults.style.display = 'block';
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                searchResults.innerHTML = '';
+                if (data.length === 0) {
+                    searchResults.innerHTML = '<div class="list-group-item">No results found.</div>';
+                    return;
+                }
+                data.forEach(place => {
+                    const item = document.createElement('a');
+                    item.className = 'list-group-item list-group-item-action';
+                    item.textContent = place.display_name;
+                    item.href = '#';
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        updateMapMarker(place.lat, place.lon);
+                        locationInput.value = `${parseFloat(place.lat).toFixed(6)},${parseFloat(place.lon).toFixed(6)}`;
+                        searchResults.style.display = 'none';
+                        searchInput.value = place.display_name;
+                    });
+                    searchResults.appendChild(item);
+                });
+            });
+    });
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.style.display = 'none';
         }
     });
 </script>
