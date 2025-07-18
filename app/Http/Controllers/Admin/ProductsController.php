@@ -225,7 +225,7 @@ class ProductsController extends Controller
             $product->product_isbn     = $data['product_isbn'];
             $product->product_price    = $data['product_price'];
             $product->product_discount = $data['product_discount'];
-            $product->product_weight   = $data['product_weight'] . "Kg";
+            // $product->product_weight   = $data['product_weight'] . "Kg";
             $product->description      = $data['description'];
             $product->meta_title       = $data['meta_title'];
             $product->meta_description = $data['meta_description'];

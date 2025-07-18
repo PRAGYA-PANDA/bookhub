@@ -58,9 +58,6 @@
                     </button>
                 </div>
             @endif
-
-
-
             <div class="container py-4">
                 <div class="row">
                     <!-- Update Contact Details -->
@@ -151,11 +148,7 @@
                     </div>
                 </div>
             </div>
-
 </div>
-
-
-
             </div>
         </div>
     </div>

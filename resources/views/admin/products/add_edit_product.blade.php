@@ -189,7 +189,7 @@
                                     </div>
                                 </div>
                                 <div class="card mb-4">
-                                    <div class="card-header bg-primary text-white">
+                                    <div class="card-header text-white" style="background-color: #928e8e">
                                         <i class="mdi mdi-map-marker"></i> Location
                                     </div>
                                     <div class="card-body">
@@ -205,7 +205,8 @@
                                             </div>
                                             <small class="form-text text-muted">Enter manually, use the button, or search below.</small>
                                         </div>
-                                        <div class="form-group mb-3" style="position:relative;">
+
+                                        {{-- <div class="form-group mb-3" style="position:relative;">
                                             <label for="searchLocation">Search Location</label>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
@@ -215,7 +216,8 @@
                                             </div>
                                             <div class="list-group" id="searchResults" style="position:absolute;z-index:1000;width:100%;display:none;"></div>
                                             <small class="form-text text-muted">Start typing to search for a location.</small>
-                                        </div>
+                                        </div> --}}
+
                                         <div id="map" style="height: 300px; margin-top: 10px; border-radius: 8px; overflow: hidden;"></div>
                                     </div>
                                 </div>
@@ -326,7 +328,8 @@
                                     </div>
                                   </div> --}}
 
-                                <div class="form-group">
+
+                                  <div class="form-group">
                                     <label for="authors">Select Authors</label>
                                     <small class="text-muted">(Search and select multiple authors.)</small>
 
@@ -401,13 +404,14 @@
                                         @if (!empty($product['product_discount'])) value="{{ $product['product_discount'] }}" @else value="{{ old('product_discount') }}" @endif>
                                     {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
                                 </div>
-                                <div class="form-group">
+
+                                
+                                {{-- <div class="form-group">
                                     <label for="product_weight">Weight (in Kg)</label>
                                     <input type="number" class="form-control" id="product_weight"
                                         placeholder="Enter Book Weight" name="product_weight"
                                         @if (!empty($product['product_weight'])) value="{{ $product['product_weight'] }}" @else value="{{ old('product_weight') }}" @endif>
-                                    {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
-                                </div>
+                                </div> --}}
 
 
                                 <div class="form-group">
@@ -710,7 +714,7 @@
     });
 
     // Search Location Geocoding
-    const searchInput = document.getElementById('searchLocation');
+    //const searchInput = document.getElementById('searchLocation');
     const searchResults = document.getElementById('searchResults');
 
     searchInput.addEventListener('input', function() {
