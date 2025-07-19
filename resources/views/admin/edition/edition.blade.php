@@ -34,7 +34,7 @@
                                         @foreach ($editions as $key => $edition)
                                             <tr>
                                                 <td>{{ __($key + 1) }}</td>
-                                                <td>{{ $edition->edition }}</td>
+                                                <td>{{ $edition->edition ?? 'Not set'}}</td>
                                                 
                                                 <td>
                                                     <a title="Edit Edition" href="{{ route('edition.edit', $edition->id) }}">
