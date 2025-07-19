@@ -25,9 +25,8 @@
                                 <table id="editions" class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>No.</th>
                                             <th>Edition</th>
-                                           
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
