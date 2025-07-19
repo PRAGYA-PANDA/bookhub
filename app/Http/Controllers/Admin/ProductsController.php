@@ -15,6 +15,7 @@ use App\Models\ProductsFilter;
 use App\Models\ProductsAttribute;
 use App\Models\Subject;
 use App\Models\Language;
+use App\Models\Edition;
 
 class ProductsController extends Controller
 {
@@ -215,9 +216,6 @@ class ProductsController extends Controller
                 $data['product_discount'] = 0;
             }
 
-            if (empty($data['product_weight'])) {
-                $data['product_weight'] = 0;
-            }
 
 
             $product->condition     = $data['condition'];
@@ -225,7 +223,7 @@ class ProductsController extends Controller
             $product->product_isbn     = $data['product_isbn'];
             $product->product_price    = $data['product_price'];
             $product->product_discount = $data['product_discount'];
-            // $product->product_weight   = $data['product_weight'] . "Kg";
+            $product->edition_id = $data['edition_id'];
             $product->description      = $data['description'];
             $product->meta_title       = $data['meta_title'];
             $product->meta_description = $data['meta_description'];
@@ -287,9 +285,9 @@ class ProductsController extends Controller
         $subjects = Subject::where('status', 1)->get()->toArray();
         // dd($subjects);
         $languages = Language::get();
-
+        $editions = \App\Models\Edition::all();
         // return view('admin.products.add_edit_product')->with(compact('title', 'product'));
-        return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories', 'publishers','authors','subjects', 'languages'));
+        return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories', 'publishers','authors','subjects', 'languages', 'editions'));
     }
 
     public function getAuthor(Request $request){

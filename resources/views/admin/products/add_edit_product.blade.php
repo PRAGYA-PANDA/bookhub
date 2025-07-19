@@ -299,6 +299,16 @@
                                     </select>
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="edition_id">Select Edition</label>
+                                    <select name="edition_id" id="edition_id" class="form-control text-dark">
+                                        <option value="">Select Edition</option>
+                                        @foreach ($editions as $edition)
+                                            <option value="{{ $edition->id }}" @if (!empty($product['edition_id']) && $product['edition_id'] == $edition->id) selected @endif>{{ $edition->edition }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                                 {{-- <div class="form-group">
                                     <label for="authors">Select Authors</label>
                                     <small class="text-muted">(Hold Ctrl (Cmd on Mac) to select multiple authors.)</small>
