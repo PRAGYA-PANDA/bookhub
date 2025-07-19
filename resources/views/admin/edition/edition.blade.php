@@ -31,7 +31,7 @@
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody> 
                                         @foreach ($editions as $key => $edition)
                                             <tr>
                                                 <td>{{ __($key + 1) }}</td>
