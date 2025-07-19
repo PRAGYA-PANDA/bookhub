@@ -68,9 +68,9 @@
                         <li class="nav-item"> <a
                                 @if (Session::get('page') == 'products') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
                                 class="nav-link" href="{{ url('admin/products') }}">Products</a></li>
-                                <li class="nav-item"> <a
-                                    @if (Session::get('page') == 'ebooks') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
-                                    class="nav-link" href="{{ url('admin/ebooks') }}">Ebooks</a></li>
+                        <li class="nav-item"> <a
+                                @if (Session::get('page') == 'ebooks') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
+                                class="nav-link" href="{{ url('admin/ebooks') }}">Ebooks</a></li>
                         <li class="nav-item"> <a
                                 @if (Session::get('page') == 'coupons') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
                                 class="nav-link" href="{{ url('admin/coupons') }}">Coupons</a></li>
@@ -137,7 +137,8 @@
                     <i class="menu-arrow"></i>
                 </a>
                 <div class="collapse" id="ui-admins">
-                    <ul class="nav flex-column sub-menu" style="background: #fff !important; color: #052CA3 !important">
+                    <ul class="nav flex-column sub-menu"
+                        style="background: #fff !important; color: #052CA3 !important">
 
                         {{-- The Route Parameter {type} is the `type` column in the `admins` table, which can only be: admin, subadmin or vendor. And if there's no parameter passed at all, show ALL of the admins, subadmins and vendors at the same page --}}
                         <li class="nav-item"> <a
@@ -160,6 +161,7 @@
                 <a @if (Session::get('page') == 'sections' ||
                         Session::get('page') == 'categories' ||
                         Session::get('page') == 'products' ||
+                        Session::get('page') == 'edition' ||
                         Session::get('page') == 'ebooks' ||
                         Session::get('page') == 'publisher' ||
                         Session::get('page') == 'filters' ||
@@ -197,9 +199,12 @@
                         <li class="nav-item"> <a
                                 @if (Session::get('page') == 'products') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
                                 class="nav-link" href="{{ url('admin/products') }}">Products</a></li>
-                                <li class="nav-item"> <a
-                                    @if (Session::get('page') == 'ebooks') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
-                                    class="nav-link" href="{{ url('admin/ebooks') }}">Ebooks</a></li>
+                        <li class="nav-item"> <a
+                                @if (Session::get('page') == 'edition') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
+                                class="nav-link" href="{{ url('admin/edition') }}">Edition</a></li>
+                        {{-- <li class="nav-item"> <a
+                                @if (Session::get('page') == 'ebooks') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
+                                class="nav-link" href="{{ url('admin/ebooks') }}">Ebooks</a></li> --}}
                         <li class="nav-item"> <a
                                 @if (Session::get('page') == 'coupons') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
                                 class="nav-link" href="{{ url('admin/coupons') }}">Coupons</a></li>

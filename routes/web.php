@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Front\BookRequestController;
 use App\Http\Controllers\Front\IndexController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\EditionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -203,6 +204,16 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         Route::get('add-edit-ebook/{id?}', [App\Http\Controllers\Admin\EbooksController::class, 'create'])->name('admin.ebooks.create');
         Route::post('add-edit-ebook/{id?}', [App\Http\Controllers\Admin\EbooksController::class, 'store'])->name('admin.ebooks.store');
         Route::get('delete-ebook/{id}', [App\Http\Controllers\Admin\EbooksController::class, 'destroy'])->name('admin.ebooks.delete');
+
+        // Editions
+        Route::resource('edition', EditionController::class)->names([
+            'index' => 'edition.index',
+            'create' => 'edition.create',
+            'store' => 'edition.store',
+            'edit' => 'edition.edit',
+            'update' => 'edition.update',
+            'destroy' => 'edition.destroy',
+        ])->except(['show']);
 
     });
 

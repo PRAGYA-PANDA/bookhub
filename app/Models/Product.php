@@ -44,6 +44,11 @@ class Product extends Model
     return $this->belongsTo(Language::class, 'language_id');
 }
 
+    public function edition()
+    {
+        return $this->belongsTo(Edition::class, 'edition_id');
+    }
+
 
     public function authors()
     {
