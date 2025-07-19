@@ -467,18 +467,30 @@ class ProductsController extends Controller
             'category',
             'language',
             'publisher',
-            'authors', // add this if not already present
+            'authors',
             'attributes' => function ($query) {
-        $query->where('stock', '>', 0)->where('status', 1);
+                $query->where('stock', '>', 0)->where('status', 1);
             },
             'images',
             'vendor',
-        ])->find($id); // Eager Loading (using with() method): https://laravel.com/docs/9.x/eloquent-relationships#eager-loading    // Eager Loading Multiple Relationships: https://laravel.com/docs/9.x/eloquent-relationships#eager-loading-multiple-relationships
+        ])->find($id);
+
+        // Check if product or its category is missing
+        if (!$productDetails || !$productDetails->category) {
+            abort(404, 'Product or category not found');
+        }
+
+        $categoryDetails = Category::categoryDetails($productDetails->category->url);
+
+        $similarProducts = Product::with('publisher', 'authors')
+            ->where('category_id', $productDetails->category->id)
+            ->where('id', '!=', $id)
+            ->limit(4)
+            ->inRandomOrder()
+            ->get()
+            ->toArray();
 
                                                                                           // dd($productDetails->publisher->name);
-        $categoryDetails = Category::categoryDetails($productDetails['category']['url']); // to get the Breadcrumb links (which is HTML) to show them in front/products/detail.blade.php
-
-                                                                                                                                                                                                // Get similar products (or related products) (functionality) by getting other products from THE SAME CATEGORY
         $similarProducts = Product::with('publisher', 'authors')->where('category_id', $productDetails['category']['id'])->where('id', '!=', $id)->limit(4)->inRandomOrder()->get()->toArray(); // where('id', '!=', $id)    means get all similar products (of the same category) EXCEPT (exclude) the currently viewed product (to not be repeated (to prevent repetition))    // limit(4)->inRandomOrder()    means show only 4 similar products but IN RANDOM ORDER
 
                                                  // Recently Viewed Products (Items) functionality (we created `recently_viewed_products` table but we won't need to create a Model for it, because we won't do much work with it)
@@ -651,7 +663,7 @@ class ProductsController extends Controller
             }
 
             // Check if the selected product `product_id` with that selected `size` have available `stock` in `products_attributes` table
-            $getProductStock = ProductsAttribute::getProductStock($data['product_id'], $data['size']);
+            $getProductStock = ProductsAttribute::getProductStock($data['product_id'], null);
 
             if ($getProductStock < $data['quantity']) { // if the `stock` available (in `products_attributes` table) is less than the ordered quantity by user (the quantity that the user desires)
                 return redirect()->back()->with('error_message', 'Required Quantity is not available!');
@@ -676,7 +688,7 @@ class ProductsController extends Controller
                 $countProducts = Cart::where([
                     'user_id'    => $user_id, // THAT EXACT authenticated/logged in user (using their `user_id` because they're authenticated/logged in)
                     'product_id' => $data['product_id'],
-                    'size'       => $data['size'],
+                    // 'size'       => $data['size'],
                 ])->count();
             } else {                       // if the user is NOT logged in (guest)
                                                // Check if that guest or NOT logged in user has already THE SAME products `product_id` with THE SAME `size` (in `carts` table) in the Cart i.e. the `carts` table    // When user logins, their `user_id` gets updated (check userLogin() method in UserController.php)
@@ -684,7 +696,7 @@ class ProductsController extends Controller
                 $countProducts = Cart::where([ // We get the count (number) of that specific product `product_id` with that specific `size` to prevent repetition in the `carts` table
                     'session_id' => $session_id,   // THAT EXACT NON-authenticated/NOT logged or Guest user (using their `session_id` because they're NOT authenticated/NOT logged in or Guest)
                     'product_id' => $data['product_id'],
-                    'size'       => $data['size'],
+                    // 'size'       => $data['size'],
                 ])->count();
             }
 
@@ -694,7 +706,7 @@ class ProductsController extends Controller
                     'session_id' => $session_id,   // THAT EXACT NON-authenticated/NOT logged or Guest user (using their `session_id` because they're NOT authenticated/NOT logged in or Guest)
                     'user_id'    => $user_id ?? 0, // if the user is authenticated/logged in, take its $user_id. If not, make it zero 0    // When user logins, their `user_id` gets updated (check userLogin() method in UserController.php)
                     'product_id' => $data['product_id'],
-                    'size'       => $data['size'],
+                    // 'size'       => $data['size'],
                 ])->increment('quantity', $data['quantity']); // Add the new added quantity (    $data['quantity']    ) to the already existing `quantity` in the `carts` table    // Update Statements: Increment & Decrement: https://laravel.com/docs/9.x/queries#increment-and-decrement
             } else {                                      // if that `product_id` with that `size` was never ordered by that user `session_id` or `user_id` (i.e. that product with that size for that user doesn't exist in the `carts` table), INSERT it into the `carts` table for the first time
                                                               // INSERT the ordered product `product_id`, the user's session ID `session_id`, `size` and `quantity` in the `carts` table
@@ -703,13 +715,13 @@ class ProductsController extends Controller
                 $item->session_id = $session_id; // $session_id will be stored whether the user is authenticated/logged in or NOT
                 $item->user_id    = $user_id;    // depending on the last if statement (whether user is authenticated/logged in or NOT (guest))    // $user_id will be always zero 0 if the user is NOT authenticated/logged in    // When user logins, their `user_id` gets updated (check userLogin() method in UserController.php)
                 $item->product_id = $data['product_id'];
-                $item->size       = $data['size'];
+                // $item->size       = $data['size'];
                 $item->quantity   = $data['quantity'];
 
                 $item->save();
             }
 
-            return redirect()->back()->with('success_message', 'Product has been added in Cart! <a href="/cart" style="text-decoration: underline !important">View Cart</a>');
+            return redirect()->back()->with('success_message', 'Product has been added in Cart! <a href="cart" style="text-decoration: underline !important">View Cart</a>');
         }
     }
 
@@ -753,7 +765,7 @@ class ProductsController extends Controller
             // Get available product `stock` from `products_attributes` table
             $availableStock = ProductsAttribute::select('stock')->where([
                 'product_id' => $cartDetails['product_id'],
-                'size'       => $cartDetails['size'],
+                // 'size'       => $cartDetails['size'],
             ])->first()->toArray();
 
             if ($data['qty'] > $availableStock['stock']) { // if the user's desired quantity exceeds the available `stack` in `products_attributes` table    // $data['cartid'] comes from the 'data' object sent from inside the $.ajax() method in front/js/custom.js file

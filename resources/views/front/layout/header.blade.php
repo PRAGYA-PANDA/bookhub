@@ -168,7 +168,7 @@ $sections = \App\Models\Section::sections();
                 </div>
 
 
-               
+
 
                 <div class="col-lg-3 col-md-3 col-sm-6">
                     <nav>
@@ -181,7 +181,7 @@ $sections = \App\Models\Section::sections();
                             <li>
                                 <a id="mini-cart-trigger">
                                     <i class="ion ion-md-basket"></i>
-                                    <span class="item-counter totalCartItems">{{ totalCartItems() }}</span>
+                                    <span class="item-counter totalCartItems">{{ totalCartItems()  }}</span>
                                     {{-- totalCartItems() function is in our custom Helpers/Helper.php file that we have registered in 'composer.json' file --}} {{-- We created the CSS class 'totalCartItems' to use it in front/js/custom.js to update the total cart items via AJAX, because in pages that we originally use AJAX to update the cart items (such as when we delete a cart item in http://127.0.0.1:8000/cart using AJAX), the number doesn't change in the header automatically because AJAX is already used and no page reload/refresh has occurred --}}
                                 </a>
                             </li>
@@ -199,8 +199,6 @@ $sections = \App\Models\Section::sections();
         </div>
     </div>
     <!-- Responsive-Buttons /- -->
-
-
 
     <!-- Mini Cart Widget -->
     <div id="appendHeaderCartItems"> {{-- We created the CSS class 'appendHeaderCartItems' to use it in front/js/custom.js to update the total cart items via AJAX in the Mini Cart Wedget, because in pages that we originally use AJAX to update the cart items (such as when we delete a cart item in http://127.0.0.1:8000/cart using AJAX), the number doesn't change in the header automatically because AJAX is already used and no page reload/refresh has occurred --}}
