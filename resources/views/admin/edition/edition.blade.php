@@ -25,17 +25,16 @@
                                 <table id="editions" class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>No.</th>
                                             <th>Edition</th>
-                                           
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody> 
                                         @foreach ($editions as $key => $edition)
                                             <tr>
                                                 <td>{{ __($key + 1) }}</td>
-                                                <td>{{ $edition->edition }}</td>
+                                                <td>{{ $edition->edition ?? 'Not set'}}</td>
                                                 
                                                 <td>
                                                     <a title="Edit Edition" href="{{ route('edition.edit', $edition->id) }}">
