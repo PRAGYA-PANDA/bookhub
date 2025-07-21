@@ -12,8 +12,8 @@ class BookRequestsController extends Controller
 {
     public function index()
     {
-        $bookRequests = BookRequest::with('user')->get();
         Session::put('page', 'bookRequests');
+        $bookRequests = BookRequest::with('user')->get();
         return view('admin.requestedbooks.index', compact('bookRequests'));
     }
 
@@ -30,6 +30,22 @@ class BookRequestsController extends Controller
     return redirect()->back()->with('success', 'Book Request deleted successfully.');
 }
 
+    public function updateStatus(Request $request)
+    {
+        if ($request->ajax()) {
+            $bookRequest = BookRequest::find($request->book_id);
+            if ($bookRequest) {
+                $bookRequest->status = $bookRequest->status == 1 ? 0 : 1;
+                $bookRequest->save();
+                return response()->json([
+                    'status' => $bookRequest->status,
+                    'book_id' => $bookRequest->id,
+                    'message' => 'Status updated successfully.'
+                ]);
+            }
+            return response()->json(['error' => 'Book Request not found.'], 404);
+        }
+    }
 }
 
 

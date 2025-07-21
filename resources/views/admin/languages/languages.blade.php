@@ -44,7 +44,10 @@
                                         </td>
                                         <td>
                                             <a href="{{ url('admin/add-edit-language/'.$language['id']) }}"><i style="font-size:25px;" class="mdi mdi-pencil-box"></i></a>
-                                            <a href="javascript:void(0)" class="confirmDelete" module="language" moduleid="{{ $language['id'] }}"><i style="font-size:25px;" class="mdi mdi-file-excel-box"></i></a>
+
+                                            <a href="{{ url('admin/delete-language/' . $language['id']) }}" onclick="return confirm('Are you sure you want to delete this language?')">
+                                                <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                     @endforeach

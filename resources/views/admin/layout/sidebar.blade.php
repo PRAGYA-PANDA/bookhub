@@ -64,16 +64,44 @@
                     <i class="menu-arrow"></i>
                 </a>
                 <div class="collapse" id="ui-catalogue">
-                    <ul class="nav flex-column sub-menu" style="background: #fff !important; color: #052CA3 !important">
+                    <ul class="nav flex-column sub-menu"
+                        style="background: #fff !important; color: #052CA3 !important">
+                        <li class="nav-item"> <a
+                                @if (Session::get('page') == 'sections') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
+                                class="nav-link" href="{{ url('admin/sections') }}">Sections</a></li>
+                        <li class="nav-item"> <a
+                                @if (Session::get('page') == 'categories') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
+                                class="nav-link" href="{{ url('admin/categories') }}">Categories</a></li>
+                        <li class="nav-item"> <a
+                                @if (Session::get('page') == 'publisher') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
+                                class="nav-link" href="{{ url('admin/publisher') }}">Publisher</a></li>
+                        <li class="nav-item"> <a
+                                @if (Session::get('page') == 'authors') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
+                                class="nav-link" href="{{ url('admin/authors') }}">Author</a></li>
+                        <li class="nav-item"> <a
+                                @if (Session::get('page') == 'subjects') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
+                                class="nav-link" href="{{ url('admin/subjects') }}">Subject</a></li>
+                        <li class="nav-item"> <a
+                                @if (Session::get('page') == 'languages') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
+                                class="nav-link" href="{{ url('admin/languages') }}">Book Languages</a></li>
                         <li class="nav-item"> <a
                                 @if (Session::get('page') == 'products') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
                                 class="nav-link" href="{{ url('admin/products') }}">Products</a></li>
                         <li class="nav-item"> <a
+                                @if (Session::get('page') == 'edition') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
+                                class="nav-link" href="{{ url('admin/edition') }}">Edition</a></li>
+                        {{-- <li class="nav-item"> <a
                                 @if (Session::get('page') == 'ebooks') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
-                                class="nav-link" href="{{ url('admin/ebooks') }}">Ebooks</a></li>
+                                class="nav-link" href="{{ url('admin/ebooks') }}">Ebooks</a></li> --}}
                         <li class="nav-item"> <a
                                 @if (Session::get('page') == 'coupons') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
                                 class="nav-link" href="{{ url('admin/coupons') }}">Coupons</a></li>
+                        <li class="nav-item"> <a
+                                @if (Session::get('page') == 'filters') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
+                                class="nav-link" href="{{ url('admin/filters') }}">Filters</a></li>
+                        <li class="nav-item"> <a
+                                @if (Session::get('page') == 'bookRequests') style="background: #052CA3 !important; color: #FFF !important" @else style="background: #fff !important; color: #052CA3 !important" @endif
+                                class="nav-link" href="{{ url('admin/requestedbooks') }}">Requested Books</a></li>
                     </ul>
                 </div>
             </li>

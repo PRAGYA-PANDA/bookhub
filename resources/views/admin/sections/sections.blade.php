@@ -64,7 +64,9 @@
                                                     {{-- <a title="Section" class="confirmDelete" href="{{ url('admin/delete-section/' . $section['id']) }}"> --}}
                                                         {{-- <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i> --}} {{-- Icons from Skydash Admin Panel Template --}}
                                                     {{-- </a> --}}
-                                                    <a href="JavaScript:void(0)" class="confirmDelete" module="section" moduleid="{{ $section['id'] }}">
+
+
+                                                    <a href="{{ url('admin/delete-section/' . $section['id']) }}" onclick="return confirm('Are you sure you want to delete this section?')">
                                                         <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i> {{-- Icons from Skydash Admin Panel Template --}}
                                                     </a>
                                                 </td>
