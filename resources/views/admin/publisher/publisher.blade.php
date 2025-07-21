@@ -60,12 +60,13 @@
                                                         <i style="font-size: 25px" class="mdi mdi-pencil-box"></i> {{-- Icons from Skydash Admin Panel Template --}}
                                                     </a>
 
-                                                    {{-- Confirm Deletion JS alert and Sweet Alert --}}
-                                                    {{-- <a title="publisher" class="confirmDelete" href="{{ url('admin/delete-publisher/' . $publisher['id']) }}"> --}}
-                                                        {{-- <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i> --}} {{-- Icons from Skydash Admin Panel Template --}}
-                                                    {{-- </a> --}}
-                                                    <a href="JavaScript:void(0)" class="confirmDelete" module="publisher" moduleid="{{ $publisher['id'] }}">
-                                                        <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i> {{-- Icons from Skydash Admin Panel Template --}}
+                                                    {{-- <a href="JavaScript:void(0)" class="confirmDelete" module="publisher" moduleid="{{ $publisher['id'] }}">
+                                                        <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i>
+                                                    </a> --}}
+
+
+                                                    <a href="{{ url('admin/delete-publisher/' . $publisher['id']) }}" onclick="return confirm('Are you sure you want to delete this publisher?')">
+                                                        <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i>
                                                     </a>
                                                 </td>
                                             </tr>

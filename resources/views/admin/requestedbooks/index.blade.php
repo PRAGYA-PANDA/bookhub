@@ -31,9 +31,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($bookRequests as $book)
+                                    @foreach($bookRequests as $key => $book)
                                     <tr>
-                                        <td>{{ $book['id'] }}</td>
+                                        <td>{{ $key + 1 }}</td>
                                         <td>{{ $book['book_title'] }}</td>
                                         <td>{{ $book['author_name'] }}</td>
                                         <td>{{ $book['message'] }}</td>
@@ -41,11 +41,11 @@
                                         <td>
                                             @if($book['status']==1)
                                                 <a class="updateBookStatus" id="book-{{ $book['id'] }}" book_id="{{ $book['id'] }}" href="javascript:void(0)">
-                                                <i style="font-size:25px;" class="mdi mdi-bookmark-check" status="Active"></i>
+                                                <i style="font-size:25px;" title="Book Available" class="mdi mdi-bookmark-check" status="Active"></i>
                                                 </a>
                                             @else
                                                 <a class="updateBookStatus" id="book-{{ $book['id'] }}" book_id="{{ $book['id'] }}" href="javascript:void(0)">
-                                                <i style="font-size:25px;" class="mdi mdi-bookmark-outline" status="Inactive"></i>
+                                                <i style="font-size:25px;" title="Book Requested" class="mdi mdi-bookmark-outline" status="Inactive"></i>
                                                 </a>
                                             @endif
                                         </td>
@@ -76,4 +76,37 @@
     </div>
     @include('admin.layout.footer')
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function(){
+    $('.updateBookStatus').click(function(){
+        var book_id = $(this).attr('book_id');
+        var $icon = $(this).find('i');
+        $.ajax({
+            type: 'POST',
+            url: '{{ route("bookrequests.updateStatus") }}',
+            data: {
+                _token: '{{ csrf_token() }}',
+                book_id: book_id
+            },
+            success: function(resp){
+                if(resp.status == 1){
+                    $icon.removeClass('mdi-bookmark-outline').addClass('mdi-bookmark-check')
+                        .attr('title', 'Book Available').attr('status', 'Active');
+                } else {
+                    $icon.removeClass('mdi-bookmark-check').addClass('mdi-bookmark-outline')
+                        .attr('title', 'Book Requested').attr('status', 'Inactive');
+                }
+            },
+            error: function(xhr){
+                alert('Failed to update status.');
+            }
+        });
+    });
+});
+</script>
 @endsection
+
+

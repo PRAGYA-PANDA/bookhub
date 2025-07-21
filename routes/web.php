@@ -82,6 +82,7 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         //RequestedBooks
         Route::get('requestedbooks', [BookRequestsController::class, 'index'])->name('requestbook.index');
         Route::delete('book-requests/{id}', [BookRequestsController::class, 'delete'])->name('bookrequests.delete');
+        Route::post('admin/bookrequests/update-status', [BookRequestsController::class, 'updateStatus'])->name('bookrequests.updateStatus');
 
         //Subject
         Route::get('subjects', [SubjectController::class, 'index'])->name('subject');
