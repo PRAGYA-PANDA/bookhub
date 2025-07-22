@@ -307,7 +307,7 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     // Protecting the routes of user (user must be authenticated/logged in) (to prevent access to these links while being unauthenticated/not being logged in (logged out))
     Route::group(['middleware' => ['auth']], function () {
         // Render User Account page with 'GET' request (front/users/user_account.blade.php), or the HTML Form submission in the same page with 'POST' request using AJAX (to update user details). Check front/js/custom.js
-        Route::match(['GET', 'POST'], 'user/account', 'UserController@userAccount');
+        Route::match(['GET', 'POST'], 'user/account', 'UserController@userAccount')->name('useraccount');
 
         // User Account Update Password HTML Form submission via AJAX. Check front/js/custom.js
         Route::post('user/update-password', 'UserController@userUpdatePassword');

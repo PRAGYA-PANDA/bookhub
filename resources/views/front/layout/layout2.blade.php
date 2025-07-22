@@ -147,25 +147,25 @@
         }
 
 
-      /* code by sumit */
+        /* code by sumit */
 
         .dropdown-menu li {
             width: 100% !important;
         }
 
-        .sticky{
+        .sticky {
 
-            position:fixed ;
-            top:0px ;
-            left:0 ;
-            z-index:10000 ;
-            width:100%;
+            position: fixed;
+            top: 0px;
+            left: 0;
+            z-index: 10000;
+            width: 100%;
             /* background:#faf1dc !important; */
-            border-bottom:1px solid #C0C0C0;
+            border-bottom: 1px solid #C0C0C0;
         }
 
-        header{
-            background:#FFFFFF;
+        header {
+            background: #FFFFFF;
 
 
         }
@@ -279,7 +279,8 @@
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="set('all')">
+                                                    <a class="dropdown-item" href="javascript:void(0);"
+                                                        onclick="set('all')">
                                                         <i class="fas fa-th-large me-2"></i>All
                                                     </a>
                                                 </li>
@@ -307,7 +308,8 @@
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="setLanguage('all')">
+                                                    <a class="dropdown-item" href="javascript:void(0);"
+                                                        onclick="setLanguage('all')">
                                                         <i class="fas fa-th-large me-2"></i>All
                                                     </a>
                                                 </li>
@@ -337,16 +339,22 @@
 
                                 <!-- User Account -->
                                 @guest
-                                    <a class="btn text-white" style="background-color: #6c5dd4;"
-                                        href="{{ route('login') }}">
-                                        <i class="fas fa-user me-2"></i>Login/Register
-                                    </a>
+
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" class="btn text-white" style="background-color: #6c5dd4;">
+                                    <i class="fas fa-user" style="margin-right:8px;"></i> Login
+                                </a>
+
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" class="btn text-white" style="background-color: #6c5dd4;">
+                                    <i class="fas fa-user-plus" style="margin-right:8px;"></i> Register
+                                </a>
+
                                 @else
                                     <div class="d-flex align-items-center">
-                                        <img class="rounded-circle me-2"
+                                        <a href="{{ route('useraccount') }}"><img class="rounded-circle me-2"
                                             src="{{ asset(Auth::user()->ImageUpload->filename ?? 'assets/images/avatar.png') }}"
-                                            width="35" height="35">
-                                        <span class="me-2">{{ Auth::user()->name }}</span>
+                                            width="35" height="35"></a>
+
+                                        <a href="{{ route('useraccount') }}" style="text-decoration: none; color:black;font-weight: bold;"><span class="me-2">{{ Auth::user()->name }}</span></a>
                                         <a class="btn btn-sm" style="background-color: #6c5dd4; color: white;"
                                             href="{{ route('logout') }}"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -846,6 +854,77 @@
             }
         });
     </script>
+
+{{-- Login --}}
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="loginForm" method="POST" action="{{ route('user.login') }}">
+          @csrf
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">Login</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Email -->
+            <div class="mb-3">
+              <label>Email</label>
+              <input type="email" name="email" class="form-control" required>
+            </div>
+            <!-- Password -->
+            <div class="mb-3">
+              <label>Password</label>
+              <input type="password" name="password" class="form-control" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Login</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  {{-- Register --}}
+  <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="registerForm" method="POST" action="{{ route('user.register') }}">
+          @csrf
+          <div class="modal-header">
+            <h5 class="modal-title" id="registerModalLabel">Register</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Name -->
+            <div class="mb-3">
+              <label>Name</label>
+              <input type="text" name="name" class="form-control" required>
+            </div>
+            <!-- Email -->
+            <div class="mb-3">
+              <label>Email</label>
+              <input type="email" name="email" class="form-control" required>
+            </div>
+            <!-- Password -->
+            <div class="mb-3">
+              <label>Password</label>
+              <input type="password" name="password" class="form-control" required>
+            </div>
+            <!-- Mobile -->
+            <div class="mb-3">
+              <label>Mobile</label>
+              <input type="text" name="mobile" class="form-control" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Register</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
