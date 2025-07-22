@@ -37,7 +37,7 @@
                                         <td>{{ $book['book_title'] }}</td>
                                         <td>{{ $book['author_name'] }}</td>
                                         <td>{{ $book['message'] }}</td>
-                                        <td>{{ $book->user->name }}</td>
+                                        <td>{{ $book->user->name ?? 'User not found' }}</td>
                                         <td>
                                             @if($book['status']==1)
                                                 <a class="updateBookStatus" id="book-{{ $book['id'] }}" book_id="{{ $book['id'] }}" href="javascript:void(0)">

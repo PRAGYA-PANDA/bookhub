@@ -39,16 +39,15 @@ class Product extends Model
         return $this->belongsTo(Subject::class, 'subject_id');
     }
 
-   public function language()
-{
-    return $this->belongsTo(Language::class, 'language_id');
-}
+    public function language()
+    {
+        return $this->belongsTo(Language::class, 'language_id');
+    }
 
     public function edition()
     {
         return $this->belongsTo(Edition::class, 'edition_id');
     }
-
 
     public function authors()
     {
@@ -75,10 +74,10 @@ class Product extends Model
                                                            // A static method (to be able to be called directly without instantiating an object in index.blade.php) to determine the final price of a product because a product can have a discount from TWO things: either a `CATEGORY` discount or `PRODUCT` discout
     public static function getDiscountPrice($product_id)
     { // this method is called in front/index.blade.php
-        // Get the product PRICE, DISCOUNT and CATEGORY ID
+                                                               // Get the product PRICE, DISCOUNT and CATEGORY ID
         $productDetails = Product::select('product_price', 'product_discount', 'category_id')->where('id', $product_id)->first();
 
-        if (!$productDetails) {
+        if (! $productDetails) {
             return 0; // Return 0 if product not found
         }
 
@@ -87,14 +86,14 @@ class Product extends Model
         // Get the product category discount `category_discount` from `categories` table using its `category_id` in `products` table
         $categoryDetails = Category::select('category_discount')->where('id', $productDetails['category_id'])->first();
 
-        if (!$categoryDetails) {
+        if (! $categoryDetails) {
             $categoryDetails = ['category_discount' => 0];
         } else {
             $categoryDetails = json_decode(json_encode($categoryDetails), true); // convert the object to an array
         }
 
-        $originalPrice = $productDetails['product_price'];
-        $productDiscount = $productDetails['product_discount'] ?? 0;
+        $originalPrice    = $productDetails['product_price'];
+        $productDiscount  = $productDetails['product_discount'] ?? 0;
         $categoryDiscount = $categoryDetails['category_discount'] ?? 0;
 
         // Calculate the highest discount (product discount takes precedence over category discount)
