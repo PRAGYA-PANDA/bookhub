@@ -56,11 +56,13 @@
         .options-list div:hover {
             background: #f1f1f1;
         }
+
         #searchResults {
             max-height: 200px;
             overflow-y: auto;
             cursor: pointer;
         }
+
         #searchResults .list-group-item {
             padding: 8px 12px;
         }
@@ -196,14 +198,18 @@
                                         <div class="form-group mb-3">
                                             <label for="location">Coordinates (Latitude,Longitude)</label>
                                             <div class="input-group">
-                                                <input type="text" class="form-control" readonly id="location" name="location" placeholder="e.g. 28.6139,77.2090" value="{{ old('location', $product->location ?? '') }}">
+                                                <input type="text" class="form-control" readonly id="location"
+                                                    name="location" placeholder="e.g. 28.6139,77.2090"
+                                                    value="{{ old('location', $product->location ?? '') }}">
                                                 <div class="input-group-append">
-                                                    <button class="btn btn-outline-secondary" type="button" id="getLocationBtn">
+                                                    <button class="btn btn-outline-secondary" type="button"
+                                                        id="getLocationBtn">
                                                         <i class="mdi mdi-crosshairs-gps"></i> Get Current Location
                                                     </button>
                                                 </div>
                                             </div>
-                                            <small class="form-text text-muted">use the button to fetch the current location.</small>
+                                            <small class="form-text text-muted">use the button to fetch the current
+                                                location.</small>
                                         </div>
 
                                         {{-- <div class="form-group mb-3" style="position:relative;">
@@ -218,7 +224,9 @@
                                             <small class="form-text text-muted">Start typing to search for a location.</small>
                                         </div> --}}
 
-                                        <div id="map" style="height: 300px; margin-top: 10px; border-radius: 8px; overflow: hidden;"></div>
+                                        <div id="map"
+                                            style="height: 300px; margin-top: 10px; border-radius: 8px; overflow: hidden;">
+                                        </div>
                                     </div>
                                 </div>
                                 <style>
@@ -227,14 +235,17 @@
                                         overflow-y: auto;
                                         cursor: pointer;
                                         border-radius: 0 0 0.25rem 0.25rem;
-                                        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
                                     }
+
                                     #searchResults .list-group-item {
                                         padding: 10px 16px;
                                         font-size: 15px;
                                         transition: background 0.2s;
                                     }
-                                    #searchResults .list-group-item:hover, #searchResults .list-group-item.active {
+
+                                    #searchResults .list-group-item:hover,
+                                    #searchResults .list-group-item.active {
                                         background: #f1f1f1;
                                         color: #007bff;
                                     }
@@ -274,17 +285,20 @@
                                     @include('admin.filters.category_filters')
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="publisher_id">Select Publisher</label>
-                                    <select name="publisher_id" id="publisher_id" class="form-control text-dark">
-                                        <option value="">Select Publisher</option>
-                                        @foreach ($publishers as $publisher)
-                                            <option value="{{ $publisher['id'] }}"
-                                                @if (!empty($product['publisher_id'] == $publisher['id'])) selected @endif>{{ $publisher['name'] }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                
+                                    <div class="form-group">
+                                        <label for="publisher_id">Publisher</label>
+                                        <select class="form-control" name="publisher_id" id="publisher_id">
+                                            <option value="">Select Publisher</option>
+                                            @foreach ($publishers as $pub)
+                                                <option value="{{ $pub['id'] }}"
+                                                    @if (!empty($product['publisher_id']) && $product['publisher_id'] == $pub['id']) selected @endif>{{ $pub['name'] }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                
+
 
                                 <div class="form-group">
                                     <label for="subject_id">Select Subject</label>
@@ -304,42 +318,17 @@
                                     <select name="edition_id" id="edition_id" class="form-control text-dark">
                                         <option value="">Select Edition</option>
                                         @foreach ($editions as $edition)
-                                            <option value="{{ $edition->id }}" @if (!empty($product['edition_id']) && $product['edition_id'] == $edition->id) selected @endif>{{ $edition->edition }}</option>
+                                            <option value="{{ $edition->id }}"
+                                                @if (!empty($product['edition_id']) && $product['edition_id'] == $edition->id) selected @endif>{{ $edition->edition }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
 
-                                {{-- <div class="form-group">
-                                    <label for="authors">Select Authors</label>
-                                    <small class="text-muted">(Hold Ctrl (Cmd on Mac) to select multiple authors.)</small>
-
-                                    <input type="text" id="author-search" class="form-control mb-2"
-                                        placeholder="Search Authors">
-
-                                    <select name="author_id[]" id="authors-select" multiple class="form-control"
-                                        size="8">
-                                        @foreach ($authors as $author)
-                                            <option value="{{ $author->id }}"
-                                                @if (!empty($product->id) && $product->authors->contains($author->id)) selected @endif>
-                                                {{ $author->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div> --}}
 
 
-                                {{-- <div class="form-group">
-                                    <label for="authors">Select Authors</label>
-                                    <small class="text-muted">(Search and select mul
-                                    <div class="multi-select-wrapper">
-                                      <div class="selected-options"  id="selectedOptions"></div>
-                                      <input type="text" id="searchInput" class="search-input form-control mb-2" placeholder="Search Authors">
-                                      <div class="options-list" id="optionsList"></div>
-                                    </div>
-                                  </div> --}}
 
-
-                                  <div class="form-group">
+                                <div class="form-group">
                                     <label for="authors">Select Authors</label>
                                     <small class="text-muted">(Search and select multiple authors.)</small>
 
@@ -415,7 +404,7 @@
                                     {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
                                 </div>
 
-                                
+
                                 {{-- <div class="form-group">
                                     <label for="product_weight">Weight (in Kg)</label>
                                     <input type="number" class="form-control" id="product_weight"
@@ -491,12 +480,13 @@
         @include('admin.layout.footer')
         <!-- partial -->
     </div>
-
+    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <!-- Include Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <!-- Include Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
     <script>
         $(document).ready(function() {
@@ -509,79 +499,6 @@
 
 
 
-    <!-- Dynamic Authors -->
-    {{-- <script>
-        const authors = @json($authors);
-    </script>
-
-    <script>
-        const selectedOptions = document.getElementById('selectedOptions');
-        const searchInput = document.getElementById('searchInput');
-        const optionsList = document.getElementById('optionsList');
-
-        let selected = [];
-
-        function renderOptions(filter = '') {
-            optionsList.innerHTML = '';
-            const filteredAuthors = authors.filter(author =>
-                author.name.toLowerCase().includes(filter.toLowerCase()) &&
-                !selected.some(sel => sel.id === author.id)
-            );
-
-            if (filteredAuthors.length > 0) {
-                filteredAuthors.forEach(author => {
-                    const option = document.createElement('div');
-                    option.textContent = author.name;
-                    option.dataset.id = author.id;
-                    option.onclick = () => selectOption(author);
-                    optionsList.appendChild(option);
-                });
-                optionsList.style.display = 'block';
-            } else {
-                optionsList.style.display = 'none';
-            }
-        }
-
-        function renderSelected() {
-            selectedOptions.innerHTML = '';
-            selected.forEach(author => {
-                const span = document.createElement('span');
-                span.innerHTML = `${author.name} <i onclick="removeOption(${author.id})">&times;</i>`;
-                selectedOptions.appendChild(span);
-            });
-        }
-
-        function selectOption(author) {
-            if (!selected.find(item => item.id === author.id)) {
-                selected.push(author);
-                renderSelected();
-                searchInput.value = '';
-                renderOptions();
-            }
-        }
-
-        function removeOption(id) {
-            selected = selected.filter(author => author.id !== id);
-            renderSelected();
-            renderOptions();
-        }
-
-        searchInput.addEventListener('input', (e) => {
-            renderOptions(e.target.value);
-        });
-
-        searchInput.addEventListener('focus', () => {
-            renderOptions(searchInput.value);
-        });
-
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.multi-select-wrapper')) {
-                optionsList.style.display = 'none';
-            }
-        });
-
-        renderOptions();
-    </script> --}}
 
     <script>
         const authors = @json($authors);
@@ -670,104 +587,120 @@
 
         renderSelected();
     </script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script>
-    // Existing geolocation button
-    document.getElementById('getLocationBtn').addEventListener('click', function() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                document.getElementById('location').value = position.coords.latitude + ',' + position.coords.longitude;
-                updateMapMarker(position.coords.latitude, position.coords.longitude);
-            }, function(error) {
-                alert('Unable to retrieve your location.');
-            });
-        } else {
-            alert('Geolocation is not supported by this browser.');
-        }
-    });
 
-    // Leaflet map integration
-    var defaultLatLng = [28.6139, 77.2090]; // Default to New Delhi
-    var locationInput = document.getElementById('location');
-    var initialLatLng = locationInput.value ? locationInput.value.split(',').map(Number) : defaultLatLng;
-    var map = L.map('map').setView(initialLatLng, 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-    var marker = L.marker(initialLatLng, {draggable:true}).addTo(map);
 
-    function updateMapMarker(lat, lng) {
-        marker.setLatLng([lat, lng]);
-        map.setView([lat, lng], 13);
-    }
 
-    marker.on('dragend', function(e) {
-        var latlng = marker.getLatLng();
-        locationInput.value = latlng.lat.toFixed(6) + ',' + latlng.lng.toFixed(6);
-    });
 
-    map.on('click', function(e) {
-        marker.setLatLng(e.latlng);
-        locationInput.value = e.latlng.lat.toFixed(6) + ',' + e.latlng.lng.toFixed(6);
-    });
 
-    locationInput.addEventListener('change', function() {
-        var val = locationInput.value.split(',');
-        if(val.length === 2) {
-            var lat = parseFloat(val[0]);
-            var lng = parseFloat(val[1]);
-            if(!isNaN(lat) && !isNaN(lng)) {
-                updateMapMarker(lat, lng);
-            }
-        }
-    });
 
-    // Search Location Geocoding
-    //const searchInput = document.getElementById('searchLocation');
-    const searchResults = document.getElementById('searchResults');
-
-    searchInput.addEventListener('input', function() {
-        const query = this.value.trim();
-        if (query.length < 3) {
-            searchResults.style.display = 'none';
-            searchResults.innerHTML = '';
-            return;
-        }
-        searchResults.innerHTML = '<div class="list-group-item">Searching...</div>';
-        searchResults.style.display = 'block';
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
-            .then(response => response.json())
-            .then(data => {
-                searchResults.innerHTML = '';
-                if (data.length === 0) {
-                    searchResults.innerHTML = '<div class="list-group-item">No results found.</div>';
-                    return;
-                }
-                data.forEach(place => {
-                    const item = document.createElement('a');
-                    item.className = 'list-group-item list-group-item-action';
-                    item.textContent = place.display_name;
-                    item.href = '#';
-                    item.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        updateMapMarker(place.lat, place.lon);
-                        locationInput.value = `${parseFloat(place.lat).toFixed(6)},${parseFloat(place.lon).toFixed(6)}`;
-                        searchResults.style.display = 'none';
-                        searchInput.value = place.display_name;
-                    });
-                    searchResults.appendChild(item);
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script>
+        // Existing geolocation button
+        document.getElementById('getLocationBtn').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById('location').value = position.coords.latitude + ',' + position
+                        .coords.longitude;
+                    updateMapMarker(position.coords.latitude, position.coords.longitude);
+                }, function(error) {
+                    alert('Unable to retrieve your location.');
                 });
-            });
-    });
-    document.addEventListener('click', function(e) {
-        if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-            searchResults.style.display = 'none';
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        });
+
+        // Leaflet map integration
+        var defaultLatLng = [28.6139, 77.2090]; // Default to New Delhi
+        var locationInput = document.getElementById('location');
+        var initialLatLng = locationInput.value ? locationInput.value.split(',').map(Number) : defaultLatLng;
+        var map = L.map('map').setView(initialLatLng, 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        var marker = L.marker(initialLatLng, {
+            draggable: true
+        }).addTo(map);
+
+        function updateMapMarker(lat, lng) {
+            marker.setLatLng([lat, lng]);
+            map.setView([lat, lng], 13);
         }
-    });
-</script>
+
+        marker.on('dragend', function(e) {
+            var latlng = marker.getLatLng();
+            locationInput.value = latlng.lat.toFixed(6) + ',' + latlng.lng.toFixed(6);
+        });
+
+        map.on('click', function(e) {
+            marker.setLatLng(e.latlng);
+            locationInput.value = e.latlng.lat.toFixed(6) + ',' + e.latlng.lng.toFixed(6);
+        });
+
+        locationInput.addEventListener('change', function() {
+            var val = locationInput.value.split(',');
+            if (val.length === 2) {
+                var lat = parseFloat(val[0]);
+                var lng = parseFloat(val[1]);
+                if (!isNaN(lat) && !isNaN(lng)) {
+                    updateMapMarker(lat, lng);
+                }
+            }
+        });
+
+        // Search Location Geocoding
+        //const searchInput = document.getElementById('searchLocation');
+        const searchResults = document.getElementById('searchResults');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            if (query.length < 3) {
+                searchResults.style.display = 'none';
+                searchResults.innerHTML = '';
+                return;
+            }
+            searchResults.innerHTML = '<div class="list-group-item">Searching...</div>';
+            searchResults.style.display = 'block';
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    searchResults.innerHTML = '';
+                    if (data.length === 0) {
+                        searchResults.innerHTML = '<div class="list-group-item">No results found.</div>';
+                        return;
+                    }
+                    data.forEach(place => {
+                        const item = document.createElement('a');
+                        item.className = 'list-group-item list-group-item-action';
+                        item.textContent = place.display_name;
+                        item.href = '#';
+                        item.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            updateMapMarker(place.lat, place.lon);
+                            locationInput.value =
+                                `${parseFloat(place.lat).toFixed(6)},${parseFloat(place.lon).toFixed(6)}`;
+                            searchResults.style.display = 'none';
+                            searchInput.value = place.display_name;
+                        });
+                        searchResults.appendChild(item);
+                    });
+                });
+        });
+        document.addEventListener('click', function(e) {
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+
+            // Only add logic if both elements exist
+            if (searchInput && searchResults) {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.style.display = 'none';
+                }
+            }
+        });
+    </script>
+
+
+
+
 @endsection
-
-@push('scripts')
-
-@endpush

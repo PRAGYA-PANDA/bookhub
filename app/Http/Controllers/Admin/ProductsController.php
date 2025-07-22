@@ -16,10 +16,13 @@ use App\Models\ProductsAttribute;
 use App\Models\Subject;
 use App\Models\Language;
 use App\Models\Edition;
+use App\Models\Publisher;
+use Illuminate\Support\Facades\Validator;
 
 class ProductsController extends Controller
 {
-    public function products() { // render products.blade.php in the Admin Panel
+    public function products()
+    { // render products.blade.php in the Admin Panel
         Session::put('page', 'products');
 
 
@@ -35,11 +38,11 @@ class ProductsController extends Controller
         }
 
         // Get ALL products ($products)
-        $products = Product::orderBy('id','desc')->with([ // Constraining Eager Loads: https://laravel.com/docs/9.x/eloquent-relationships#constraining-eager-loads    // Subquery Where Clauses: https://laravel.com/docs/9.x/queries#subquery-where-clauses    // Advanced Subqueries: https://laravel.com/docs/9.x/eloquent#advanced-subqueries
-            'section' => function($query) { // the 'section' relationship method in Product.php Model
+        $products = Product::orderBy('id', 'desc')->with([ // Constraining Eager Loads: https://laravel.com/docs/9.x/eloquent-relationships#constraining-eager-loads    // Subquery Where Clauses: https://laravel.com/docs/9.x/queries#subquery-where-clauses    // Advanced Subqueries: https://laravel.com/docs/9.x/eloquent#advanced-subqueries
+            'section' => function ($query) { // the 'section' relationship method in Product.php Model
                 $query->select('id', 'name'); // Important Note: It's a MUST to select 'id' even if you don't need it, because the relationship Foreign Key `product_id` depends on it, or else the `product` relationship would give you 'null'!
             },
-            'category' => function($query) { // the 'category' relationship method in Product.php Model
+            'category' => function ($query) { // the 'category' relationship method in Product.php Model
                 $query->select('id', 'category_name'); // Important Note: It's a MUST to select 'id' even if you don't need it, because the relationship Foreign Key `product_id` depends on it, or else the `product` relationship would give you 'null'!
             }
         ]);
@@ -56,7 +59,8 @@ class ProductsController extends Controller
         return view('admin.products.products')->with(compact('products')); // render products.blade.php page, and pass $products variable to the view
     }
 
-    public function updateProductStatus(Request $request) { // Update Product Status using AJAX in products.blade.php
+    public function updateProductStatus(Request $request)
+    { // Update Product Status using AJAX in products.blade.php
         if ($request->ajax()) { // if the request is coming via an AJAX call
             $data = $request->all(); // Getting the name/value pairs array that are sent from the AJAX request (AJAX call)
             // dd($data);
@@ -78,7 +82,8 @@ class ProductsController extends Controller
         }
     }
 
-    public function deleteProduct($id) {
+    public function deleteProduct($id)
+    {
         Product::where('id', $id)->delete();
 
         $message = 'Book has been deleted successfully!';
@@ -86,7 +91,8 @@ class ProductsController extends Controller
         return redirect()->back()->with('success_message', $message);
     }
 
-    public function addEditProduct(Request $request, $id = null) { // If the $id is not passed, this means 'Add a Product', if not, this means 'Edit the Product'
+    public function addEditProduct(Request $request, $id = null)
+    { // If the $id is not passed, this means 'Add a Product', if not, this means 'Edit the Product'
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'products');
 
@@ -279,18 +285,22 @@ class ProductsController extends Controller
         // Get all publishers
         $publishers = \App\Models\Publisher::where('status', 1)->get()->toArray();
         // dd($publishers);
-       $authors = Author::where('status', 1)->get();
+        $authors = Author::where('status', 1)->get();
 
-            //dd($authors);
+        //dd($authors);
         $subjects = Subject::where('status', 1)->get()->toArray();
         // dd($subjects);
         $languages = Language::get();
         $editions = \App\Models\Edition::all();
         // return view('admin.products.add_edit_product')->with(compact('title', 'product'));
-        return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories', 'publishers','authors','subjects', 'languages', 'editions'));
+        return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories', 'publishers', 'authors', 'subjects', 'languages', 'editions'));
     }
 
-    public function getAuthor(Request $request){
+
+
+
+    public function getAuthor(Request $request)
+    {
         $q = $request->input('q');
 
         return Author::where('name', 'like', "%{$q}%")
@@ -298,7 +308,8 @@ class ProductsController extends Controller
             ->get();
     }
 
-    public function deleteProductImage($id) { // AJAX call from admin/js/custom.js    // Delete the product image from BOTH SERVER (FILESYSTEM) & DATABASE    // $id is passed as a Route Parameter
+    public function deleteProductImage($id)
+    { // AJAX call from admin/js/custom.js    // Delete the product image from BOTH SERVER (FILESYSTEM) & DATABASE    // $id is passed as a Route Parameter
         // Get the product image record stored in the database
         $productImage = Product::select('product_image')->where('id', $id)->first();
         // dd($productImage);
@@ -336,7 +347,8 @@ class ProductsController extends Controller
 
 
 
-    public function addAttributes(Request $request, $id) { // Add/Edit Attributes function
+    public function addAttributes(Request $request, $id)
+    { // Add/Edit Attributes function
         Session::put('page', 'products');
 
         $product = Product::select('id', 'product_name', 'product_isbn', 'product_price', 'product_image')->with('attributes')->find($id); // with('attributes') is the relationship method name in the Product.php model
@@ -383,7 +395,8 @@ class ProductsController extends Controller
         return view('admin.attributes.add_edit_attributes')->with(compact('product'));
     }
 
-    public function updateAttributeStatus(Request $request) { // Update Attribute Status using AJAX in add_edit_attributes.blade.php
+    public function updateAttributeStatus(Request $request)
+    { // Update Attribute Status using AJAX in add_edit_attributes.blade.php
         if ($request->ajax()) { // if the request is coming via an AJAX call
             $data = $request->all(); // Getting the name/value pairs array that are sent from the AJAX request (AJAX call)
             // dd($data);
@@ -404,7 +417,8 @@ class ProductsController extends Controller
         }
     }
 
-    public function editAttributes(Request $request) {
+    public function editAttributes(Request $request)
+    {
         Session::put('page', 'products');
 
         if ($request->isMethod('post')) { // if the <form> is submitted
@@ -426,7 +440,8 @@ class ProductsController extends Controller
         }
     }
 
-    public function addImages(Request $request, $id) { // $id is the URL Paramter (slug) passed from the URL
+    public function addImages(Request $request, $id)
+    { // $id is the URL Paramter (slug) passed from the URL
         Session::put('page', 'products');
 
         $product = Product::select('id', 'product_name', 'product_isbn', 'product_price', 'product_image')->with('images')->find($id); // with('images') is the relationship method name in the Product.php model
@@ -484,7 +499,8 @@ class ProductsController extends Controller
         return view('admin.images.add_images')->with(compact('product'));
     }
 
-    public function updateImageStatus(Request $request) { // Update Image Status using AJAX in add_images.blade.php
+    public function updateImageStatus(Request $request)
+    { // Update Image Status using AJAX in add_images.blade.php
         if ($request->ajax()) { // if the request is coming via an AJAX call
             $data = $request->all(); // Getting the name/value pairs array that are sent from the AJAX request (AJAX call)
             // dd($data);
@@ -505,7 +521,8 @@ class ProductsController extends Controller
         }
     }
 
-    public function deleteImage($id) { // AJAX call from admin/js/custom.js    // Delete the product image from BOTH SERVER (FILESYSTEM) & DATABASE    // $id is passed as a Route Parameter
+    public function deleteImage($id)
+    { // AJAX call from admin/js/custom.js    // Delete the product image from BOTH SERVER (FILESYSTEM) & DATABASE    // $id is passed as a Route Parameter
         // Get the product image record stored in the database
         $productImage = ProductsImage::select('image')->where('id', $id)->first();
         // dd($productImage);
@@ -539,5 +556,4 @@ class ProductsController extends Controller
 
         return redirect()->back()->with('success_message', $message);
     }
-
 }

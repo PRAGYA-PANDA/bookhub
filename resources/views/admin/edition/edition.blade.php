@@ -64,11 +64,18 @@
             </div>
         </footer>
     </div>
+    
+    <!-- DataTables Bootstrap 4 CSS CDN -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css">
+
+    <!-- jQuery CDN (required for DataTables) -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <!-- DataTables JS CDN -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#editions').DataTable();
+        });
+    </script>
 @endsection
-@push('scripts')
-<script>
-    $(document).ready(function() {
-        $('#editions').DataTable();
-    });
-</script>
-@endpush 
