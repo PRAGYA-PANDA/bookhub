@@ -17,10 +17,10 @@
                     <ul class="bread-crumb list-inline mb-0">
                         <li class="has-separator list-inline-item">
                             <i class="ion ion-md-home"></i>
-                            <a href="index.html">Home</a>
+                            <a href="{{ url('/') }}">Home</a>
                         </li>
                         <li class="is-marked list-inline-item">
-                            <a href="account.html">Account</a>
+                            <a href="{{ route('useraccount') }}">Account</a>
                         </li>
                     </ul>
                 </div>

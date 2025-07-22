@@ -354,7 +354,7 @@
                                             src="{{ asset(Auth::user()->ImageUpload->filename ?? 'assets/images/avatar.png') }}"
                                             width="35" height="35"></a>
 
-                                        <a href="{{ route('useraccount') }}" style="text-decoration: none; color:black;font-weight: bold;"><span class="me-2">{{ Auth::user()->name }}</span></a>
+                                        <a href="{{ route('useraccount') }}" style="text-decoration: none; color:rgb(77, 74, 74);font-weight: bold;"><span class="me-2">{{ Auth::user()->name }}</span></a>
                                         <a class="btn btn-sm" style="background-color: #6c5dd4; color: white;"
                                             href="{{ route('logout') }}"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
