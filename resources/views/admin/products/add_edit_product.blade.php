@@ -196,14 +196,14 @@
                                         <div class="form-group mb-3">
                                             <label for="location">Coordinates (Latitude,Longitude)</label>
                                             <div class="input-group">
-                                                <input type="text" class="form-control" id="location" name="location" placeholder="e.g. 28.6139,77.2090" value="{{ old('location', $product->location ?? '') }}">
+                                                <input type="text" class="form-control" readonly id="location" name="location" placeholder="e.g. 28.6139,77.2090" value="{{ old('location', $product->location ?? '') }}">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-outline-secondary" type="button" id="getLocationBtn">
                                                         <i class="mdi mdi-crosshairs-gps"></i> Get Current Location
                                                     </button>
                                                 </div>
                                             </div>
-                                            <small class="form-text text-muted">Enter manually, use the button, or search below.</small>
+                                            <small class="form-text text-muted">use the button to fetch the current location.</small>
                                         </div>
 
                                         {{-- <div class="form-group mb-3" style="position:relative;">
