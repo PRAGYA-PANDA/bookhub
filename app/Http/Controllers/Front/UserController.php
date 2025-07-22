@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\BookRequest;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Product;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use App\Models\RequestedBook;
 
 class UserController extends Controller
 {
@@ -258,6 +260,8 @@ class UserController extends Controller
              $logos = HeaderLogo::all();
              $language    = Language::get();
 
+        // Fetch requested books for the logged-in user
+        $requestedBooks = BookRequest::where('requested_by_user', Auth::id())->orderBy('created_at', 'desc')->get();
 
         if ($request->ajax()) {
             $data = $request->all();
@@ -298,7 +302,11 @@ class UserController extends Controller
         } else {
             // GET request: load the account view
             $countries = \App\Models\Country::where('status', 1)->get()->toArray();
-            return view('front.users.user_account')->with(compact('countries', 'condition', 'footerProducts','category', 'logos', 'sections', 'language'));
+            $user = Auth::user();
+
+            return view('front.users.user_account')->with(compact(
+                'user', 'countries', 'condition', 'footerProducts', 'category', 'logos', 'sections', 'language', 'requestedBooks'
+            ));
         }
     }
 

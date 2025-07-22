@@ -721,7 +721,9 @@ class ProductsController extends Controller
                 $item->save();
             }
 
-            return redirect()->back()->with('success_message', 'Product has been added in Cart! <a href="cart" style="text-decoration: underline !important">View Cart</a>');
+            // return redirect('cart')->back()->with('success_message', 'Product has been added in Cart! <a href="" style="text-decoration: underline !important">View Cart</a>');
+
+            return redirect()->route('cart');
         }
     }
 
