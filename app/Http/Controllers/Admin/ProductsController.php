@@ -175,7 +175,21 @@ class ProductsController extends Controller
 
             $product->section_id  = $categoryDetails['section_id'];
             $product->category_id = $data['category_id'];
-            $product->publisher_id    = $data['publisher_id'];
+            // $product->publisher_id    = $data['publisher_id'];
+            // Existing or new publisher check
+// Handle publisher
+if (!empty($data['new_publisher'])) {
+    // Admin typed a new one → insert to DB
+    $newPublisher = new \App\Models\Publisher();
+    $newPublisher->name = $data['new_publisher'];
+    $newPublisher->status = 1;
+    $newPublisher->save();
+    $product->publisher_id = $newPublisher->id;
+  } else {
+    // Else use the existing selected one
+    $product->publisher_id = $data['publisher_id'];
+  }
+
             //$product->authors()->sync($data['author_id']);
             $product->subject_id    = $data['subject_id'];
             $product->language_id    = $data['language_id'];
@@ -294,10 +308,7 @@ class ProductsController extends Controller
         $editions = \App\Models\Edition::all();
         // return view('admin.products.add_edit_product')->with(compact('title', 'product'));
         return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories', 'publishers', 'authors', 'subjects', 'languages', 'editions'));
-    }
-
-
-
+    }  
 
     public function getAuthor(Request $request)
     {

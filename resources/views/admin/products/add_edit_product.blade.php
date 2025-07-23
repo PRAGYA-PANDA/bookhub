@@ -285,19 +285,27 @@
                                     @include('admin.filters.category_filters')
                                 </div>
 
-                                
-                                    <div class="form-group">
-                                        <label for="publisher_id">Publisher</label>
-                                        <select class="form-control" name="publisher_id" id="publisher_id">
-                                            <option value="">Select Publisher</option>
-                                            @foreach ($publishers as $pub)
-                                                <option value="{{ $pub['id'] }}"
-                                                    @if (!empty($product['publisher_id']) && $product['publisher_id'] == $pub['id']) selected @endif>{{ $pub['name'] }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+
+                                <div class="form-group">
+                                    <label for="publisher_id">Publisher (Choose Existing)</label>
+                                    <select class="form-control" name="publisher_id" id="publisher_id">
+                                        <option value="">Select Publisher</option>
+                                        @foreach ($publishers as $pub)
+                                            <option value="{{ $pub['id'] }}"
+                                                @if (!empty($product['publisher_id']) && $product['publisher_id'] == $pub['id']) selected @endif>
+                                                {{ $pub['name'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="new_publisher">Or Add New Publisher</label>
+                                    <div class="input-group">
+                                        <input type="text" name="new_publisher" id="new_publisher"
+                                            class="form-control" placeholder="Type new publisher name">
+                                        <button type="button" id="addPublisherBtn" class="btn btn-primary">Add</button>
                                     </div>
-                                
+                                </div>
 
 
                                 <div class="form-group">
@@ -480,12 +488,49 @@
         @include('admin.layout.footer')
         <!-- partial -->
     </div>
+
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <!-- Include Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <!-- Include Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $('#addPublisherBtn').click(function() {
+            let publisherName = $('#new_publisher').val().trim();
+            if (publisherName === '') {
+                alert('Please enter a publisher name.');
+                return;
+            }
+
+            $.ajax({
+                url: '{{ route('admin.addPublisherAjax') }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    name: publisherName
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // Add to dropdown
+                        $('#publisher_id').append('<option value="' + response.id + '" selected>' +
+                            response.name + '</option>');
+                        $('#new_publisher').val(''); // Clear input
+                        alert('Publisher added!');
+                    } else {
+                        alert(response.message || 'Something went wrong.');
+                    }
+                },
+                error: function(xhr) {
+                    alert('Error occurred. See console.');
+                    console.log(xhr.responseText);
+                }
+            });
+        });
+    </script>
 
 
     <script>
@@ -496,9 +541,6 @@
             });
         });
     </script>
-
-
-
 
     <script>
         const authors = @json($authors);

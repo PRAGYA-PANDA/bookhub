@@ -67,7 +67,12 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
 
         //Publishers
         Route::get('publisher', 'PublisherController@publisher');
-        Route::post('update-publisher-status', 'PublisherController@updatePublisherStatus');               // Update Brands Status using AJAX in brands.blade.php
+        Route::post('update-publisher-status', 'PublisherController@updatePublisherStatus');
+        
+        Route::post('/admin/add-publisher-ajax', [App\Http\Controllers\Admin\PublisherController::class, 'addPublisherAjax'])->name('admin.addPublisherAjax');
+
+
+        // Update Brands Status using AJAX in brands.blade.php
         Route::get('delete-publisher/{id}', 'PublisherController@deletePublisher');                        // Delete a brand in brands.blade.php
         Route::match(['get', 'post'], 'add-edit-publisher/{id?}', 'PublisherController@addEditPublisher'); // the slug {id?} is an Optional Parameter, so if it's passed, this means Edit/Update the brand, and if not passed, this means Add a Brand
 

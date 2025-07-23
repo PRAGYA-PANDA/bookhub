@@ -54,6 +54,43 @@ class PublisherController extends Controller
         return redirect()->back()->with('success_message', $message);
     }
 
+
+    public function addPublisherAjax(Request $request)
+    {
+        if ($request->ajax()) {
+            $request->validate([
+                'name' => 'required|string|max:255',
+            ]);
+
+            // Check if already exists
+            $existing = Publisher::where('name', $request->name)->first();
+            if ($existing) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Publisher already exists.'
+                ]);
+            }
+
+            $publisher = new Publisher();
+            $publisher->name = $request->name;
+            $publisher->status = 1; // Or default status
+            $publisher->save();
+
+            return response()->json([
+                'status' => 'success',
+                'id' => $publisher->id,
+                'name' => $publisher->name
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Invalid request.'
+        ]);
+    }
+
+
+
     public function addEditPublisher(Request $request, $id = null) { // If the $id is not passed, this means Add a publisher, if not, this means Edit the publisher
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'publisher');
