@@ -190,7 +190,7 @@
                                             <i class="mdi mdi-account"></i> Update Contact Details
                                         </div>
                                         <div class="card-body">
-                                            <form id="accountForm" action="javascript:;" method="post">
+                                            <form id="accountForm" action="{{ route('user.updateContact') }}" method="post">
                                                 @csrf
                                                 <div class="form-row">
                                                     <div class="form-group col-md-6 mb-3">

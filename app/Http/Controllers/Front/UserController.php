@@ -288,11 +288,6 @@ class UserController extends Controller
                     'pincode' => $data['pincode'],
                     'address' => $data['address'],
                 ]);
-
-                return response()->json([
-                    'type'    => 'success',
-                    'message' => 'Your contact/billing details successfully updated!',
-                ]);
             } else {
                 return response()->json([
                     'type'   => 'error',
@@ -303,12 +298,12 @@ class UserController extends Controller
             // GET request: load the account view
             $countries = \App\Models\Country::where('status', 1)->get()->toArray();
             $user = Auth::user();
-
             return view('front.users.user_account')->with(compact(
                 'user', 'countries', 'condition', 'footerProducts', 'category', 'logos', 'sections', 'language', 'requestedBooks'
             ));
         }
     }
+
 
     // User Account Update Password HTML Form submission via AJAX. Check front/js/custom.js
     public function userUpdatePassword(Request $request)

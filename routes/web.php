@@ -68,7 +68,7 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         //Publishers
         Route::get('publisher', 'PublisherController@publisher');
         Route::post('update-publisher-status', 'PublisherController@updatePublisherStatus');
-        
+
         Route::post('/admin/add-publisher-ajax', [App\Http\Controllers\Admin\PublisherController::class, 'addPublisherAjax'])->name('admin.addPublisherAjax');
 
 
@@ -318,6 +318,8 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     Route::group(['middleware' => ['auth']], function () {
         // Render User Account page with 'GET' request (front/users/user_account.blade.php), or the HTML Form submission in the same page with 'POST' request using AJAX (to update user details). Check front/js/custom.js
         Route::match(['GET', 'POST'], 'user/account', 'UserController@userAccount')->name('useraccount');
+        Route::post('/account/update-contact', 'UserController@userAccount')->name('user.updateContact');
+
 
         // User Account Update Password HTML Form submission via AJAX. Check front/js/custom.js
         Route::post('user/update-password', 'UserController@userUpdatePassword');
