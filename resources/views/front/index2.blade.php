@@ -538,46 +538,45 @@
     </script>
 
     <script>
-let page = 2;
-let loading = false;
-let endOfData = false;
+        let page = 2;
+        let loading = false;
+        let endOfData = false;
 
-function loadMoreProducts() {
-    if (loading || endOfData) return;
+        function loadMoreProducts() {
+            if (loading || endOfData) return;
 
-    loading = true;
-    $('#scroll-loader').show();
+            loading = true;
+            $('#scroll-loader').show();
 
-    $.ajax({
-        url: "{{ url('/') }}" + "?page=" + page,
-        type: "GET",
-        success: function(data) {
-            if (data.trim() === '') {
-                endOfData = true;
-                $('#scroll-loader').html("<p class='text-muted'>No more books to load.</p>");
-            } else {
-                $('#new-products-container').append(data);
-                page++;
-                $('#scroll-loader').hide();
-                loading = false;
-            }
-        },
-        error: function() {
-            $('#scroll-loader').html("<p class='text-danger'>Error loading more products.</p>");
-            loading = false;
+            $.ajax({
+                url: "{{ url('/') }}" + "?page=" + page,
+                type: "GET",
+                success: function(data) {
+                    if (data.trim() === '') {
+                        endOfData = true;
+                        $('#scroll-loader').html("<p class='text-muted'>No more books to load.</p>");
+                    } else {
+                        $('#new-products-container').append(data);
+                        page++;
+                        $('#scroll-loader').hide();
+                        loading = false;
+                    }
+                },
+                error: function() {
+                    $('#scroll-loader').html("<p class='text-danger'>Error loading more products.</p>");
+                    loading = false;
+                }
+            });
         }
-    });
-}
 
-$(window).on('scroll', function() {
-    let scrollTop = $(window).scrollTop();
-    let windowHeight = $(window).height();
-    let documentHeight = $(document).height();
+        $(window).on('scroll', function() {
+            let scrollTop = $(window).scrollTop();
+            let windowHeight = $(window).height();
+            let documentHeight = $(document).height();
 
-    if (scrollTop + windowHeight + 100 >= documentHeight) {
-        loadMoreProducts();
-    }
-});
-</script>
-
+            if (scrollTop + windowHeight + 100 >= documentHeight) {
+                loadMoreProducts();
+            }
+        });
+    </script>
 @endsection
