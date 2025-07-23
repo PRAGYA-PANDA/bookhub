@@ -318,11 +318,9 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     Route::group(['middleware' => ['auth']], function () {
         // Render User Account page with 'GET' request (front/users/user_account.blade.php), or the HTML Form submission in the same page with 'POST' request using AJAX (to update user details). Check front/js/custom.js
         Route::match(['GET', 'POST'], 'user/account', 'UserController@userAccount')->name('useraccount');
-        Route::post('/account/update-contact', 'UserController@userAccount')->name('user.updateContact');
-
 
         // User Account Update Password HTML Form submission via AJAX. Check front/js/custom.js
-        Route::post('user/update-password', 'UserController@userUpdatePassword');
+        Route::post('user/update-password', 'UserController@userUpdatePassword')->name('updatePassword');
 
         // Coupon Code redemption (Apply coupon) / Coupon Code HTML Form submission via AJAX in front/products/cart_items.blade.php, check front/js/custom.js
         Route::post('/apply-coupon', 'ProductsController@applyCoupon'); // Important Note: We added this route here as a protected route inside the 'auth' middleware group because ONLY logged in/authenticated users are allowed to redeem Coupons!

@@ -5,18 +5,16 @@ use App\Http\Controllers\Controller;
 use App\Models\BookRequest;
 use App\Models\Cart;
 use App\Models\Category;
-use App\Models\Product;
-use App\Models\Section;
 use App\Models\HeaderLogo;
 use App\Models\Language;
+use App\Models\Product;
+use App\Models\Section;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use App\Models\RequestedBook;
 
 class UserController extends Controller
 {
@@ -24,10 +22,9 @@ class UserController extends Controller
     public function loginRegister(Request $request)
     {
         $condition = session('condition', 'new');
-        $sections = Section::all();
-        $logos = HeaderLogo::all();
-        $language    = Language::get();
-
+        $sections  = Section::all();
+        $logos     = HeaderLogo::all();
+        $language  = Language::get();
 
         if (! in_array($condition, ['new', 'old'])) {
             $condition = 'new';
@@ -40,7 +37,7 @@ class UserController extends Controller
             ->get()
             ->toArray();
         $category = Category::limit(10)->get();
-        return view('front.users.login_register', compact('condition', 'footerProducts', 'category','sections','language','logos'));
+        return view('front.users.login_register', compact('condition', 'footerProducts', 'category', 'sections', 'language', 'logos'));
     }
 
     // User Registration (in front/users/login_register.blade.php) <form> submission using an AJAX request. Check front/js/custom.js
@@ -84,7 +81,7 @@ class UserController extends Controller
         //     $message->to($email)->subject('Confirm your Multi-vendor E-commerce Application Account');
         // });
 
-        return redirect(url()->previous())->with('success_message','Registration successfully!!');
+        return redirect(url()->previous())->with('success_message', 'Registration successfully!!');
     }
 
     // User Login (in front/users/login_register.blade.php) <form> submission using an AJAX request. Check front/js/custom.js
@@ -255,19 +252,20 @@ class UserController extends Controller
             ->get()
             ->toArray();
 
-             $category = Category::limit(10)->get();
-             $sections = Section::all();
-             $logos = HeaderLogo::all();
-             $language    = Language::get();
-
-        // Fetch requested books for the logged-in user
+        $category       = Category::limit(10)->get();
+        $sections       = Section::all();
+        $logos          = HeaderLogo::all();
+        $language       = Language::get();
         $requestedBooks = BookRequest::where('requested_by_user', Auth::id())->orderBy('created_at', 'desc')->get();
+        $countries      = \App\Models\Country::where('status', 1)->get()->toArray();
+        $user           = Auth::user();
 
-        if ($request->ajax()) {
+        // ----- THIS HANDLES POST from the FORM -----
+        if ($request->isMethod('post')) {
             $data = $request->all();
 
             // Validation
-            $validator = \Illuminate\Support\Facades\Validator::make($data, [
+            $request->validate([
                 'name'    => 'required|string|max:100',
                 'city'    => 'required|string|max:100',
                 'state'   => 'required|string|max:100',
@@ -277,76 +275,51 @@ class UserController extends Controller
                 'pincode' => 'required|digits:6',
             ]);
 
-            if ($validator->passes()) {
-                // Update user info
-                User::where('id', Auth::user()->id)->update([
-                    'name'    => $data['name'],
-                    'mobile'  => $data['mobile'],
-                    'city'    => $data['city'],
-                    'state'   => $data['state'],
-                    'country' => $data['country'],
-                    'pincode' => $data['pincode'],
-                    'address' => $data['address'],
-                ]);
-            } else {
-                return response()->json([
-                    'type'   => 'error',
-                    'errors' => $validator->messages(),
-                ]);
-            }
-        } else {
-            // GET request: load the account view
-            $countries = \App\Models\Country::where('status', 1)->get()->toArray();
-            $user = Auth::user();
-            return view('front.users.user_account')->with(compact(
-                'user', 'countries', 'condition', 'footerProducts', 'category', 'logos', 'sections', 'language', 'requestedBooks'
-            ));
-        }
-    }
+            User::where('id', Auth::id())->update([
+                'name'    => $data['name'],
+                'mobile'  => $data['mobile'],
+                'city'    => $data['city'],
+                'state'   => $data['state'],
+                'country' => $data['country'],
+                'pincode' => $data['pincode'],
+                'address' => $data['address'],
+            ]);
 
+            // Redirect back with success message
+            return redirect()->back()->with('success_message', 'Account details updated successfully!');
+        }
+
+        // For GET request: Show the form
+        return view('front.users.user_account')->with(compact(
+            'user', 'countries', 'condition', 'footerProducts', 'category', 'logos', 'sections', 'language', 'requestedBooks'
+        ));
+    }
 
     // User Account Update Password HTML Form submission via AJAX. Check front/js/custom.js
     public function userUpdatePassword(Request $request)
     {
-        $condition = $request->query('condition');
-        if (! in_array($condition, ['new', 'old'])) {
-            $condition = 'new';
-        }
-        if ($request->ajax()) { // if the 'POST' request is coming from an AJAX call (update user details)
-            $data      = $request->all();
-            $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+        if ($request->isMethod('post')) {
 
+            $request->validate([
                 'current_password' => 'required',
                 'new_password'     => 'required|min:6',
                 'confirm_password' => 'required|min:6|same:new_password',
             ]);
 
-            if ($validator->passes()) {
-                $current_password = $data['current_password'];
-                $checkPassword    = User::where('id', Auth::user()->id)->first();
+            $user = Auth::user();
 
-                if (Hash::check($current_password, $checkPassword->password)) {
+            if (Hash::check($request->input('current_password'), $user->password)) {
+                $user->password = bcrypt($request->input('new_password'));
+                $user->save();
 
-                    $user           = User::find(Auth::user()->id);
-                    $user->password = bcrypt($data['new_password']);
-                    $user->save();
-
-                    return response()->json([ // JSON Responses: https://laravel.com/docs/9.x/responses#json-responses
-                        'type'    => 'success',
-                        'message' => 'Account password successfully updated!',
-                    ]);
-                } else {
-                    return response()->json([ // JSON Responses: https://laravel.com/docs/9.x/responses#json-responses
-                        'type'    => 'incorrect',
-                        'message' => 'Your current password is incorrect!',
-                    ]);
-                }
+                return redirect()->back()->with('success_message', 'Account password successfully updated!');
             } else {
-                return response()->json([
-                    'type'   => 'error',
-                    'errors' => $validator->messages(),
-                ]);
+                return redirect()->back()->withErrors(['current_password' => 'Your current password is incorrect!']);
             }
         }
+
+        // If GET request, just show form (optional)
+        return view('front.users.change_password');
     }
+
 }
