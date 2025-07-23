@@ -169,6 +169,13 @@
 
 
         }
+        .lgbtn {
+            width: 100px;
+            color: white;
+        }
+        .lgbtn:hover {
+            color: white;
+        }
     </style>
 
 </head>
@@ -340,21 +347,29 @@
                                 <!-- User Account -->
                                 @guest
 
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" class="btn text-white" style="background-color: #6c5dd4;">
-                                    <i class="fas fa-user" style="margin-right:8px;"></i> Login
-                                </a>
-
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" class="btn text-white" style="background-color: #6c5dd4;">
-                                    <i class="fas fa-user-plus" style="margin-right:8px;"></i> Register
-                                </a>
-
+                                    <div class="row">
+                                        <div class="col">
+                                            <a href="#" class="btn lgbtn" data-bs-toggle="modal" data-bs-target="#loginModal"
+                                                class="btn text-white" style="background-color: #6c5dd4;   font-size: 12px;">
+                                                <i class="fas fa-user" style="margin-right:8px;"></i> Login
+                                            </a>
+                                        </div>
+                                        <div class="col">
+                                            <a href="#" class="btn lgbtn" data-bs-toggle="modal" data-bs-target="#registerModal"
+                                                class="btn text-white" style="background-color: #6c5dd4;   font-size: 12px;">
+                                                <i class="fas fa-user-plus" style="margin-right:4px;"></i> Register
+                                            </a>
+                                        </div>
+                                    </div>
                                 @else
                                     <div class="d-flex align-items-center">
                                         <a href="{{ route('useraccount') }}"><img class="rounded-circle me-2"
-                                            src="{{ asset(Auth::user()->ImageUpload->filename ?? 'assets/images/avatar.png') }}"
-                                            width="35" height="35"></a>
+                                                src="{{ asset(Auth::user()->ImageUpload->filename ?? 'assets/images/avatar.png') }}"
+                                                width="35" height="35"></a>
 
-                                        <a href="{{ route('useraccount') }}" style="text-decoration: none; color:rgb(77, 74, 74);font-weight: bold;"><span class="me-2">{{ Auth::user()->name }}</span></a>
+                                        <a href="{{ route('useraccount') }}"
+                                            style="text-decoration: none; color:rgb(77, 74, 74);font-weight: bold;"><span
+                                                class="me-2">{{ Auth::user()->name }}</span></a>
                                         <a class="btn btn-sm" style="background-color: #6c5dd4; color: white;"
                                             href="{{ route('logout') }}"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -855,76 +870,79 @@
         });
     </script>
 
-{{-- Login --}}
-<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form id="loginForm" method="POST" action="{{ route('user.login') }}">
-          @csrf
-          <div class="modal-header">
-            <h5 class="modal-title" id="loginModalLabel">Login</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <!-- Email -->
-            <div class="mb-3">
-              <label>Email</label>
-              <input type="email" name="email" class="form-control" required>
+    {{-- Login --}}
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="loginForm" method="POST" action="{{ route('user.login') }}">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label>Email</label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label>Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+                </form>
             </div>
-            <!-- Password -->
-            <div class="mb-3">
-              <label>Password</label>
-              <input type="password" name="password" class="form-control" required>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Login</button>
-          </div>
-        </form>
-      </div>
+        </div>
     </div>
-  </div>
 
 
-  {{-- Register --}}
-  <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form id="registerForm" method="POST" action="{{ route('user.register') }}">
-          @csrf
-          <div class="modal-header">
-            <h5 class="modal-title" id="registerModalLabel">Register</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <!-- Name -->
-            <div class="mb-3">
-              <label>Name</label>
-              <input type="text" name="name" class="form-control" required>
+    {{-- Register --}}
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="registerForm" method="POST" action="{{ route('user.register') }}">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Name -->
+                        <div class="mb-3">
+                            <label>Name</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label>Email</label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label>Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <!-- Mobile -->
+                        <div class="mb-3">
+                            <label>Mobile</label>
+                            <input type="text" name="mobile" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </div>
+                </form>
             </div>
-            <!-- Email -->
-            <div class="mb-3">
-              <label>Email</label>
-              <input type="email" name="email" class="form-control" required>
-            </div>
-            <!-- Password -->
-            <div class="mb-3">
-              <label>Password</label>
-              <input type="password" name="password" class="form-control" required>
-            </div>
-            <!-- Mobile -->
-            <div class="mb-3">
-              <label>Mobile</label>
-              <input type="text" name="mobile" class="form-control" required>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Register</button>
-          </div>
-        </form>
-      </div>
+        </div>
     </div>
-  </div>
 </body>
 
 </html>
