@@ -564,7 +564,7 @@
                                         <p>Edit your account information and personal details.</p>
                                     </div>
 
-                                    <form class="woocommerce-form" id="accountForm" action="javascript:;" method="post">
+                                    <form class="woocommerce-form" id="accountForm" action="{{ route('useraccount') }}" method="post">
                                         @csrf
                                         <div class="woocommerce-form-row woocommerce-form-row--wide">
                                             <label>Email address <span class="required">*</span></label>
