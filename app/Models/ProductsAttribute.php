@@ -9,6 +9,9 @@ class ProductsAttribute extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'product_id', 'size', 'price', 'stock', 'sku', 'status'
+    ];
 
 
     public static function getProductStock($product_id, $size) { // Get the `stock` available for that specific product (`product_id`) with that specific size (`size`) (in `products_attributes` table)?

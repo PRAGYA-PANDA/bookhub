@@ -274,7 +274,7 @@
                             <div class="entry-content card p-2 glass-effect">
                                 <h3 class="entry-title">
                                     <a href="{{ url('product/' . $product->id) }}" style="text-decoration: none;">
-                                        {{ $product->product_name }}
+                                        {{ $product->product_name }} ({{ $product->edition->edition ?? 'not set' }} Edition)
                                     </a>
                                 </h3>
                                 <p>Publisher: {{ $product->publisher->name ?? 'N/A' }}</p>

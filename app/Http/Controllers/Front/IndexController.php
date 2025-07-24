@@ -17,7 +17,7 @@ class IndexController extends Controller
         $sliderBanners  = Banner::where('type', 'Slider')->where('status', 1)->get()->toArray();
         $fixBanners     = Banner::where('type', 'Fix')->where('status', 1)->get()->toArray();
         $condition      = session('condition', 'new');
-        $sliderProducts = Product::with(['authors', 'publisher'])
+        $sliderProducts = Product::with(['authors', 'publisher', 'edition'])
             ->when($condition !== 'all', function ($query) use ($condition) {
                 $query->where('condition', $condition);
             })
@@ -48,7 +48,7 @@ class IndexController extends Controller
         //     ->orderBy('id', 'desc')
         //     ->get();
 
-        $newProducts = Product::with(['authors', 'publisher'])
+        $newProducts = Product::with(['authors', 'publisher', 'edition'])
             ->when($condition !== 'all', function ($query) use ($condition) {
                 $query->where('condition', $condition);
             })

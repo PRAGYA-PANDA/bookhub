@@ -86,7 +86,7 @@
                                 <input type="text" class="form-control" id="section_name" placeholder="Enter Section Name" name="section_name" @if (!empty($section['name'])) value="{{ $section['name'] }}" @else value="{{ old('section_name') }}" @endif> 
                             </div>
                             <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                            <button type="reset"  class="btn btn-light">Cancel</button>
+                            <a href="{{ url('admin/sections') }}" class="btn btn-light">Cancel</a>
                         </form>
                     </div>
                 </div>

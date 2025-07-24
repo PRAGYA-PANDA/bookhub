@@ -44,7 +44,10 @@ class ProductsController extends Controller
             },
             'category' => function ($query) { // the 'category' relationship method in Product.php Model
                 $query->select('id', 'category_name'); // Important Note: It's a MUST to select 'id' even if you don't need it, because the relationship Foreign Key `product_id` depends on it, or else the `product` relationship would give you 'null'!
-            }
+            },
+            'edition' => function ($query) { // the 'edition' relationship method in Product.php Model
+                $query->select('id', 'edition'); // Important Note: It's a MUST to select 'id' even if you don't need it, because the relationship Foreign Key `product_id` depends on it, or else the `product` relationship would give you 'null'!
+            },
         ]);
 
         // if the authenticated user (the logged in user) is 'vendor', show ONLY the products that BELONG TO them (in products.blade.php) ($products)
@@ -177,18 +180,18 @@ class ProductsController extends Controller
             $product->category_id = $data['category_id'];
             // $product->publisher_id    = $data['publisher_id'];
             // Existing or new publisher check
-// Handle publisher
-if (!empty($data['new_publisher'])) {
-    // Admin typed a new one → insert to DB
-    $newPublisher = new \App\Models\Publisher();
-    $newPublisher->name = $data['new_publisher'];
-    $newPublisher->status = 1;
-    $newPublisher->save();
-    $product->publisher_id = $newPublisher->id;
-  } else {
-    // Else use the existing selected one
-    $product->publisher_id = $data['publisher_id'];
-  }
+            // Handle publisher
+            if (!empty($data['new_publisher'])) {
+                // Admin typed a new one → insert to DB
+                $newPublisher = new \App\Models\Publisher();
+                $newPublisher->name = $data['new_publisher'];
+                $newPublisher->status = 1;
+                $newPublisher->save();
+                $product->publisher_id = $newPublisher->id;
+            } else {
+                // Else use the existing selected one
+                $product->publisher_id = $data['publisher_id'];
+            }
 
             //$product->authors()->sync($data['author_id']);
             $product->subject_id    = $data['subject_id'];
@@ -308,7 +311,7 @@ if (!empty($data['new_publisher'])) {
         $editions = \App\Models\Edition::all();
         // return view('admin.products.add_edit_product')->with(compact('title', 'product'));
         return view('admin.products.add_edit_product')->with(compact('title', 'product', 'categories', 'publishers', 'authors', 'subjects', 'languages', 'editions'));
-    }  
+    }
 
     public function getAuthor(Request $request)
     {

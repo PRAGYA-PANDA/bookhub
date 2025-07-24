@@ -91,7 +91,7 @@
                                     <input type="text" class="form-control" id="subject_name" placeholder="Enter Subject Name" name="name" @if (!empty($subject['name'])) value="{{ $subject['name'] }}" @else value="{{ old('subject_name') }}" @endif>
                                 </div>
                                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                <button type="reset"  class="btn btn-light">Cancel</button>
+                                <a href="{{ url('admin/subjects') }}" class="btn btn-light">Cancel</a>
                             </form>
                         </div>
                     </div>

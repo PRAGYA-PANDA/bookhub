@@ -91,7 +91,7 @@
                                     <input type="text" class="form-control" id="author_name" value="{{$authors->name}}" placeholder="Enter Author Name" name="name" @if (!empty($author['name'])) value="{{ $author['name'] }}" @else value="{{ old('author_name') }}" @endif>
                                 </div>
                                 <button type="submit" class="btn btn-primary mr-2">Update</button>
-                                <button type="reset"  class="btn btn-light">Cancel</button>
+                                <a href="{{ url('admin/authors') }}" class="btn btn-light">Cancel</a>
                             </form>
                         </div>
                     </div>

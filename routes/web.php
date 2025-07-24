@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AuthorController;
+use App\Http\Controllers\Admin\BookAttributeController;
 use App\Http\Controllers\Admin\BookRequestsController;
 use App\Http\Controllers\Admin\ProductsController;
 use App\Http\Controllers\Admin\SectionController;
@@ -224,8 +225,8 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         ])->except(['show']);
 
 
-        // Route::get('publishers/search', [ProductsController::class, 'search'])->name('admin.publishers.search');
-        // Route::post('publishers/add', [ProductsController::class, 'add'])->name('admin.publishers.add');
+        Route::get('product/{id}/editions', [BookAttributeController::class, 'getEditions']);
+        Route::post('book-attribute', [BookAttributeController::class, 'store']);
 
 
 

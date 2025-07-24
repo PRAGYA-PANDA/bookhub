@@ -98,7 +98,7 @@
                                     <input type="text" class="form-control" id="filter_value" placeholder="Enter Filter Value" name="filter_value"  @if (!empty($filter['filter_value'])) value="{{ $filter['filter_value'] }}" @else value="{{ old('filter_value') }}" @endif>  {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
                                 </div>
                                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                <button type="reset"  class="btn btn-light">Cancel</button>
+                                <a href="{{ url('admin/filters') }}" class="btn btn-light">Cancel</a>
                             </form>
                         </div>
                     </div>
