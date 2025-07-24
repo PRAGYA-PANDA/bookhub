@@ -433,14 +433,21 @@
                                         aria-selected="false">Account Details</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a href="#edit-address" class="nav-edit-address nav-link" id="edit-address-tab"
-                                        data-bs-toggle="tab" role="tab" aria-controls="edit-address"
+                                    <a href="#change-password" class="nav-change-password nav-link" id="change-password-tab"
+                                        data-bs-toggle="tab" role="tab" aria-controls="change-password"
                                         aria-selected="false">Change Password</a>
                                 </li>
 
                                 <!-- Logout link -->
                                 <li class="nav-item" role="presentation">
-                                    <a href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();"  class="nav-customer-logout nav-link">Logout</a>
+                                    <a href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                        class="nav-customer-logout nav-link">Logout</a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                        style="display: none;">
+                                        @csrf
+                                    </form>
                                 </li>
 
                             </ul>
@@ -448,10 +455,9 @@
                     </div>
 
                     <!-- Hidden form in your layout -->
-                    <form id="logout-form" action="{{ route('logout') }}" method=""
-                    style="display: none;">
-                    
-                </form>
+                    <form id="logout-form" action="{{ route('logout') }}" method="" style="display: none;">
+
+                    </form>
 
                     <!-- Content Area -->
                     <div class="col-lg-9">
@@ -515,8 +521,12 @@
                                                     <div class="info-value">{{ $user->country ?: 'Not provided' }}</div>
                                                 </div>
                                             </div>
-                                            <a href="#edit-account" data-bs-toggle="tab" class="woocommerce-Button">Edit
-                                                Account Details</a>
+                                            {{-- <a href="#edit-account" id="edit-account-tab" data-bs-toggle="tab"
+                                                role="tab" aria-controls="edit-account" aria-selected="false"
+                                                class="woocommerce-Button">Edit
+                                                Account Details</a> --}}
+
+                                           
                                         </div>
                                     </div>
                                 </div>
@@ -667,44 +677,46 @@
                                 </div>
 
                                 <!-- Change Password Tab -->
-                                @if (session('success_message'))
-                                    <div class="alert alert-success">{{ session('success_message') }}</div>
-                                @endif
+                                <div class="tab-pane fade" id="change-password" role="tabpanel"
+                                    aria-labelledby="change-password-tab">
+                                    @if (session('success_message'))
+                                        <div class="alert alert-success">{{ session('success_message') }}</div>
+                                    @endif
 
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul style="margin:0;">
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul style="margin:0;">
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
 
-                                <form class="woocommerce-form" id="passwordForm" action="{{ route('updatePassword') }}"
-                                    method="POST" style="max-width: 400px;">
-                                    @csrf
-                                    <div class="woocommerce-form-row woocommerce-form-row--wide">
-                                        <label>Current password <span class="required">*</span></label>
-                                        <input type="password" id="current-password" name="current_password">
-                                    </div>
-                                    <div class="woocommerce-form-row woocommerce-form-row--wide">
-                                        <label>New password <span class="required">*</span></label>
-                                        <input type="password" id="new-password" name="new_password">
-                                    </div>
-                                    <div class="woocommerce-form-row woocommerce-form-row--wide">
-                                        <label>Confirm new password <span class="required">*</span></label>
-                                        <input type="password" id="confirm-password" name="confirm_password">
-                                    </div>
-                                    <div class="woocommerce-form-row">
-                                        <button type="submit" class="woocommerce-Button">Update password</button>
-                                    </div>
-                                </form>
-
+                                    <form class="woocommerce-form" id="passwordForm"
+                                        action="{{ route('updatePassword') }}" method="POST" style="max-width: 400px;">
+                                        @csrf
+                                        <div class="woocommerce-form-row woocommerce-form-row--wide">
+                                            <label>Current password <span class="required">*</span></label>
+                                            <input type="password" id="current-password" name="current_password">
+                                        </div>
+                                        <div class="woocommerce-form-row woocommerce-form-row--wide">
+                                            <label>New password <span class="required">*</span></label>
+                                            <input type="password" id="new-password" name="new_password">
+                                        </div>
+                                        <div class="woocommerce-form-row woocommerce-form-row--wide">
+                                            <label>Confirm new password <span class="required">*</span></label>
+                                            <input type="password" id="confirm-password" name="confirm_password">
+                                        </div>
+                                        <div class="woocommerce-form-row">
+                                            <button type="submit" class="woocommerce-Button">Update password</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
 
                             <!-- Flash Messages -->
-                            @if (Session::has('success_message'))
+                            {{-- @if (Session::has('success_message'))
                                 <div class="woocommerce-message">
                                     {{ Session::get('success_message') }}
                                 </div>
@@ -725,7 +737,7 @@
                                         @endforeach
                                     </ul>
                                 </div>
-                            @endif
+                            @endif --}}
                         </div>
                     </div>
                 </div>
@@ -745,21 +757,21 @@
                 $(e.target).addClass('active');
             });
 
-            $('.nav-customer-logout').on('click', function(e) {
-                e.preventDefault();
-                $('#logout-form').submit();
-            });
+            // $('.nav-customer-logout').on('click', function(e) {
+            //     e.preventDefault();
+            //     $('#logout-form').submit();
+            // });
 
             // Form submissions
-            $('#accountForm').on('submit', function(e) {
-                e.preventDefault();
-                // Add your account form submission logic here
-            });
+            // $('#accountForm').on('submit', function(e) {
+            //     e.preventDefault();
+            //     // Add your account form submission logic here
+            // });
 
-            $('#passwordForm').on('submit', function(e) {
-                e.preventDefault();
-                // Add your password form submission logic here
-            });
+            // $('#passwordForm').on('submit', function(e) {
+            //     e.preventDefault();
+            //     // Add your password form submission logic here
+            // });
         });
     </script>
 

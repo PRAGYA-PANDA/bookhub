@@ -291,7 +291,7 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     Route::post('user/login', 'UserController@userLogin')->name('user.login');
 
     // User logout (This route is accessed from Logout tab in the drop-down menu in the header (in front/layout/header.blade.php))
-    Route::get('user/logout', 'UserController@logout')->name('logout');
+    Route::post('user/logout', 'UserController@userLogout')->name('logout');
 
 
 

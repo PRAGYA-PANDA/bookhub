@@ -271,7 +271,7 @@ class UserController extends Controller
                 'state'   => 'required|string|max:100',
                 'address' => 'required|string|max:100',
                 'country' => 'required|string|max:100',
-                'mobile'  => 'required|numeric|digits:11',
+                'mobile'  => 'required|numeric|digits:10',
                 'pincode' => 'required|digits:6',
             ]);
 
