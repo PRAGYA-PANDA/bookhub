@@ -63,8 +63,9 @@
                                                         {{-- Show the 'no-image' Dummy Image: If you have for example a table with an 'images' column (that can exist or not exist), use a 'Dummy Image' in case there's no image. Example: https://dummyimage.com/  --}}
                                                     @endif
                                                 </td>
-                                                <td>{{ $product['category']['category_name'] ?? 'N/A'}}</td> {{-- Through the relationship --}}
-                                                <td>{{ $product['section']['name'] ?? 'N/A'}}</td> {{-- Through the relationship --}}
+                                                <td>{{ $product['category']['category_name'] ?? 'N/A' }}</td>
+                                                {{-- Through the relationship --}}
+                                                <td>{{ $product['section']['name'] ?? 'N/A' }}</td> {{-- Through the relationship --}}
                                                 <td>
                                                     @if ($product['admin_type'] == 'vendor')
                                                         <a target="_blank"
@@ -91,17 +92,84 @@
                                                         </a>
                                                     @endif
                                                 </td>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="addAttributeModal" tabindex="-1"
+                                                    aria-labelledby="addAttributeModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <form id="addAttributeForm">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="addAttributeModalLabel">Add
+                                                                        Book Attribute</h5>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+
+                                                                    <!-- Book name + edition display (read-only) -->
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label">Book Name
+                                                                            ('Edition')
+                                                                        </label>
+                                                                        <input type="text" class="form-control"
+                                                                            id="bookNameEdition" readonly>
+                                                                    </div>
+
+                                                                    <!-- Edition select -->
+                                                                    <div class="mb-3">
+                                                                        <label for="bookEdition"
+                                                                            class="form-label">Edition</label>
+                                                                        <select id="bookEdition" class="form-select"
+                                                                            required>
+                                                                            <option value="" disabled selected>Select
+                                                                                Edition</option>
+                                                                            <!-- Editions will be populated dynamically -->
+                                                                        </select>
+                                                                    </div>
+
+                                                                    <div class="mb-3">
+                                                                        <label for="bookPrice"
+                                                                            class="form-label">Price</label>
+                                                                        <input type="number" class="form-control"
+                                                                            id="bookPrice" placeholder="Enter price"
+                                                                            required min="0" step="0.01">
+                                                                    </div>
+
+                                                                    <div class="mb-3">
+                                                                        <label for="bookStock"
+                                                                            class="form-label">Stock</label>
+                                                                        <input type="number" class="form-control"
+                                                                            id="bookStock"
+                                                                            placeholder="Enter stock quantity" required
+                                                                            min="0" step="1">
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary">Create</button>
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Close</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <td>
                                                     <a title="Edit Book"
                                                         href="{{ url('admin/add-edit-product/' . $product['id']) }}">
                                                         <i style="font-size: 25px" class="mdi mdi-pencil-box"></i>
                                                         {{-- Icons from Skydash Admin Panel Template --}}
                                                     </a>
-                                                    <a title="Add Attributes"
-                                                        href="{{ url('admin/add-edit-attributes/' . $product['id']) }}">
+                                                    <a href="#" data-bs-toggle="modal"
+                                                        data-bs-target="#addAttributeModal" data-id="{{ $product['id'] }}"
+                                                        data-name="{{ $product['product_name'] }}" id="openAddAttributeModal">
                                                         <i style="font-size: 25px" class="mdi mdi-plus-box"></i>
-                                                        {{-- Icons from Skydash Admin Panel Template --}}
                                                     </a>
+
+
                                                     <a title="Add Multiple Images"
                                                         href="{{ url('admin/add-images/' . $product['id']) }}">
                                                         <i style="font-size: 25px" class="mdi mdi-library-plus"></i>
@@ -109,7 +177,8 @@
                                                     </a>
 
 
-                                                    <a href="{{ url('admin/delete-product/' . $product['id']) }}" onclick="return confirm('Are you sure you want to delete this product?')">
+                                                    <a href="{{ url('admin/delete-product/' . $product['id']) }}"
+                                                        onclick="return confirm('Are you sure you want to delete this product?')">
                                                         <i style="font-size: 25px" class="mdi mdi-file-excel-box"></i>
                                                     </a>
                                                 </td>
@@ -133,4 +202,122 @@
         </footer>
         <!-- partial -->
     </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+
+            // Example editions (replace with dynamic data if needed)
+            const editionList = ["1st", "2nd", "3rd"];
+            const bookEditionSelect = $('#bookEdition');
+            const bookNameEditionInput = $('#bookNameEdition');
+            const addAttributeForm = $('#addAttributeForm');
+            const formAlert = $('#formAlert');
+
+            let currentProductId = null;
+            let currentBookName = '';
+
+            function showAlert(message, type = 'success') {
+                formAlert
+                    .removeClass('d-none')
+                    .removeClass('alert-success alert-danger alert-warning')
+                    .addClass(`alert-${type}`)
+                    .text(message);
+            }
+
+            function clearAlert() {
+                formAlert.addClass('d-none').text('');
+            }
+
+            function updateBookNameEdition() {
+                const selectedEdition = bookEditionSelect.val();
+                if (selectedEdition) {
+                    bookNameEditionInput.val(`${currentBookName} (${selectedEdition} Edition)`);
+                } else {
+                    bookNameEditionInput.val(currentBookName);
+                }
+            }
+
+            function populateEditions() {
+                bookEditionSelect.html('<option value="" disabled selected>Select Edition</option>');
+                editionList.forEach(ed => {
+                    bookEditionSelect.append(`<option value="${ed}">${ed} Edition</option>`);
+                });
+            }
+
+            // When any "Add Attribute" icon is clicked
+            $(document).on('click', '#openAddAttributeModal', function() {
+                currentProductId = $(this).data('id');
+                currentBookName = $(this).data('name') || 'Example Book'; // Optional: pass book name too
+console.log(currentBookName);
+
+                populateEditions();
+                bookEditionSelect.val('');
+                updateBookNameEdition();
+                addAttributeForm[0].reset();
+                clearAlert();
+            });
+
+            // Update readonly input when edition changes
+            bookEditionSelect.on('change', updateBookNameEdition);
+
+            // Submit form with jQuery AJAX
+            addAttributeForm.on('submit', function(e) {
+                e.preventDefault();
+                clearAlert();
+
+                const selectedEdition = bookEditionSelect.val();
+                const price = parseFloat($('#bookPrice').val());
+                const stock = parseInt($('#bookStock').val(), 10);
+
+                if (!selectedEdition) {
+                    showAlert('Please select an edition.', 'warning');
+                    return;
+                }
+                if (isNaN(price) || price < 0) {
+                    showAlert('Please enter a valid price.', 'warning');
+                    return;
+                }
+                if (isNaN(stock) || stock < 0) {
+                    showAlert('Please enter a valid stock quantity.', 'warning');
+                    return;
+                }
+
+                const payload = {
+                    product_id: currentProductId,
+                    book_name: currentBookName,
+                    edition: selectedEdition,
+                    price: price,
+                    stock: stock,
+                };
+
+                $.ajax({
+                    url: '/api/products_attributes', // Your API endpoint
+                    type: 'POST',
+                    data: JSON.stringify(payload),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        showAlert('Book attribute added successfully!', 'success');
+
+                        setTimeout(() => {
+                            const modal = bootstrap.Modal.getInstance($(
+                                '#addAttributeModal'));
+                            modal.hide();
+                            addAttributeForm[0].reset();
+                            updateBookNameEdition();
+                            clearAlert();
+                            // Optionally reload table here
+                        }, 1500);
+                    },
+                    error: function(xhr) {
+                        const errorMsg = xhr.responseJSON?.message ||
+                            'Failed to save attributes. Please try again.';
+                        showAlert(errorMsg, 'danger');
+                    }
+                });
+            });
+        });
+    </script>
 @endsection
