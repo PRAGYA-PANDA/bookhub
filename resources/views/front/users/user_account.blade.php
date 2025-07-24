@@ -437,12 +437,21 @@
                                         data-bs-toggle="tab" role="tab" aria-controls="edit-address"
                                         aria-selected="false">Change Password</a>
                                 </li>
+
+                                <!-- Logout link -->
                                 <li class="nav-item" role="presentation">
-                                    <a href="{{ route('logout') }}" class="nav-customer-logout nav-link">Logout</a>
+                                    <a href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();"  class="nav-customer-logout nav-link">Logout</a>
                                 </li>
+
                             </ul>
                         </nav>
                     </div>
+
+                    <!-- Hidden form in your layout -->
+                    <form id="logout-form" action="{{ route('logout') }}" method=""
+                    style="display: none;">
+                    
+                </form>
 
                     <!-- Content Area -->
                     <div class="col-lg-9">
@@ -658,38 +667,39 @@
                                 </div>
 
                                 <!-- Change Password Tab -->
-                                @if(session('success_message'))
-                                <div class="alert alert-success">{{ session('success_message') }}</div>
-                            @endif
+                                @if (session('success_message'))
+                                    <div class="alert alert-success">{{ session('success_message') }}</div>
+                                @endif
 
-                            @if($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul style="margin:0;">
-                                        @foreach($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul style="margin:0;">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
 
-                            <form class="woocommerce-form" id="passwordForm" action="{{ route('updatePassword') }}" method="POST" style="max-width: 400px;">
-                                @csrf
-                                <div class="woocommerce-form-row woocommerce-form-row--wide">
-                                    <label>Current password <span class="required">*</span></label>
-                                    <input type="password" id="current-password" name="current_password">
-                                </div>
-                                <div class="woocommerce-form-row woocommerce-form-row--wide">
-                                    <label>New password <span class="required">*</span></label>
-                                    <input type="password" id="new-password" name="new_password">
-                                </div>
-                                <div class="woocommerce-form-row woocommerce-form-row--wide">
-                                    <label>Confirm new password <span class="required">*</span></label>
-                                    <input type="password" id="confirm-password" name="confirm_password">
-                                </div>
-                                <div class="woocommerce-form-row">
-                                    <button type="submit" class="woocommerce-Button">Update password</button>
-                                </div>
-                            </form>
+                                <form class="woocommerce-form" id="passwordForm" action="{{ route('updatePassword') }}"
+                                    method="POST" style="max-width: 400px;">
+                                    @csrf
+                                    <div class="woocommerce-form-row woocommerce-form-row--wide">
+                                        <label>Current password <span class="required">*</span></label>
+                                        <input type="password" id="current-password" name="current_password">
+                                    </div>
+                                    <div class="woocommerce-form-row woocommerce-form-row--wide">
+                                        <label>New password <span class="required">*</span></label>
+                                        <input type="password" id="new-password" name="new_password">
+                                    </div>
+                                    <div class="woocommerce-form-row woocommerce-form-row--wide">
+                                        <label>Confirm new password <span class="required">*</span></label>
+                                        <input type="password" id="confirm-password" name="confirm_password">
+                                    </div>
+                                    <div class="woocommerce-form-row">
+                                        <button type="submit" class="woocommerce-Button">Update password</button>
+                                    </div>
+                                </form>
 
                             </div>
 
@@ -723,6 +733,9 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
     <script>
         $(document).ready(function() {
             // Bootstrap 5 handles tab switching automatically
@@ -732,10 +745,9 @@
                 $(e.target).addClass('active');
             });
 
-            // Handle logout link (prevent tab behavior)
             $('.nav-customer-logout').on('click', function(e) {
-                // Let the logout link work normally
-                return true;
+                e.preventDefault();
+                $('#logout-form').submit();
             });
 
             // Form submissions
