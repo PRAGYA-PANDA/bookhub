@@ -419,23 +419,39 @@
                         <nav class="woocommerce-MyAccount-navigation">
                             <ul class="nav flex-column nav-pills" id="account-tabs" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <a href="#dashboard" class="nav-dashboard nav-link active" id="dashboard-tab" data-bs-toggle="tab" role="tab" aria-controls="dashboard" aria-selected="true">Dashboard</a>
+                                    <a href="#dashboard" class="nav-dashboard nav-link active" id="dashboard-tab"
+                                        data-bs-toggle="tab" role="tab" aria-controls="dashboard"
+                                        aria-selected="true">Dashboard</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a href="#orders" class="nav-orders nav-link" id="orders-tab" data-bs-toggle="tab" role="tab" aria-controls="orders" aria-selected="false">My Book Requests</a>
+                                    <a href="#orders" class="nav-orders nav-link" id="orders-tab" data-bs-toggle="tab"
+                                        role="tab" aria-controls="orders" aria-selected="false">My Book Requests</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a href="#edit-account" class="nav-edit-account nav-link" id="edit-account-tab" data-bs-toggle="tab" role="tab" aria-controls="edit-account" aria-selected="false">Account Details</a>
+                                    <a href="#edit-account" class="nav-edit-account nav-link" id="edit-account-tab"
+                                        data-bs-toggle="tab" role="tab" aria-controls="edit-account"
+                                        aria-selected="false">Account Details</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a href="#edit-address" class="nav-edit-address nav-link" id="edit-address-tab" data-bs-toggle="tab" role="tab" aria-controls="edit-address" aria-selected="false">Change Password</a>
+                                    <a href="#edit-address" class="nav-edit-address nav-link" id="edit-address-tab"
+                                        data-bs-toggle="tab" role="tab" aria-controls="edit-address"
+                                        aria-selected="false">Change Password</a>
                                 </li>
+
+                                <!-- Logout link -->
                                 <li class="nav-item" role="presentation">
-                                    <a href="{{ route('logout') }}" class="nav-customer-logout nav-link">Logout</a>
+                                    <a href="{{ route('logout') }}"  onclick="event.preventDefault(); document.getElementById('logout-form').submit();"  class="nav-customer-logout nav-link">Logout</a>
                                 </li>
+
                             </ul>
                         </nav>
                     </div>
+
+                    <!-- Hidden form in your layout -->
+                    <form id="logout-form" action="{{ route('logout') }}" method=""
+                    style="display: none;">
+                    
+                </form>
 
                     <!-- Content Area -->
                     <div class="col-lg-9">
@@ -443,7 +459,8 @@
                             <div class="tab-content" id="account-tabs-content">
 
                                 <!-- Dashboard Tab -->
-                                <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                                <div class="tab-pane fade show active" id="dashboard" role="tabpanel"
+                                    aria-labelledby="dashboard-tab">
                                     <div class="woocommerce-account-header">
                                         <h1>My Account</h1>
                                         <p>Hello <strong>{{ explode(' ', $user->name)[0] }}</strong>, welcome to your
@@ -542,7 +559,8 @@
                                                             @if ($book->status == 0)
                                                                 <span class="status-badge status-pending">Pending</span>
                                                             @elseif ($book->status == 1)
-                                                                <span class="status-badge status-available">Book Available</span>
+                                                                <span class="status-badge status-available">Book
+                                                                    Available</span>
                                                             @else
                                                                 <span
                                                                     class="status-badge status-unavailable">Unavailable</span>
@@ -558,13 +576,30 @@
                                 </div>
 
                                 <!-- Account Details Tab -->
-                                <div class="tab-pane fade" id="edit-account" role="tabpanel" aria-labelledby="edit-account-tab">
+                                <div class="tab-pane fade" id="edit-account" role="tabpanel"
+                                    aria-labelledby="edit-account-tab">
                                     <div class="woocommerce-account-header">
                                         <h1>Account Details</h1>
                                         <p>Edit your account information and personal details.</p>
                                     </div>
 
-                                    <form class="woocommerce-form" id="accountForm" action="{{ route('useraccount') }}" method="post">
+                                    @if (session('success_message'))
+                                        <div class="alert alert-success">{{ session('success_message') }}</div>
+                                    @endif
+
+                                    @if ($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul style="margin:0;">
+                                                @foreach ($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
+
+
+                                    <form class="woocommerce-form" id="accountForm" action="{{ route('useraccount') }}"
+                                        method="POST">
                                         @csrf
                                         <div class="woocommerce-form-row woocommerce-form-row--wide">
                                             <label>Email address <span class="required">*</span></label>
@@ -632,35 +667,40 @@
                                 </div>
 
                                 <!-- Change Password Tab -->
-                                <div class="tab-pane fade" id="edit-address" role="tabpanel" aria-labelledby="edit-address-tab">
-                                    <div class="woocommerce-account-header">
-                                        <h1>Change Password</h1>
-                                        <p>Update your account password for better security.</p>
+                                @if (session('success_message'))
+                                    <div class="alert alert-success">{{ session('success_message') }}</div>
+                                @endif
+
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul style="margin:0;">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
                                     </div>
+                                @endif
 
-                                    <form class="woocommerce-form" id="passwordForm" action="javascript:;"
-                                        method="post" style="max-width: 400px;">
-                                        @csrf
-                                        <div class="woocommerce-form-row woocommerce-form-row--wide">
-                                            <label>Current password <span class="required">*</span></label>
-                                            <input type="password" id="current-password" name="current_password">
-                                        </div>
+                                <form class="woocommerce-form" id="passwordForm" action="{{ route('updatePassword') }}"
+                                    method="POST" style="max-width: 400px;">
+                                    @csrf
+                                    <div class="woocommerce-form-row woocommerce-form-row--wide">
+                                        <label>Current password <span class="required">*</span></label>
+                                        <input type="password" id="current-password" name="current_password">
+                                    </div>
+                                    <div class="woocommerce-form-row woocommerce-form-row--wide">
+                                        <label>New password <span class="required">*</span></label>
+                                        <input type="password" id="new-password" name="new_password">
+                                    </div>
+                                    <div class="woocommerce-form-row woocommerce-form-row--wide">
+                                        <label>Confirm new password <span class="required">*</span></label>
+                                        <input type="password" id="confirm-password" name="confirm_password">
+                                    </div>
+                                    <div class="woocommerce-form-row">
+                                        <button type="submit" class="woocommerce-Button">Update password</button>
+                                    </div>
+                                </form>
 
-                                        <div class="woocommerce-form-row woocommerce-form-row--wide">
-                                            <label>New password <span class="required">*</span></label>
-                                            <input type="password" id="new-password" name="new_password">
-                                        </div>
-
-                                        <div class="woocommerce-form-row woocommerce-form-row--wide">
-                                            <label>Confirm new password <span class="required">*</span></label>
-                                            <input type="password" id="confirm-password" name="confirm_password">
-                                        </div>
-
-                                        <div class="woocommerce-form-row">
-                                            <button type="submit" class="woocommerce-Button">Update password</button>
-                                        </div>
-                                    </form>
-                                </div>
                             </div>
 
                             <!-- Flash Messages -->
@@ -693,6 +733,9 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
     <script>
         $(document).ready(function() {
             // Bootstrap 5 handles tab switching automatically
@@ -702,10 +745,9 @@
                 $(e.target).addClass('active');
             });
 
-            // Handle logout link (prevent tab behavior)
             $('.nav-customer-logout').on('click', function(e) {
-                // Let the logout link work normally
-                return true;
+                e.preventDefault();
+                $('#logout-form').submit();
             });
 
             // Form submissions
