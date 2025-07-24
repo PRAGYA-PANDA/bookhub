@@ -217,10 +217,10 @@
                     </div>
 
                     <div class="modal-footer bg-light border-0 p-4">
-                        <button type="submit" class="btn btn-primary btn-lg px-4 fw-semibold">
+                        <button type="submit" class="btn btn-primary  px-4 fw-semibold">
                             <i class="fas fa-save me-2"></i>Create Attribute
                         </button>
-                        <button type="button" class="btn btn-outline-secondary btn-lg px-4" data-bs-dismiss="modal">
+                        <button type="button" class="btn btn-outline-secondary  px-4" data-bs-dismiss="modal">
                             <i class="fas fa-times me-2"></i>Cancel
                         </button>
                     </div>

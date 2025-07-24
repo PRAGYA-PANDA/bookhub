@@ -730,6 +730,9 @@ class ProductsController extends Controller
     // Render Cart page (front/products/cart.blade.php)
     public function cart(Request $request)
     {
+        $logos    = HeaderLogo::first();
+        $sections = Section::all();
+        $language = Language::get();
         $condition = $request->query('condition');
         if (! in_array($condition, ['new', 'old'])) {
             $condition = 'new';
@@ -741,7 +744,16 @@ class ProductsController extends Controller
         $meta_title    = 'Shopping Cart - Multi Vendor E-commerce';
         $meta_keywords = 'shopping cart, multi vendor';
 
-        return view('front.products.cart')->with(compact('getCartItems', 'meta_title', /* 'meta_description', */'meta_keywords', 'condition'));
+        $footerProducts = Product::orderBy('id', 'Desc')
+            ->when($condition !== 'all', function ($query) use ($condition) {
+                $query->where('condition', $condition);
+            })
+            ->where('status', 1)
+            ->take(3)
+            ->get()
+            ->toArray();
+
+        return view('front.products.cart')->with(compact('getCartItems', 'meta_title', /* 'meta_description', */'meta_keywords', 'condition', 'logos', 'sections', 'language', 'footerProducts'));
     }
 
     // Update Cart Item Quantity AJAX call in front/products/cart_items.blade.php. Check front/js/custom.js
