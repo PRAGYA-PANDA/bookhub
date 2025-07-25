@@ -1,224 +1,543 @@
 {{-- Note: This page (view) is rendered by the checkout() method in the Front/ProductsController.php --}}
-@extends('front.layout.layout')
-
+@extends('front.layout.layout2')
 
 @section('content')
-    <!-- Page Introduction Wrapper -->
-    <div class="page-style-a">
-        <div class="container">
-            <div class="page-intro">
-                <h2>Checkout</h2>
-                <ul class="bread-crumb">
-                    <li class="has-separator">
-                        <i class="ion ion-md-home"></i>
-                        <a href="index.html">Home</a>
-                    </li>
-                    <li class="is-marked">
-                        <a href="checkout.html">Checkout</a>
-                    </li>
-                </ul>
+<!-- Page Introduction Wrapper -->
+<div class="page-style-a">
+    <div class="container">
+        <div class="page-intro">
+            <h2>Checkout</h2>
+            <ul class="bread-crumb">
+                <li class="has-separator">
+                    <i class="ion ion-md-home"></i>
+                    <a href="index.html">Home</a>
+                </li>
+                <li class="is-marked">
+                    <a href="checkout.html">Checkout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Page Introduction Wrapper /- -->
+
+<!-- Checkout-Page -->
+<div class="page-checkout u-s-p-t-80">
+    <div class="container">
+        {{-- Error Messages --}}
+        @if (Session::has('error_message'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Error:</strong> {{ Session::get('error_message') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="row">
+                    <!-- Delivery Addresses Section -->
+                    <div class="col-lg-6" id="deliveryAddresses">
+                        <div class="delivery-section">
+                            <div class="section-header">
+                                <h4><i class="fas fa-map-marker-alt"></i> Delivery Information</h4>
+                            </div>
+                            @include('front.products.delivery_addresses')
+                        </div>
+                    </div>
+
+                    <!-- Order Summary & Payment -->
+                    <div class="col-lg-6">
+                        <form name="checkoutForm" id="checkoutForm" action="{{ url('/checkout') }}" method="post">
+                            @csrf
+
+                            <!-- Delivery Addresses Selection -->
+                            @if (count($deliveryAddresses) > 0)
+                                <div class="checkout-section">
+                                    <div class="section-header">
+                                        <h4><i class="fas fa-home"></i> Select Delivery Address</h4>
+                                    </div>
+                                    <div class="address-options">
+                                        @foreach ($deliveryAddresses as $address)
+                                            <div class="address-item">
+                                                <div class="address-radio">
+                                                    <input type="radio" 
+                                                           id="address{{ $address['id'] }}" 
+                                                           name="address_id" 
+                                                           value="{{ $address['id'] }}" 
+                                                           shipping_charges="{{ $address['shipping_charges'] }}" 
+                                                           total_price="{{ $total_price }}" 
+                                                           coupon_amount="{{ \Illuminate\Support\Facades\Session::get('couponAmount') }}" 
+                                                           codpincodeCount="{{ $address['codpincodeCount'] }}" 
+                                                           prepaidpincodeCount="{{ $address['prepaidpincodeCount'] }}">
+                                                    <label for="address{{ $address['id'] }}" class="address-label">
+                                                        <div class="address-info">
+                                                            <h6>{{ $address['name'] }}</h6>
+                                                            <p>{{ $address['address'] }}, {{ $address['city'] }}, {{ $address['state'] }}, {{ $address['country'] }}</p>
+                                                            <span class="phone">📞 {{ $address['mobile'] }}</span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                                <div class="address-actions">
+                                                    <a href="javascript:;" data-addressid="{{ $address['id'] }}" class="editAddress action-btn edit-btn">
+                                                        <i class="fas fa-edit"></i> Edit
+                                                    </a>
+                                                    <a href="javascript:;" data-addressid="{{ $address['id'] }}" class="removeAddress action-btn remove-btn">
+                                                        <i class="fas fa-trash"></i> Remove
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+
+                            <!-- Order Summary -->
+                            <div class="checkout-section">
+                                <div class="section-header">
+                                    <h4><i class="fas fa-shopping-cart"></i> Order Summary</h4>
+                                </div>
+                                
+                                <div class="order-summary">
+                                    <!-- Products List -->
+                                    <div class="products-list">
+                                        @php $total_price = 0 @endphp
+                                        @foreach ($getCartItems as $item)
+                                            @php
+                                                $getDiscountAttributePrice = \App\Models\Product::getDiscountAttributePrice($item['product_id'], $item['size']);
+                                            @endphp
+                                            <div class="product-item">
+                                                <div class="product-info">
+                                                    <img width="50px" src="{{ asset('front/images/product_images/small/') }}" alt="Product">
+                                                    <div class="product-details">
+                                                        <h6>{{ $item['product']['product_name'] }}</h6>
+                                                        <small>Size: {{ $item['size'] }} | Qty: {{ $item['quantity'] }}</small>
+                                                    </div>
+                                                </div>
+                                                <div class="product-price">
+                                                    ₹{{ $getDiscountAttributePrice['final_price'] * $item['quantity'] }}
+                                                </div>
+                                            </div>
+                                            @php $total_price = $total_price + ($getDiscountAttributePrice['final_price'] * $item['quantity']) @endphp
+                                        @endforeach
+                                    </div>
+
+                                    <!-- Price Breakdown -->
+                                    <div class="price-breakdown">
+                                        <div class="price-row">
+                                            <span>Subtotal</span>
+                                            <span>₹{{ $total_price }}</span>
+                                        </div>
+                                        <div class="price-row">
+                                            <span>Shipping Charges</span>
+                                            <span class="shipping_charges">₹0</span>
+                                        </div>
+                                        <div class="price-row">
+                                            <span>Coupon Discount</span>
+                                            <span>
+                                                @if (\Illuminate\Support\Facades\Session::has('couponAmount'))
+                                                    <span class="couponAmount">-₹{{ \Illuminate\Support\Facades\Session::get('couponAmount') }}</span>
+                                                @else
+                                                    ₹0
+                                                @endif
+                                            </span>
+                                        </div>
+                                        <div class="price-row total-row">
+                                            <span><strong>Grand Total</strong></span>
+                                            <span><strong class="grand_total">₹{{ $total_price - \Illuminate\Support\Facades\Session::get('couponAmount') }}</strong></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Payment Methods -->
+                            <div class="checkout-section">
+                                <div class="section-header">
+                                    <h4><i class="fas fa-credit-card"></i> Payment Method</h4>
+                                </div>
+                                
+                                <div class="payment-methods">
+                                    <div class="payment-option codMethod">
+                                        <input type="radio" class="radio-box" name="payment_gateway" id="cash-on-delivery" value="COD">
+                                        <label class="payment-label" for="cash-on-delivery">
+                                            <div class="payment-info">
+                                                <i class="fas fa-money-bill-wave"></i>
+                                                <span>Cash on Delivery</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="payment-option prepaidMethod">
+                                        <input type="radio" class="radio-box" name="payment_gateway" id="paypal" value="Paypal">
+                                        <label class="payment-label" for="paypal">
+                                            <div class="payment-info">
+                                                <i class="fab fa-paypal"></i>
+                                                <span>PayPal</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="payment-option prepaidMethod">
+                                        <input type="radio" class="radio-box" name="payment_gateway" id="iyzipay" value="iyzipay">
+                                        <label class="payment-label" for="iyzipay">
+                                            <div class="payment-info">
+                                                <i class="fas fa-credit-card"></i>
+                                                <span>iyzipay</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Terms & Conditions -->
+                            <div class="checkout-section">
+                                <div class="terms-section">
+                                    <input type="checkbox" class="check-box" id="accept" name="accept" value="Yes" title="Please agree to T&C">
+                                    <label class="terms-label" for="accept">
+                                        I've read and accept the <a href="terms-and-conditions.html" class="terms-link">terms & conditions</a>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Place Order Button -->
+                            <div class="checkout-section">
+                                <button type="submit" id="placeOrder" class="place-order-btn">
+                                    <i class="fas fa-lock"></i> Place Order Securely
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <!-- Page Introduction Wrapper /- -->
-    <!-- Checkout-Page -->
-    <div class="page-checkout u-s-p-t-80">
-        <div class="container">
+</div>
 
-            {{-- Showing the following HTML Form Validation Errors: (check checkout() method in Front/ProductsController.php) --}}
-            {{-- Determining If An Item Exists In The Session (using has() method): https://laravel.com/docs/9.x/session#determining-if-an-item-exists-in-the-session --}}
-            @if (Session::has('error_message')) <!-- Check AdminController.php, updateAdminPassword() method -->
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Error:</strong> {{ Session::get('error_message') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            @endif
+<style>
+/* Checkout Page Styles */
+.checkout-section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #f0f0f0;
+}
 
+.section-header {
+    border-bottom: 2px solid #f8f9fa;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
 
+.section-header h4 {
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
 
-                <div class="row">
-                    <div class="col-lg-12 col-md-12">
+.section-header i {
+    color: #007bff;
+    margin-right: 8px;
+}
 
-                        <!-- Second Accordion /- -->
+/* Address Selection */
+.address-options {
+    space-y: 15px;
+}
 
-                        <div class="row">
-                            <!-- Billing-&-Shipping-Details -->
-                            <div class="col-lg-6" id="deliveryAddresses"> {{-- We created this id="deliveryAddresses" to use it as a handle for jQuery AJAX to refresh this page, check front/js/custom.js --}}
+.address-item {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    position: relative;
+}
 
+.address-item:hover {
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0,123,255,0.15);
+}
 
+.address-radio input[type="radio"] {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}
 
+.address-label {
+    cursor: pointer;
+    padding-left: 35px;
+    display: block;
+    margin: 0;
+}
 
+.address-info h6 {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
 
-                                @include('front.products.delivery_addresses')
+.address-info p {
+    color: #666;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
 
+.address-info .phone {
+    color: #007bff;
+    font-size: 14px;
+}
 
+.address-actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 10px;
+}
 
-                            </div>
-                            <!-- Billing-&-Shipping-Details /- -->
-                            <!-- Checkout -->
-                            <div class="col-lg-6">
+.action-btn {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
 
+.edit-btn {
+    background: #28a745;
+    color: white;
+}
 
+.edit-btn:hover {
+    background: #218838;
+    color: white;
+}
 
-                                {{-- The complete HTML Form of the user submitting their Delivery Address and Payment Method --}}
-                                <form name="checkoutForm" id="checkoutForm" action="{{ url('/checkout') }}" method="post">
-                                    @csrf {{-- Preventing CSRF Requests: https://laravel.com/docs/9.x/csrf#preventing-csrf-requests --}}
+.remove-btn {
+    background: #dc3545;
+    color: white;
+}
 
+.remove-btn:hover {
+    background: #c82333;
+    color: white;
+}
 
+/* Order Summary */
+.order-summary {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+}
 
+.products-list {
+    margin-bottom: 20px;
+}
 
-                                    @if (count($deliveryAddresses) > 0) {{-- Checking if there are any $deliveryAddreses for the currently authenticated/logged-in user --}} {{-- $deliveryAddresses variable is passed in from checkout() method in Front/ProductsController.php --}}
+.product-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #dee2e6;
+}
 
-                                        <h4 class="section-h4">Delivery Addresses</h4>
+.product-item:last-child {
+    border-bottom: none;
+}
 
-                                        @foreach ($deliveryAddresses as $address)
-                                            <div class="control-group" style="float: left; margin-right: 5px">
-                                                {{-- We'll use the Custom HTML data attributes:    shipping_charges    ,    total_price    ,    coupon_amount    ,    codpincodeCount    and    prepaidpincodeCount    to use them as handles for jQuery to change the calculations in "Your Order" section using jQuery. Check front/js/custom.js file --}}
-                                                <input type="radio" id="address{{ $address['id'] }}" name="address_id" value="{{ $address['id'] }}" shipping_charges="{{ $address['shipping_charges'] }}" total_price="{{ $total_price }}" coupon_amount="{{ \Illuminate\Support\Facades\Session::get('couponAmount') }}" codpincodeCount="{{ $address['codpincodeCount'] }}" prepaidpincodeCount="{{ $address['prepaidpincodeCount'] }}"> {{-- $total_price variable is passed in from checkout() method in Front/ProductsController.php --}} {{-- We created the Custom HTML Attribute id="address{{ $address['id'] }}" to get the UNIQUE ids of the addresses in order for the <label> HTML element to be able to point for that <input> --}}
-                                            </div>
-                                            <div>
-                                                <label class="control-label" for="address{{ $address['id'] }}">
-                                                    {{ $address['name'] }}, {{ $address['address'] }}, {{ $address['city'] }}, {{ $address['state'] }}, {{ $address['country'] }} ({{ $address['mobile'] }})
-                                                </label>
-                                                <a href="javascript:;" data-addressid="{{ $address['id'] }}" class="removeAddress" style="float: right; margin-left: 10px">Remove</a> {{-- We used href="javascript:;" to prevent the <a> link from being clickable (to make the <a> unclickable) (stop the <a> function or action) because we'll use jQuery AJAX to click this link, check front/js/custom.js --}} {{-- We use the class="removeAddress" as a handle for the AJAX request in front/js/custom.js --}}
-                                                <a href="javascript:;" data-addressid="{{ $address['id'] }}" class="editAddress"   style="float: right"                   >Edit</a>   {{-- We used href="javascript:;" to prevent the <a> link from being clickable (to make the <a> unclickable) (stop the <a> function or action) because we'll use jQuery AJAX to click this link, check front/js/custom.js --}} {{-- We use the class="editAddress" as a handle for the AJAX request in front/js/custom.js --}}
-                                            </div>
-                                        @endforeach
-                                        <br>
-                                    @endif
+.product-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
+.product-info img {
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
 
-                                    <h4 class="section-h4">Your Order</h4>
-                                    <div class="order-table">
-                                        <table class="u-s-m-b-13">
-                                            <thead>
-                                                <tr>
-                                                    <th>Product</th>
-                                                    <th>Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+.product-details h6 {
+    margin: 0 0 5px 0;
+    color: #333;
+    font-weight: 500;
+}
 
+.product-details small {
+    color: #666;
+}
 
+.product-price {
+    font-weight: 600;
+    color: #007bff;
+}
 
-                                                {{-- We'll place this $total_price inside the foreach loop to calculate the total price of all products in Cart. Check the end of the next foreach loop before @endforeach --}}
-                                                @php $total_price = 0 @endphp
+/* Price Breakdown */
+.price-breakdown {
+    border-top: 1px solid #dee2e6;
+    padding-top: 15px;
+}
 
-                                                @foreach ($getCartItems as $item) {{-- $getCartItems is passed in from cart() method in Front/ProductsController.php --}}
-                                                    @php
-                                                        $getDiscountAttributePrice = \App\Models\Product::getDiscountAttributePrice($item['product_id'], $item['size']); // from the `products_attributes` table, not the `products` table
-                                                        // dd($getDiscountAttributePrice);
-                                                    @endphp
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
 
+.total-row {
+    border-top: 1px solid #dee2e6;
+    padding-top: 10px;
+    margin-top: 10px;
+    font-size: 18px;
+}
 
-                                                    <tr>
-                                                        <td>
-                                                            <a href="{{ url('product/' . $item['product_id']) }}">
-                                                                <img width="50px" src="{{ asset('front/images/product_images/small/' . $item['product']['product_image']) }}" alt="Product">
-                                                                <h6 class="order-h6">{{ $item['product']['product_name'] }}
-                                                                <br>
-                                                                {{ $item['size'] }}</h6>
-                                                            </a>
-                                                            <span class="order-span-quantity">x {{ $item['quantity'] }}</span>
-                                                        </td>
-                                                        <td>
-                                                            <h6 class="order-h6">₹{{ $getDiscountAttributePrice['final_price'] * $item['quantity'] }}</h6> {{-- price of all products (after discount (if any)) (= price (after discoutn) * no. of products) --}}
-                                                        </td>
-                                                    </tr>
+/* Payment Methods */
+.payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
+.payment-option {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
 
+.payment-option:hover {
+    border-color: #007bff;
+}
 
-                                                    {{-- This is placed here INSIDE the foreach loop to calculate the total price of all products in Cart --}}
-                                                    @php $total_price = $total_price + ($getDiscountAttributePrice['final_price'] * $item['quantity']) @endphp
-                                                @endforeach
+.payment-option input[type="radio"] {
+    margin-right: 15px;
+}
 
+.payment-label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
 
-                                                <tr>
-                                                    <td>
-                                                        <h3 class="order-h3">Subtotal</h3>
-                                                    </td>
-                                                    <td>
-                                                        <h3 class="order-h3">₹{{ $total_price }}</h3>
-                                                    </td>
-                                                </tr>₹
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="order-h6">Shipping Charges</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="order-h6">
-                                                            <span class="shipping_charges">₹0</span>
-                                                        </h6>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h6 class="order-h6">Coupon Discount</h6>
-                                                    </td>
-                                                    <td>
-                                                        <h6 class="order-h6">
+.payment-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-                                                            @if (\Illuminate\Support\Facades\Session::has('couponAmount')) {{-- We stored the 'couponAmount' in a Session Variable inside the applyCoupon() method in Front/ProductsController.php --}}
-                                                                <span class="couponAmount">₹{{ \Illuminate\Support\Facades\Session::get('couponAmount') }}</span>
-                                                            @else
-                                                                ₹0
-                                                            @endif
-                                                        </h6>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <h3 class="order-h3">Grand Total</h3>
-                                                    </td>
-                                                    <td>
-                                                        <h3 class="order-h3">
-                                                            <strong class="grand_total">₹{{ $total_price - \Illuminate\Support\Facades\Session::get('couponAmount') }}</strong> {{-- We create the 'grand_total' CSS class to use it as a handle for AJAX inside    $('#applyCoupon').submit();    function in front/js/custom.js --}} {{-- We stored the 'couponAmount' a Session Variable inside the applyCoupon() method in Front/ProductsController.php --}}
-                                                        </h3>
-                                                    </td>
-                                                </tr>
+.payment-info i {
+    font-size: 20px;
+    color: #007bff;
+}
 
+/* Terms & Conditions */
+.terms-section {
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #007bff;
+}
 
-                                            </tbody>
-                                        </table>
-                                        <div class="u-s-m-b-13 codMethod"> {{-- We added the codMethod CSS class to disable that payment method (check front/js/custom.js) if the PIN code of that user's Delivery Address doesn't exist in our `cod_pincodes` database table --}}
-                                            <input type="radio" class="radio-box" name="payment_gateway" id="cash-on-delivery" value="COD">
-                                            <label class="label-text" for="cash-on-delivery">Cash on Delivery</label>
-                                        </div>
-                                        <div class="u-s-m-b-13 prepaidMethod"> {{-- We added the prepaidMethod CSS class to disable that payment method (check front/js/custom.js) if the PIN code of that user's Delivery Address doesn't exist in our `prepaid_pincodes` database table --}}
-                                            <input type="radio" class="radio-box" name="payment_gateway" id="paypal" value="Paypal">
-                                            <label class="label-text" for="paypal">PayPal</label>
-                                        </div>
+.terms-label {
+    cursor: pointer;
+    margin-left: 10px;
+    color: #333;
+}
 
+.terms-link {
+    color: #007bff;
+    text-decoration: none;
+}
 
-                                        {{-- iyzico Payment Gateway integration in/with Laravel --}}
-                                        <div class="u-s-m-b-13 prepaidMethod"> {{-- We added the prepaidMethod CSS class to disable that payment method (check front/js/custom.js) if the PIN code of that user's Delivery Address doesn't exist in our `prepaid_pincodes` database table --}}
-                                            <input type="radio" class="radio-box" name="payment_gateway" id="iyzipay" value="iyzipay">
-                                            <label class="label-text" for="iyzipay">iyzipay</label>
-                                        </div>
+.terms-link:hover {
+    text-decoration: underline;
+}
 
+/* Place Order Button */
+.place-order-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 
-                                        <div class="u-s-m-b-13">
-                                            <input type="checkbox" class="check-box" id="accept" name="accept" value="Yes" title="Please agree to T&C">
-                                            <label class="label-text no-color" for="accept">I’ve read and accept the
-                                                <a href="terms-and-conditions.html" class="u-c-brand">terms & conditions</a>
-                                            </label>
-                                        </div>
-                                        <button type="submit" id="placeOrder" class="button button-outline-secondary">Place Order</button> {{-- Show our Preloader/Loader/Loading Page/Preloading Screen while the <form> is submitted using the    id="placeOrder"    HTML attribute. Check front/js/custom.js --}}
-                                    </div>
-                                </form>
+.place-order-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,123,255,0.3);
+}
 
+.place-order-btn i {
+    margin-right: 8px;
+}
 
-                            </div>
-                            <!-- Checkout /- -->
-                        </div>
+/* Delivery Section */
+.delivery-section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #f0f0f0;
+    height: fit-content;
+}
 
-                    </div>
-                </div>
+/* Responsive Design */
+@media (max-width: 768px) {
+    .checkout-section {
+        padding: 20px 15px;
+    }
+    
+    .address-actions {
+        position: static;
+        margin-top: 10px;
+        justify-content: flex-end;
+    }
+    
+    .product-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .product-info {
+        width: 100%;
+    }
+    
+    .payment-methods {
+        gap: 10px;
+    }
+    
+    .place-order-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}
 
+/* Alert Improvements */
+.alert {
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
 
-        </div>
-    </div>
-    <!-- Checkout-Page /- -->
+.alert i {
+    margin-right: 8px;
+}
+</style>
+
+<!-- Checkout-Page /- -->
 @endsection

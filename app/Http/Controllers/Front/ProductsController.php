@@ -1024,6 +1024,9 @@ class ProductsController extends Controller
     // Checkout page (using match() method for the 'GET' request for rendering the front/products/checkout.blade.php page or the 'POST' request for the HTML Form submission in the same page) (for submitting the user's Delivery Address and Payment Method))
     public function checkout(Request $request)
     {
+        $logos    = HeaderLogo::first();
+        $sections = Section::all();
+        $language = Language::get();
         $condition = $request->query('condition');
         if (! in_array($condition, ['new', 'old'])) {
             $condition = 'new';
@@ -1049,8 +1052,8 @@ class ProductsController extends Controller
             $attrPrice   = Product::getDiscountAttributePrice($item['product_id'], $item['size']);
             $total_price = $total_price + ($attrPrice['final_price'] * $item['quantity']);
 
-            $product_weight = $item['product']['product_weight'];
-            $total_weight   = $total_weight + $product_weight;
+            // $product_weight = $item['product']['product_weight'];
+            // $total_weight   = $total_weight + $product_weight;
         }
 
         $deliveryAddresses = DeliveryAddress::deliveryAddresses(); // the delivery addresses of the currently authenticated/logged in user
@@ -1298,7 +1301,14 @@ class ProductsController extends Controller
             return redirect('thanks'); // redirect to front/products/thanks.blade.php page
         }
 
-        return view('front.products.checkout')->with(compact('deliveryAddresses', 'countries', 'getCartItems', 'total_price', 'condition'));
+        $footerProducts = Product::orderBy('id', 'Desc')
+        ->where('condition', $condition)
+        ->where('status', 1)
+        ->take(3)
+        ->get()
+        ->toArray();
+
+        return view('front.products.checkout')->with(compact('deliveryAddresses', 'countries', 'getCartItems', 'total_price', 'condition', 'footerProducts', 'logos', 'sections', 'language'));
     }
 
     // Rendering Thanks page (after placing an order)
