@@ -36,10 +36,11 @@ class ProductsAttribute extends Model
     {
         $getAttributeStatus = ProductsAttribute::select('status')->where([
             'product_id' => $product_id,
-            'size'       => $size
+            // 'size'       => $size
         ])->first();
 
-       
-        return $getAttributeStatus->status;
+
+        return $getAttributeStatus->status ?? null;
+
     }
 }
