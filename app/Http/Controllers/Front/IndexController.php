@@ -108,12 +108,14 @@ class IndexController extends Controller
             'is_featured' => 'Yes',
             'status'      => 1,
         ])
-            ->when($condition !== 'all', function ($query) use ($condition) {
-                $query->where('condition', $condition);
-            })
-            ->limit(6)
-            ->get()
-            ->toArray();
+        ->when($condition !== 'all', function ($query) use ($condition) {
+            $query->where('condition', $condition);
+        })
+        ->when(session('language') && session('language') !== 'all', function ($query) {
+            $query->where('language_id', session('language'));
+        })
+        ->limit(10)
+        ->get();
 
         $meta_title       = 'Multi Vendor E-commerce Website';
         $meta_description = 'Online Shopping Website which deals in Clothing, Electronics & Appliances Products';
