@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
@@ -59,6 +60,18 @@ class IndexController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(8);
 
+        $slidingProducts = Product::with(['authors', 'publisher', 'edition'])
+            ->when($condition !== 'all', function ($query) use ($condition) {
+                $query->where('condition', $condition);
+            })
+            ->when(session('language') && session('language') !== 'all', function ($query) {
+                $query->where('language_id', session('language'));
+            })
+            ->where('status', 1)
+            ->orderBy('id', 'desc')
+            ->limit(10)
+            ->get();
+
         $category = Category::limit(10)->get();
 
         $footerProducts = Product::orderBy('id', 'Desc')
@@ -110,7 +123,7 @@ class IndexController extends Controller
             return view('front.partials.new_products', compact('newProducts'))->render();
         }
 
-        return view('front.index2', [
+        return view('front.index3', [
             'languages'        => Language::all(),
             'selectedLanguage' => Language::find(session('language')),
 
@@ -130,7 +143,8 @@ class IndexController extends Controller
             'sections',
             'language',
             'logos',
-            'sliderProducts'
+            'sliderProducts',
+            'slidingProducts'
         ));
     }
 
