@@ -6,7 +6,7 @@
         <div class="container-fluid px-4 py-5">
             <div class="row justify-content-center">
                 <div class="col-xxl-10 col-xl-11">
-                    
+
                     <!-- Page Header -->
                     <div class="page-header mb-5">
                         <div class="row align-items-center">
@@ -19,7 +19,7 @@
                             </div>
                             <div class="col-md-6 text-md-right">
                                 <nav class="breadcrumb-nav">
-                                    <a href="/" class="breadcrumb-link">Home</a>
+                                    <a href="{{ url('/') }}" class="breadcrumb-link">Home</a>
                                     <span class="breadcrumb-separator">•</span>
                                     <span class="breadcrumb-current">Cart</span>
                                 </nav>
@@ -93,13 +93,13 @@
                                     <div class="card-subtitle">Save money with promo codes</div>
                                 </div>
                                 <div class="card-body-custom">
-                                    <form id="applyCoupon" method="post" action="javascript:void(0)" 
+                                    <form id="applyCoupon" method="post" action="javascript:void(0)"
                                           @if (\Illuminate\Support\Facades\Auth::check()) user=1 @endif>
                                         <div class="modern-input-group">
-                                            <input type="text" 
-                                                   class="modern-input" 
-                                                   placeholder="Enter discount code" 
-                                                   id="code" 
+                                            <input type="text"
+                                                   class="modern-input"
+                                                   placeholder="Enter discount code"
+                                                   id="code"
                                                    name="code">
                                             <button type="submit" class="modern-input-btn">
                                                 Apply
@@ -157,8 +157,8 @@
 
         /* Page Header */
         .page-header { }
-        .page-title { 
-            font-size: 2.5rem; font-weight: 700; color: #2d3748; 
+        .page-title {
+            font-size: 2.5rem; font-weight: 700; color: #2d3748;
             display: flex; align-items: center; margin-bottom: 0.5rem;
         }
         .title-icon { font-size: 2.2rem; margin-right: 1rem; }
@@ -170,7 +170,7 @@
 
         /* Content Cards */
         .content-card {
-            background: white; border-radius: 20px; 
+            background: white; border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
             border: 1px solid rgba(255,255,255,0.2);
             backdrop-filter: blur(10px);
@@ -184,14 +184,14 @@
 
         /* Custom Alerts */
         .custom-alert {
-            padding: 1rem 1.5rem; border-radius: 16px; 
+            padding: 1rem 1.5rem; border-radius: 16px;
             display: flex; align-items: flex-start; position: relative;
         }
         .success-alert { background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%); border-left: 4px solid #48bb78; }
         .error-alert { background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%); border-left: 4px solid #f56565; }
         .alert-content { display: flex; align-items: flex-start; flex: 1; }
         .alert-icon {
-            width: 2rem; height: 2rem; border-radius: 50%; 
+            width: 2rem; height: 2rem; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             font-weight: bold; margin-right: 1rem;
         }
@@ -200,12 +200,12 @@
         .alert-title { font-weight: 600; margin-bottom: 0.25rem; }
         .alert-message { color: #4a5568; }
         .alert-dismiss {
-            background: none; border: none; font-size: 1.5rem; 
+            background: none; border: none; font-size: 1.5rem;
             color: #a0aec0; cursor: pointer; margin-left: 1rem;
         }
 
         /* Modern Input */
-        .modern-input-group { 
+        .modern-input-group {
             display: flex; border-radius: 12px; overflow: hidden;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
@@ -228,18 +228,18 @@
             padding: 1.25rem 1.5rem; border-radius: 16px; text-decoration: none;
             font-weight: 600; transition: all 0.3s ease; position: relative; overflow: hidden;
         }
-        .primary-btn { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+        .primary-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white; box-shadow: 0 8px 25px rgba(102,126,234,0.3);
         }
-        .primary-btn:hover { 
+        .primary-btn:hover {
             transform: translateY(-3px); box-shadow: 0 12px 35px rgba(102,126,234,0.4);
             color: white; text-decoration: none;
         }
-        .secondary-btn { 
+        .secondary-btn {
             background: #f7fafc; color: #4a5568; border: 2px solid #e2e8f0;
         }
-        .secondary-btn:hover { 
+        .secondary-btn:hover {
             background: #edf2f7; color: #2d3748; text-decoration: none;
             transform: translateY(-2px);
         }
@@ -251,7 +251,7 @@
         /* Trust Badges */
         .trust-badges { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
         .trust-badge {
-            flex: 1; min-width: 80px; text-align: center; 
+            flex: 1; min-width: 80px; text-align: center;
             padding: 0.75rem 0.5rem; background: rgba(255,255,255,0.7);
             border-radius: 12px; backdrop-filter: blur(10px);
         }

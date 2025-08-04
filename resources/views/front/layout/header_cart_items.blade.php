@@ -15,20 +15,26 @@
             @php $total_price = 0 @endphp
 
             @php
-                $getCartItems = getCartItems(); // getCartItems() function is in our custom Helpers/Helper.php file that we have registered in 'composer.json' file --}}
+                $getCartItems = \App\Models\Cart::getCartItems();
             @endphp
 
-            @foreach ($getCartItems as $item) {{-- $getCartItems is passed in from cart() method in Front/ProductsController.php --}}
+
+            @foreach ($getCartItems as $item)
+                {{-- $getCartItems is passed in from cart() method in Front/ProductsController.php --}}
                 @php
-                    $getDiscountAttributePrice = \App\Models\Product::getDiscountAttributePrice($item['product_id'], $item['size']); // from the `products_attributes` table, not the `products` table
+                    $getDiscountAttributePrice = \App\Models\Product::getDiscountAttributePrice(
+                        $item['product_id'],
+                        $item['size'],
+                    ); // from the `products_attributes` table, not the `products` table
                     // dd($getDiscountAttributePrice);
                 @endphp
                 <li class="clearfix">
                     <a href="{{ url('product/' . $item['product_id']) }}">
-                    <img src="{{ asset('front/images/product_images/small/' . $item['product']['product_image']) }}" alt="Product">
-                    <span class="mini-item-name">{{ $item['product']['product_name'] }}</span>
-                    <span class="mini-item-price">EGP{{ $getDiscountAttributePrice['final_price'] }}</span>
-                    <span class="mini-item-quantity"> x {{ $item['quantity'] }} </span>
+                        <img src="{{ asset('front/images/product_images/small/' . $item['product']['product_image']) }}"
+                            alt="Product">
+                        <span class="mini-item-name">{{ $item['product']['product_name'] }}</span>
+                        <span class="mini-item-price">EGP{{ $getDiscountAttributePrice['final_price'] }}</span>
+                        <span class="mini-item-quantity"> x {{ $item['quantity'] }} </span>
                     </a>
                 </li>
                 {{-- This is placed here INSIDE the foreach loop to calculate the total price of all products in Cart --}}
@@ -43,7 +49,7 @@
             <span class="mini-total-price float-right">₹{{ $total_price }}</span>
         </div>
         <div class="mini-action-anchors">
-            <a href="{{ url('cart') }}"   class="cart-anchor">View Cart</a>
+            <a href="{{ url('cart') }}" class="cart-anchor">View Cart</a>
             <a href="{{ url('checkout') }}" class="checkout-anchor">Checkout</a>
         </div>
     </div>

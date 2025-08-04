@@ -277,10 +277,12 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
     Route::get('cart', 'ProductsController@cart')->name('cart');
 
     // Update Cart Item Quantity AJAX call in front/products/cart_items.blade.php. Check front/js/custom.js
-    Route::post('cart/update', 'ProductsController@cartUpdate');
+
+    Route::post('cart/update', [ProductsController::class, 'cartUpdate'])->name('cart.update');
+
 
     // Delete a Cart Item AJAX call in front/products/cart_items.blade.php. Check front/js/custom.js
-    Route::post('cart/delete', 'ProductsController@cartDelete');
+    Route::post('cart/delete', [ProductsController::class, 'cartDelete'])->name('cartDelete');
 
     // Render User Login/Register page (front/users/login_register.blade.php)
     Route::get('user/login-register', ['as' => 'login', 'uses' => 'UserController@loginRegister']); // 'as' => 'login'    is Giving this route a name 'login' route in order for the 'auth' middleware ('auth' middleware is the Authenticate.php) to redirect to the right page

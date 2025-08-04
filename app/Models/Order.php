@@ -13,8 +13,8 @@ class Order extends Model
 
 
 
-    // Relationship of an Order `orders` table with Order_Products `orders_products` table (every Order has many Order_Products)    
-    public function orders_products() {    
+    // Relationship of an Order `orders` table with Order_Products `orders_products` table (every Order has many Order_Products)
+    public function orders_products() {
         return $this->hasMany('App\Models\OrdersProduct', 'order_id'); // 'order_id' (column of `orders_products` table) is the Foreign Key of the Relationship
     }
 
@@ -23,12 +23,12 @@ class Order extends Model
 
 
     // Shiprocket API Integration! Shiprocket needs an "order_items" key/name in the JSON request, so we create this relationship method specifically for this matter (in order for the $getResults array in pushOrder() method in APIController.php to have the key/name of "order_items")
-    // Relationship of an Order `orders` table with Order_Products `orders_products` table (every Order has many Order_Products)    
-    public function order_items() {    
+    // Relationship of an Order `orders` table with Order_Products `orders_products` table (every Order has many Order_Products)
+    public function order_items() {
         return $this->hasMany('App\Models\OrdersProduct', 'order_id'); // 'order_id' (column of `orders_products` table) is the Foreign Key of the Relationship
     }
 
-    // Shiprocket API Integration!    
+    // Shiprocket API Integration!
     public static function pushOrder($order_id) { // this method is called from the pushOrder() method in API/APIController.php and from updateOrderStatus() method in Admin/OrderController.php
         $orderDetails = Order::with('order_items')->where('id', $order_id)->first()->toArray(); // Eager Loading: https://laravel.com/docs/9.x/eloquent-relationships#eager-loading    // 'order_items' is the relationship method name in Order.php model
         // dd($orderDetails);
@@ -87,7 +87,7 @@ class Order extends Model
 
 
         // dd($orderDetails);
-        
+
         // Convert the $orderDetails array into JSON for testing before sending the Shiprocket's API JSON HTTP request
         $orderDetails = json_encode($orderDetails);
         // dd($orderDetails);
@@ -162,7 +162,7 @@ class Order extends Model
 
         curl_close($c); // Close a cURL session
 
-        
+
         // Convert the server response from JSON to PHP array
         $result = json_decode($result, true); // https://www.php.net/manual/en/function.json-decode.php#:~:text=RFC%207159.-,associative,-When%20true%2C%20JSON
         // dd($result); // The server's PHP array response (the generated Access Token)

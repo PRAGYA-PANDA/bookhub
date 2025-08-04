@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthorController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductDemoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +17,21 @@ use App\Http\Controllers\API\AuthorController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) { // API Endpoint: GET http://127.0.0.1:8000/api/user
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) { // API Endpoint: GET http://127.0.0.1:8000/api/user
+//     return $request->user();
+// });
+Route::post('/register_demo',[AuthController::class,'register']);
+Route::post('/products_demo',[ProductDemoController::class,'store']);
+Route::put('/products_demo/{id}',[ProductDemoController::class,'update']);
+Route::delete('/products_demo/{id}',[ProductDemoController::class,'destroy']);
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    // Route::post('/products',[ProductDemoController::class,'store']);
+    // Route::put('/products/{id}',[ProductDemoController::class,'update']);
+    // Route::delete('/products/{id}',[ProductDemoController::class,'destroy']);
+    // Route::post('/logout',[AuthController::class,'logout']);
+
 });
-
-
 Route::namespace('App\Http\Controllers\API')->group(function() { // Route Groups: https://laravel.com/docs/9.x/routing#route-groups
     // Shiprocket API Integration
     // Shiprocket API Documentation: https://apidocs.shiprocket.in/

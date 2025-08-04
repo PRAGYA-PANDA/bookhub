@@ -23,11 +23,10 @@ class ProductsAttribute extends Model
     { // Get the `stock` available for that specific product (`product_id`) with that specific size (`size`) (in `products_attributes` table)?
         $getProductStock = ProductsAttribute::select('stock')->where([
             'product_id' => $product_id,
-            'size'       => $size
+            // 'size'       => $size
         ])->first();
 
-
-        return $getProductStock->stock ?? 'vgjhugv';
+        return $getProductStock->stock ?? 0;
     }
 
 
@@ -39,8 +38,6 @@ class ProductsAttribute extends Model
             // 'size'       => $size
         ])->first();
 
-
         return $getAttributeStatus->status ?? null;
-
     }
 }

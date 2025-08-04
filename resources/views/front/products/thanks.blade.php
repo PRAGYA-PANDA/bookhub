@@ -11,7 +11,7 @@
                 <ul class="bread-crumb">
                     <li class="has-separator">
                         <i class="ion ion-md-home"></i>
-                        <a href="index.html">Home</a>
+                        <a href="{{ url('/') }}">Home</a>
                     </li>
                     <li class="is-marked">
                         <a href="#">Thanks</a>
@@ -37,7 +37,7 @@
 
 
 
-{{-- Forget/Remove some data in the Session after making/placing the order --}} 
+{{-- Forget/Remove some data in the Session after making/placing the order --}}
 @php
     use Illuminate\Support\Facades\Session;
 

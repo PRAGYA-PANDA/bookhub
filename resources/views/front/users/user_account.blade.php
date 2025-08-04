@@ -526,7 +526,7 @@
                                                 class="woocommerce-Button">Edit
                                                 Account Details</a> --}}
 
-                                           
+
                                         </div>
                                     </div>
                                 </div>
@@ -543,7 +543,7 @@
                                             <div class="empty-state-icon">📚</div>
                                             <h3>No requests yet</h3>
                                             <p>You haven't made any book requests yet.</p>
-                                            <a href="{{ route('books.index') }}" class="woocommerce-Button">Browse
+                                            <a href="{{ route('requestbook.index') }}" class="woocommerce-Button">Browse
                                                 Books</a>
                                         </div>
                                     @else

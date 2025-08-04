@@ -10,7 +10,7 @@
             <ul class="bread-crumb">
                 <li class="has-separator">
                     <i class="ion ion-md-home"></i>
-                    <a href="index.html">Home</a>
+                    <a href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="is-marked">
                     <a href="checkout.html">Checkout</a>
@@ -63,14 +63,14 @@
                                         @foreach ($deliveryAddresses as $address)
                                             <div class="address-item">
                                                 <div class="address-radio">
-                                                    <input type="radio" 
-                                                           id="address{{ $address['id'] }}" 
-                                                           name="address_id" 
-                                                           value="{{ $address['id'] }}" 
-                                                           shipping_charges="{{ $address['shipping_charges'] }}" 
-                                                           total_price="{{ $total_price }}" 
-                                                           coupon_amount="{{ \Illuminate\Support\Facades\Session::get('couponAmount') }}" 
-                                                           codpincodeCount="{{ $address['codpincodeCount'] }}" 
+                                                    <input type="radio"
+                                                           id="address{{ $address['id'] }}"
+                                                           name="address_id"
+                                                           value="{{ $address['id'] }}"
+                                                           shipping_charges="{{ $address['shipping_charges'] }}"
+                                                           total_price="{{ $total_price }}"
+                                                           coupon_amount="{{ \Illuminate\Support\Facades\Session::get('couponAmount') }}"
+                                                           codpincodeCount="{{ $address['codpincodeCount'] }}"
                                                            prepaidpincodeCount="{{ $address['prepaidpincodeCount'] }}">
                                                     <label for="address{{ $address['id'] }}" class="address-label">
                                                         <div class="address-info">
@@ -99,7 +99,7 @@
                                 <div class="section-header">
                                     <h4><i class="fas fa-shopping-cart"></i> Order Summary</h4>
                                 </div>
-                                
+
                                 <div class="order-summary">
                                     <!-- Products List -->
                                     <div class="products-list">
@@ -157,7 +157,7 @@
                                 <div class="section-header">
                                     <h4><i class="fas fa-credit-card"></i> Payment Method</h4>
                                 </div>
-                                
+
                                 <div class="payment-methods">
                                     <div class="payment-option codMethod">
                                         <input type="radio" class="radio-box" name="payment_gateway" id="cash-on-delivery" value="COD">
@@ -168,7 +168,7 @@
                                             </div>
                                         </label>
                                     </div>
-                                    
+
                                     <div class="payment-option prepaidMethod">
                                         <input type="radio" class="radio-box" name="payment_gateway" id="paypal" value="Paypal">
                                         <label class="payment-label" for="paypal">
@@ -178,7 +178,7 @@
                                             </div>
                                         </label>
                                     </div>
-                                    
+
                                     <div class="payment-option prepaidMethod">
                                         <input type="radio" class="radio-box" name="payment_gateway" id="iyzipay" value="iyzipay">
                                         <label class="payment-label" for="iyzipay">
@@ -501,27 +501,27 @@
     .checkout-section {
         padding: 20px 15px;
     }
-    
+
     .address-actions {
         position: static;
         margin-top: 10px;
         justify-content: flex-end;
     }
-    
+
     .product-item {
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
     }
-    
+
     .product-info {
         width: 100%;
     }
-    
+
     .payment-methods {
         gap: 10px;
     }
-    
+
     .place-order-btn {
         padding: 12px 20px;
         font-size: 14px;
