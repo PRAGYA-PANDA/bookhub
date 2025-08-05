@@ -559,13 +559,13 @@
                                     filled with the latest and best selling Books.</p>
                                 <div class="dz-social-icon style-1">
                                     <ul>
-                                        <li><a href="https://www.facebook.com/dexignzone" target="_blank"><i
+                                        <li><a href="#" target="_blank"><i
                                                     class="fa-brands fa-facebook-f"></i></a></li>
-                                        <li><a href="https://www.youtube.com/channel/UCGL8V6uxNNMRrk3oZfVct1g"
+                                        <li><a href="#"
                                                 target="_blank"><i class="fa-brands fa-youtube"></i></a></li>
-                                        <li><a href="https://www.linkedin.com/showcase/3686700/admin/"
+                                        <li><a href="#"
                                                 target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
-                                        <li><a href="https://www.instagram.com/website_templates__/"
+                                        <li><a href="#"
                                                 target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
                                     </ul>
                                 </div>
@@ -638,12 +638,12 @@
                 <div class="container">
                     <div class="row fb-inner">
                         <div class="col-lg-6 col-md-12 text-start">
-                            <p class="copyright-text">Bookland Book Store Ecommerce Website - © 2022 All Rights
+                            <p class="copyright-text">Bookhub Book Store Ecommerce Website - © 2025 All Rights
                                 Reserved</p>
                         </div>
                         <div class="col-lg-6 col-md-12 text-end">
                             <p>Made with <span class="heart"></span> by <a
-                                    href="https://dexignzone.com/">DexignZone</a></p>
+                                    href="https://srdcindia.co.in/">Sridipta research & development consultancy pvt. ltd.</a></p>
                         </div>
                     </div>
                 </div>

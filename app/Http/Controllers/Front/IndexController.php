@@ -9,6 +9,9 @@ use App\Models\HeaderLogo;
 use App\Models\Language;
 use App\Models\Product;
 use App\Models\Section;
+use App\Models\User;
+use App\Models\Vendor;
+use App\Models\Author;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
@@ -121,6 +124,18 @@ class IndexController extends Controller
         $meta_description = 'Online Shopping Website which deals in Clothing, Electronics & Appliances Products';
         $meta_keywords    = 'eshop website, online shopping, multi vendor e-commerce';
 
+        // Get total user count for dynamic statistics
+        $totalUsers = User::count();
+
+        // Get total vendor count for dynamic statistics
+        $totalVendors = Vendor::count();
+
+        // Get total product count for dynamic statistics
+        $totalProducts = Product::where('status', 1)->count();
+
+        // Get total author count for dynamic statistics
+        $totalAuthors = Author::where('status', 1)->count();
+
         if ($request->ajax()) {
             return view('front.partials.new_products', compact('newProducts'))->render();
         }
@@ -146,7 +161,11 @@ class IndexController extends Controller
             'language',
             'logos',
             'sliderProducts',
-            'slidingProducts'
+            'slidingProducts',
+            'totalUsers',
+            'totalVendors',
+            'totalProducts',
+            'totalAuthors'
         ));
     }
 
