@@ -195,10 +195,11 @@
                                 </div>
                                 <div class="dz-content">
                                     <h4 class="title">{{ $sliderProduct['product_name'] }}</h4>
-                                    <span class="price">₹{{ \App\Models\Product::getDiscountPrice($sliderProduct['id']) }}</span>
+                                    <span
+                                        class="price">₹{{ \App\Models\Product::getDiscountPrice($sliderProduct['id']) }}</span>
                                     <a href="{{ url('product/' . $sliderProduct['id']) }}"
-                                        class="btn btn-secondary btnhover2"><i
-                                            class="flaticon-shopping-cart-1 m-r10"></i> Add to cart</a>
+                                        class="btn btn-secondary btnhover2"><i class="flaticon-shopping-cart-1 m-r10"></i>
+                                        Add to cart</a>
                                 </div>
                             </div>
                         </div>
@@ -443,174 +444,62 @@
         <div class="container">
             <div class="swiper-container books-wrapper-2 swiper-three">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="books-card style-2">
-                            <div class="dz-media">
-                                <img src="{{ asset('front/newtheme/images/books/large/bigbook1.jpg') }}" alt="book">
-                            </div>
-                            <div class="dz-content">
-                                <h6 class="sub-title">BEST SELLER</h6>
-                                <h2 class="title">A Heavy LIft</h2>
-                                <ul class="dz-tags">
-                                    <li>Napoleon Hill</li>
-                                    <li>Business & Strategy</li>
-                                </ul>
-                                <p class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                    nostrud exercitation ullamco laboris </p>
-                                <div class="price">
-                                    <span class="price-num">$9.5</span>
-                                    <del>$12.0</del>
-                                    <span class="badge">20% OFF</span>
+
+                    @foreach ($featuredProducts as $products)
+                        <div class="swiper-slide">
+                            <div class="books-card style-2">
+                                <div class="dz-media">
+                                    <img src="{{ asset('front/images/product_images/small/' . $products['product_image']) }}"
+                                        alt="banner-media" style="height: 500px; width: 1000px; object-fit: fill;">
                                 </div>
-                                <div class="bookcard-footer">
-                                    <a href="shop-cart.html" class="btn btn-primary btnhover m-t15 m-r10">Buy Now</a>
-                                    <a href="books-detail.html" class="btn btn-outline-secondary btnhover m-t15">See
-                                        Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="books-card style-2">
-                            <div class="dz-media">
-                                <img src="{{ asset('front/newtheme/images/books/large/bigbook2.jpg') }}" alt="book">
-                            </div>
-                            <div class="dz-content">
-                                <h6 class="sub-title">BEST SELLER</h6>
-                                <h2 class="title">A Heavy LIft</h2>
-                                <ul class="dz-tags">
-                                    <li>Napoleon Hill</li>
-                                    <li>Business & Strategy</li>
-                                </ul>
-                                <p class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                    nostrud exercitation ullamco laboris </p>
-                                <div class="price">
-                                    <span class="price-num">$9.5</span>
-                                    <del>$12.0</del>
-                                    <span class="badge">20% OFF</span>
-                                </div>
-                                <div class="bookcard-footer">
-                                    <a href="shop-cart.html" class="btn btn-primary btnhover m-t15 m-r10">Buy Now</a>
-                                    <a href="books-detail.html" class="btn btn-outline-secondary btnhover m-t15">See
-                                        Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="books-card style-2">
-                            <div class="dz-media">
-                                <img src="{{ asset('front/newtheme/images/books/large/bigbook1.jpg') }}" alt="book">
-                            </div>
-                            <div class="dz-content">
-                                <h6 class="sub-title">BEST SELLER</h6>
-                                <h2 class="title">A Heavy LIft</h2>
-                                <ul class="dz-tags">
-                                    <li>Napoleon Hill</li>
-                                    <li>Business & Strategy</li>
-                                </ul>
-                                <p class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                    nostrud exercitation ullamco laboris </p>
-                                <div class="price">
-                                    <span class="price-num">$9.5</span>
-                                    <del>$12.0</del>
-                                    <span class="badge">20% OFF</span>
-                                </div>
-                                <div class="bookcard-footer">
-                                    <a href="shop-cart.html" class="btn btn-primary btnhover m-t15 m-r10">Buy Now</a>
-                                    <a href="books-detail.html" class="btn btn-outline-secondary btnhover m-t15">See
-                                        Details</a>
+                                <div class="dz-content">
+                                    <h6 class="font-family: poppins text-dark" data-swiper-parallax="-10">
+                                        Publisher:
+                                        {{ $products->publisher->name ?? 'N/A' }}
+                                    </h6>
+                                    <h2 class="title text-dark mb-0" data-swiper-parallax="-20">
+                                        {{ $products['product_name'] }}</h2>
+                                    <ul class="dz-tags" data-swiper-parallax="-30">
+                                        @php
+                                            $allAuthorNames = $products->authors->pluck('name')->join(', ');
+                                        @endphp
+                                        <li><a class="text-dark" title="{{ $allAuthorNames }}"
+                                                href="javascript:void(0);">
+                                                Authors:
+                                                @if ($products->authors->isNotEmpty())
+                                                    {{ $products->authors->first()->name }}
+                                                    @if ($products->authors->count() > 1)
+                                                        ...
+                                                    @endif
+                                                @else
+                                                    N/A
+                                                @endif
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <p class="text mb-0" data-swiper-parallax="-40">Book Condition: <span
+                                            style="text-transform: capitalize;">{{ $products['condition'] }}</span>
+                                    </p>
+                                    <p class="text mb-0" data-swiper-parallax="-40">Description:
+                                        {{ $products['description'] }}</p>
+                                    <div class="price">
+                                        <span
+                                            class="price-num">₹{{ \App\Models\Product::getDiscountPrice($products['id']) }}</span>
+                                        <del>₹{{ $products['product_price'] }}</del>
+                                    </div>
+                                    <div class="bookcard-footer">
+                                        <a class="btn btn-success btnhover"
+                                            href="{{ url('product/' . $products['id']) }}">Buy
+                                            Now</a>
+                                        <a class="btn border btnhover ms-4 text-dark"
+                                            href="{{ url('product/' . $products['id']) }}">See
+                                            Details</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="books-card style-2">
-                            <div class="dz-media">
-                                <img src="{{ asset('front/newtheme/images/books/large/bigbook2.jpg') }}" alt="book">
-                            </div>
-                            <div class="dz-content">
-                                <h6 class="sub-title">BEST SELLER</h6>
-                                <h2 class="title">A Heavy LIft</h2>
-                                <ul class="dz-tags">
-                                    <li>Napoleon Hill</li>
-                                    <li>Business & Strategy</li>
-                                </ul>
-                                <p class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                    nostrud exercitation ullamco laboris </p>
-                                <div class="price">
-                                    <span class="price-num">$9.5</span>
-                                    <del>$12.0</del>
-                                    <span class="badge">20% OFF</span>
-                                </div>
-                                <div class="bookcard-footer">
-                                    <a href="shop-cart.html" class="btn btn-primary btnhover m-t15 m-r10">Buy Now</a>
-                                    <a href="books-detail.html" class="btn btn-outline-secondary btnhover m-t15">See
-                                        Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="books-card style-2">
-                            <div class="dz-media">
-                                <img src="{{ asset('front/newtheme/images/books/large/bigbook1.jpg') }}" alt="book">
-                            </div>
-                            <div class="dz-content">
-                                <h6 class="sub-title">BEST SELLER</h6>
-                                <h2 class="title">A Heavy LIft</h2>
-                                <ul class="dz-tags">
-                                    <li>Napoleon Hill</li>
-                                    <li>Business & Strategy</li>
-                                </ul>
-                                <p class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                    nostrud exercitation ullamco laboris </p>
-                                <div class="price">
-                                    <span class="price-num">$9.5</span>
-                                    <del>$12.0</del>
-                                    <span class="badge">20% OFF</span>
-                                </div>
-                                <div class="bookcard-footer">
-                                    <a href="shop-cart.html" class="btn btn-primary btnhover m-t15 m-r10">Buy Now</a>
-                                    <a href="books-detail.html" class="btn btn-outline-secondary btnhover m-t15">See
-                                        Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="books-card style-2">
-                            <div class="dz-media">
-                                <img src="{{ asset('front/newtheme/images/books/large/bigbook2.jpg') }}" alt="book">
-                            </div>
-                            <div class="dz-content">
-                                <h6 class="sub-title">BEST SELLER</h6>
-                                <h2 class="title">A Heavy LIft</h2>
-                                <ul class="dz-tags">
-                                    <li>Napoleon Hill</li>
-                                    <li>Business & Strategy</li>
-                                </ul>
-                                <p class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                                    nostrud exercitation ullamco laboris </p>
-                                <div class="price">
-                                    <span class="price-num">$9.5</span>
-                                    <del>$12.0</del>
-                                    <span class="badge">20% OFF</span>
-                                </div>
-                                <div class="bookcard-footer">
-                                    <a href="shop-cart.html" class="btn btn-primary btnhover m-t15 m-r10">Buy Now</a>
-                                    <a href="books-detail.html" class="btn btn-outline-secondary btnhover m-t15">See
-                                        Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
+
                 </div>
                 <div class="pagination-align style-2">
                     <div class="swiper-button-prev"><i class="fa-solid fa-angle-left"></i></div>
@@ -1098,7 +987,7 @@
                             <i class="fa-solid fa-users icon-cell"></i>
                         </div>
                         <div class="icon-content">
-                            <h2 class="dz-title counter m-b0">125,663</h2>
+                            <h2 class="dz-title counter m-b0">{{ number_format($totalUsers) }}</h2>
                             <p class="font-20">Happy Customers</p>
                         </div>
                     </div>
@@ -1109,7 +998,7 @@
                             <i class="fa-solid fa-book icon-cell"></i>
                         </div>
                         <div class="icon-content">
-                            <h2 class="dz-title counter m-b0">50,672</h2>
+                            <h2 class="dz-title counter m-b0">{{ number_format($totalProducts) }}</h2>
                             <p class="font-20">Book Collections</p>
                         </div>
                     </div>
@@ -1120,7 +1009,7 @@
                             <i class="fa-solid fa-store icon-cell"></i>
                         </div>
                         <div class="icon-content">
-                            <h2 class="dz-title counter m-b0">1,562</h2>
+                            <h2 class="dz-title counter m-b0">{{ number_format($totalVendors) }}</h2>
                             <p class="font-20">Our Stores</p>
                         </div>
                     </div>
@@ -1131,7 +1020,7 @@
                             <i class="fa-solid fa-leaf icon-cell"></i>
                         </div>
                         <div class="icon-content">
-                            <h2 class="dz-title counter m-b0">457</h2>
+                            <h2 class="dz-title counter m-b0">{{ number_format($totalAuthors) }}</h2>
                             <p class="font-20">Famous Writers</p>
                         </div>
                     </div>
