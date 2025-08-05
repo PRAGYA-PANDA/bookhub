@@ -117,8 +117,8 @@ class IndexController extends Controller
         ->limit(10)
         ->get();
 
-        $meta_title       = 'Multi Vendor E-commerce Website';
-        $meta_description = 'Online Shopping Website which deals in Clothing, Electronics & Appliances Products';
+        $meta_title       = 'BookHub - The Only Hub For Students';
+        $meta_description = 'The cross platform where students meets their career through books.';
         $meta_keywords    = 'eshop website, online shopping, multi vendor e-commerce';
 
         if ($request->ajax()) {

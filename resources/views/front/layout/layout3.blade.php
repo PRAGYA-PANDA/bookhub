@@ -226,9 +226,9 @@
                                             <h6 class="text-secondary">Totle = $500</h6>
                                         </li>
                                         <li class="text-center d-flex">
-                                            <a href="shop-cart.html"
+                                            <a href="{{ url('/cart') }}"
                                                 class="btn btn-sm btn-primary me-2 btnhover w-100">View Cart</a>
-                                            <a href="shop-checkout.html"
+                                            <a href="{{ url('/checkout') }}"
                                                 class="btn btn-sm btn-outline-primary btnhover w-100">Checkout</a>
                                         </li>
                                     </ul>

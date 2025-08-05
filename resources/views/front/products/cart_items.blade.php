@@ -2,53 +2,47 @@
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-
 <!-- Products-List-Wrapper -->
-<div class="table-wrapper u-s-m-b-60">
-    <table>
+<div class="table-responsive">
+    <table class="table check-tbl">
         <thead>
             <tr>
                 <th>Product</th>
-                <th>Price</th>
+                <th>Product name</th>
+                <th>Unit Price</th>
                 <th>Quantity</th>
-                <th>Subtotal</th>
-                <th>Action</th>
+                <th>Total</th>
+                <th class="text-end">Close</th>
             </tr>
         </thead>
         <tbody>
-
             {{-- We'll place this $total_price inside the foreach loop to calculate the total price of all products in Cart. Check the end of the next foreach loop before @endforeach --}}
             @php $total_price = 0 @endphp
 
             @foreach ($getCartItems as $item)
                 {{-- $getCartItems is passed in from cart() method in Front/ProductsController.php --}}
                 @php
-                $getDiscountAttributePrice = \App\Models\Product::getDiscountAttributePrice(
-                    $item['product_id'],
-                    $item['size'],
-                );
-            @endphp
+                    $getDiscountAttributePrice = \App\Models\Product::getDiscountAttributePrice(
+                        $item['product_id'],
+                        $item['size'],
+                    );
+                @endphp
 
                 <tr>
-                    <td>
-                        <div class="cart-anchor-image">
-                            <a href="{{ url('product/' . $item['product_id']) }}">
-                                <img src="{{ asset('front/images/product_images/small/') }}" alt="Product">
-                                <h6>
-                                    {{ $item['product']['product_name'] }} - {{ $item['size'] }}
-                                    <br>
-
-                                </h6>
-                            </a>
-                        </div>
+                    <td class="product-item-img">
+                        <img src="{{ asset('front/images/books/grid/book3.jpg') }}" alt="Product-img">
                     </td>
-                    <td>
-                        <div class="cart-price">
-                            @if ($getDiscountAttributePrice['discount'] > 0)
+                    <td class="product-item-name">
+                        <a href="{{ url('product/' . $item['product_id']) }}">
+                            {{ $item['product']['product_name'] }} - {{ $item['size'] }}
+                        </a>
+                    </td>
+                    <td class="product-item-price">
+                        @if ($getDiscountAttributePrice['discount'] > 0)
                             <div class="item-new-price">
                                 ₹{{ $getDiscountAttributePrice['final_price'] }}
                             </div>
-                            <div class="item-old-price" style="margin-left: -40px">
+                            <div class="item-old-price" style="text-decoration: line-through; color: #999;">
                                 ₹{{ $getDiscountAttributePrice['product_price'] }}
                             </div>
                         @else
@@ -56,58 +50,31 @@
                                 ₹{{ $getDiscountAttributePrice['final_price'] }}
                             </div>
                         @endif
-
-
-
+                    </td>
+                    <td class="product-item-quantity">
+                        <div class="quantity btn-quantity style-1 me-3">
+                            <input type="text" class="quantity-text-field" value="{{ $item['quantity'] }}" readonly>
+                            <a data-max="1000" class="plus-a" data-cartid="{{ $item['id'] }}">&#43;</a>
+                            <a data-min="1" class="minus-a" data-cartid="{{ $item['id'] }}">&#45;</a>
                         </div>
                     </td>
-                    <td>
-                        <div class="cart-quantity">
-                            <div class="quantity">
-                                <input type="text" class="quantity-text-field" value="{{ $item['quantity'] }}" readonly>
-                                <a data-max="1000" class="plus-a" data-cartid="{{ $item['id'] }}">&#43;</a>
-                                <a data-min="1" class="minus-a" data-cartid="{{ $item['id'] }}">&#45;</a>
-                            </div>
-                            </div>
-                        </div>
+                    <td class="product-item-totle">
+                        ₹{{ $getDiscountAttributePrice['final_price'] * $item['quantity'] }}
                     </td>
-
-                    <td>
-                        <div class="cart-price">
-                            ₹{{ $getDiscountAttributePrice['final_price'] * $item['quantity'] }} {{-- price of all products (after discount (if any)) (= price (after discount) * no. of products) --}}
-                        </div>
-                    </td>
-                    <td>
-                        <div class="action-wrapper">
-                          <button
-                            class="button button-outline-secondary fas fa-trash deleteCartItem"
+                    <td class="product-item-close">
+                        <button class="button button-outline-secondary fas fa-trash deleteCartItem"
                             data-cartid="{{ $item['id'] }}">
-                          </button>
-                        </div>
-                      </td>
+                        </button>
+                    </td>
                 </tr>
-
 
                 {{-- This is placed here INSIDE the foreach loop to calculate the total price of all products in Cart --}}
                 @php $total_price = $total_price + ($getDiscountAttributePrice['final_price'] * $item['quantity']) @endphp
             @endforeach
-
-
-
         </tbody>
     </table>
 </div>
 <!-- Products-List-Wrapper /- -->
-
-
-
-
-
-{{-- To solve the problem of Submiting the Coupon Code works only once, we moved the Coupon part from cart_items.blade.php to here in cart.blade.php --}} {{-- Explanation of the problem: http://publicvoidlife.blogspot.com/2014/03/on-on-or-event-delegation-explained.html --}}
-
-
-
-
 
 <!-- Billing -->
 <div class="calculation u-s-m-b-60">
@@ -136,7 +103,7 @@
 
                             @if (\Illuminate\Support\Facades\Session::has('couponAmount'))
                                 {{-- We stored the 'couponAmount' in a Session Variable inside the applyCoupon() method in Front/ProductsController.php --}}
-                                ₹0{{ \Illuminate\Support\Facades\Session::get('couponAmount') }}
+                                ₹{{ \Illuminate\Support\Facades\Session::get('couponAmount') }}
                             @else
                                 ₹0
                             @endif
@@ -149,7 +116,7 @@
                     </td>
                     <td>
                         <span
-                            class="calc-text grand_total">₹{{ $total_price - \Illuminate\Support\Facades\Session::get('couponAmount') }}</span>
+                            class="calc-text grand_total">₹{{ $total_price - \Illuminate\Support\Facades\Session::get('couponAmount', 0) }}</span>
                         {{-- We create the 'grand_total' CSS class to use it as a handle for AJAX inside    $('#applyCoupon').submit();    function in front/js/custom.js --}} {{-- We stored the 'couponAmount' a Session Variable inside the applyCoupon() method in Front/ProductsController.php --}}
                     </td>
                 </tr>
@@ -162,132 +129,131 @@
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 
 <script>
-$(document).ready(function() {
-    // Plus button click handler
-    $(document).on('click', '.plus-a', function(e) {
-        e.preventDefault();
+    $(document).ready(function() {
+        // Plus button click handler
+        $(document).on('click', '.plus-a', function(e) {
+            e.preventDefault();
 
-        let $btn = $(this);
-        let $row = $btn.closest('.cart-quantity');
-        let $input = $row.find('.quantity-text-field');
-        let maxQty = parseInt($btn.data('max'));
-        let cartId = $btn.data('cartid');
+            let $btn = $(this);
+            let $row = $btn.closest('.product-item-quantity');
+            let $input = $row.find('.quantity-text-field');
+            let maxQty = parseInt($btn.data('max'));
+            let cartId = $btn.data('cartid');
 
-        let currentQty = parseInt($input.val());
-        if (currentQty < maxQty) {
-            let newQty = currentQty + 1;
-            updateCartQuantity(cartId, newQty, $input);
-        } else {
-            alert('Maximum stock limit reached.');
-        }
-    });
-   // Minus button click handler
-   $(document).on('click', '.minus-a', function(e) {
-        e.preventDefault();
-
-        let $btn = $(this);
-        let $row = $btn.closest('.cart-quantity');
-        let $input = $row.find('.quantity-text-field');
-        let minQty = parseInt($btn.data('min'));
-        let cartId = $btn.data('cartid');
-
-        let currentQty = parseInt($input.val());
-        if (currentQty > minQty) {
-            let newQty = currentQty - 1;
-            updateCartQuantity(cartId, newQty, $input);
-        } else {
-            alert('Minimum quantity is 1.');
-        }
-    });
-
-
-    // Delete cart item click handler
-    $(document).on('click', '.deleteCartItem', function(e) {
-        e.preventDefault();
-
-        if (!confirm('Are you sure you want to remove this item?')) {
-            return false;
-        }
-
-        let cartId = $(this).data('cartid');
-        deleteCartItem(cartId);
-    });
-
-    // Function to update cart quantity
-    function updateCartQuantity(cartId, qty, $input) {
-        $.ajax({
-            url: '{{ route("cart.update") }}',
-            method: 'POST',
-            data: {
-                cartid: cartId,
-                qty: qty,
-                _token: $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(resp) {
-                if (resp.status) {
-                    // Update the input field
-                    $input.val(qty);
-
-                    // Update total cart items count
-                    if (resp.totalCartItems !== undefined) {
-                        $('.totalCartItems').text(resp.totalCartItems);
-                    }
-
-                    // Update the entire cart view if provided
-                    if (resp.view) {
-                        $('#appendCartItems').html(resp.view);
-                    }
-
-                    // Update header cart view if provided
-                    if (resp.headerview) {
-                        $('.headerCartItems').html(resp.headerview);
-                    }
-                } else {
-                    alert(resp.message || 'Could not update quantity.');
-                }
-            },
-            error: function(xhr) {
-                console.log(xhr.responseText);
-                alert('Something went wrong. Please try again.');
+            let currentQty = parseInt($input.val());
+            if (currentQty < maxQty) {
+                let newQty = currentQty + 1;
+                updateCartQuantity(cartId, newQty, $input);
+            } else {
+                alert('Maximum stock limit reached.');
             }
         });
-    }
 
-    // Function to delete cart item
-    // Function to delete cart item
-    function deleteCartItem(cartId) {
-        $.ajax({
-            url: '{{ route("cartDelete") }}',
-            type: 'POST',
-            data: {
-                cartid: cartId,
-                _token: $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function(resp) {
-                if (resp.status) {
-                    // Update the entire cart view
-                    if (resp.view) {
-                        $('#appendCartItems').html(resp.view);
-                    }
+        // Minus button click handler
+        $(document).on('click', '.minus-a', function(e) {
+            e.preventDefault();
 
-                    // Update header cart view
-                    if (resp.headerview) {
-                        $('.headerCartItems').html(resp.headerview);
-                    }
+            let $btn = $(this);
+            let $row = $btn.closest('.product-item-quantity');
+            let $input = $row.find('.quantity-text-field');
+            let minQty = parseInt($btn.data('min'));
+            let cartId = $btn.data('cartid');
 
-                    // Update total cart items count
-                    if (resp.totalCartItems !== undefined) {
-                        $('.totalCartItems').text(resp.totalCartItems);
-                    }
-                } else {
-                    alert('Could not delete item.');
-                }
-            },
-            error: function(xhr) {
-                console.log(xhr.responseText);
-                alert('Something went wrong.');
+            let currentQty = parseInt($input.val());
+            if (currentQty > minQty) {
+                let newQty = currentQty - 1;
+                updateCartQuantity(cartId, newQty, $input);
+            } else {
+                alert('Minimum quantity is 1.');
             }
         });
-    }
-});
+
+        // Delete cart item click handler
+        $(document).on('click', '.deleteCartItem', function(e) {
+            e.preventDefault();
+
+            if (!confirm('Are you sure you want to remove this item?')) {
+                return false;
+            }
+
+            let cartId = $(this).data('cartid');
+            deleteCartItem(cartId);
+        });
+
+        // Function to update cart quantity
+        function updateCartQuantity(cartId, qty, $input) {
+            $.ajax({
+                url: '{{ route('cart.update') }}',
+                method: 'POST',
+                data: {
+                    cartid: cartId,
+                    qty: qty,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(resp) {
+                    if (resp.status) {
+                        // Update the input field
+                        $input.val(qty);
+
+                        // Update total cart items count
+                        if (resp.totalCartItems !== undefined) {
+                            $('.totalCartItems').text(resp.totalCartItems);
+                        }
+
+                        // Update the entire cart view if provided
+                        if (resp.view) {
+                            $('#appendCartItems').html(resp.view);
+                        }
+
+                        // Update header cart view if provided
+                        if (resp.headerview) {
+                            $('.headerCartItems').html(resp.headerview);
+                        }
+                    } else {
+                        alert(resp.message || 'Could not update quantity.');
+                    }
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                    alert('Something went wrong. Please try again.');
+                }
+            });
+        }
+
+        // Function to delete cart item
+        function deleteCartItem(cartId) {
+            $.ajax({
+                url: '{{ route('cartDelete') }}',
+                type: 'POST',
+                data: {
+                    cartid: cartId,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(resp) {
+                    if (resp.status) {
+                        // Update the entire cart view
+                        if (resp.view) {
+                            $('#appendCartItems').html(resp.view);
+                        }
+
+                        // Update header cart view
+                        if (resp.headerview) {
+                            $('.headerCartItems').html(resp.headerview);
+                        }
+
+                        // Update total cart items count
+                        if (resp.totalCartItems !== undefined) {
+                            $('.totalCartItems').text(resp.totalCartItems);
+                        }
+                    } else {
+                        alert('Could not delete item.');
+                    }
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                    alert('Something went wrong.');
+                }
+            });
+        }
+    });
 </script>
