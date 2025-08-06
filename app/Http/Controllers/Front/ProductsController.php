@@ -743,11 +743,8 @@ class ProductsController extends Controller
         // Calculate total price
         $total_price = 0;
         foreach ($getCartItems as $item) {
-            $getDiscountAttributePrice = \App\Models\Product::getDiscountAttributePrice(
-                $item['product_id'],
-                $item['size'],
-            );
-            $total_price += $getDiscountAttributePrice['final_price'] * $item['quantity'];
+            $getDiscountPriceDetails = \App\Models\Product::getDiscountPriceDetails($item['product_id']);
+            $total_price += $getDiscountPriceDetails['final_price'] * $item['quantity'];
         }
 
         // Static SEO (HTML meta tags): Check the HTML <meta> tags and <title> tag in front/layout/layout.blade.php
