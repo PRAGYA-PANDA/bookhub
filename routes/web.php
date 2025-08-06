@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Admin\BookAttributeController;
 use App\Http\Controllers\Admin\BookRequestsController;
 use App\Http\Controllers\Admin\ProductsController;
+use App\Http\Controllers\Admin\SchoolController;
 use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Front\BookRequestController;
@@ -99,6 +100,17 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         Route::get('edit/{id}', [SubjectController::class, 'edit'])->name('edit.subject');
         Route::post('update/{id}', [SubjectController::class, 'update'])->name('update.subject');
         Route::get('delete/{id}', [SubjectController::class, 'delete'])->name('delete.subject');
+
+        // Schools
+        Route::resource('schools', SchoolController::class)->names([
+            'index' => 'admin.schools.index',
+            'create' => 'admin.schools.create',
+            'store' => 'admin.schools.store',
+            'show' => 'admin.schools.show',
+            'edit' => 'admin.schools.edit',
+            'update' => 'admin.schools.update',
+            'destroy' => 'admin.schools.destroy',
+        ]);
 
         // Products
         Route::get('products/getauthors', [ProductsController::class, 'getAuthor']);

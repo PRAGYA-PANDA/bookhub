@@ -186,6 +186,14 @@
             </li>
 
             <li class="nav-item">
+                <a @if (Session::get('page') == 'schools') style="background: #052CA3 !important; color: #FFF !important" @endif
+                    class="nav-link" href="{{ route('admin.schools.index') }}">
+                    <i class="icon-layout menu-icon"></i>
+                    <span class="menu-title">Schools</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
                 <a @if (Session::get('page') == 'sections' ||
                         Session::get('page') == 'categories' ||
                         Session::get('page') == 'products' ||
