@@ -174,61 +174,43 @@
                                         <span class="badge">5</span>
                                     </button>
                                     <ul class="dropdown-menu cart-list">
-                                        <li class="cart-item">
-                                            <div class="media">
-                                                <div class="media-left">
-                                                    <a href="books-detail.html">
-                                                        <img alt="" class="media-object"
-                                                            src="{{ asset('front/newtheme/images/books/small/pic1.jpg') }}">
-                                                    </a>
+                                        @foreach ($getCartItems as $item)
+                                            @php
+                                                   $getDiscountPriceDetails = \App\Models\Product::getDiscountPriceDetails($item['product_id']);
+                                            @endphp
+                                            <li class="cart-item">
+                                                <div class="media">
+                                                    <div class="media-left">
+                                                        <a href="books-detail.html">
+                                                            <img alt="" class="media-object"
+                                                                src="{{ asset('front/newtheme/images/books/small/pic1.jpg') }}">
+                                                        </a>
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h6 class="dz-title"><a
+                                                                href="{{ url('product/' . $item['product_id']) }}"
+                                                                class="media-heading">{{ $item['product']['product_name'] }}</a>
+                                                        </h6>
+                                                        <span class="dz-price">
+                                                            @if ($getDiscountPriceDetails['discount'] > 0)
+                                                                ₹{{ $getDiscountPriceDetails['final_price'] }}
+                                                            @else
+                                                                ₹{{ $getDiscountPriceDetails['final_price'] }}
+                                                            @endif
+                                                        </span>
+                                                        <span class="item-close">&times;</span>
+                                                    </div>
                                                 </div>
-                                                <div class="media-body">
-                                                    <h6 class="dz-title"><a href="books-detail.html"
-                                                            class="media-heading">Real Life</a></h6>
-                                                    <span class="dz-price">$28.00</span>
-                                                    <span class="item-close">&times;</span>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="cart-item">
-                                            <div class="media">
-                                                <div class="media-left">
-                                                    <a href="books-detail.html">
-                                                        <img alt="" class="media-object"
-                                                            src="{{ asset('front/newtheme/images/books/small/pic2.jpg') }}">
-                                                    </a>
-                                                </div>
-                                                <div class="media-body">
-                                                    <h6 class="dz-title"><a href="books-detail.html"
-                                                            class="media-heading">Home</a></h6>
-                                                    <span class="dz-price">$28.00</span>
-                                                    <span class="item-close">&times;</span>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="cart-item">
-                                            <div class="media">
-                                                <div class="media-left">
-                                                    <a href="books-detail.html">
-                                                        <img alt="" class="media-object"
-                                                            src="{{ asset('front/newtheme/images/books/small/pic3.jpg') }}">
-                                                    </a>
-                                                </div>
-                                                <div class="media-body">
-                                                    <h6 class="dz-title"><a href="books-detail.html"
-                                                            class="media-heading">Such a fun age</a></h6>
-                                                    <span class="dz-price">$28.00</span>
-                                                    <span class="item-close">&times;</span>
-                                                </div>
-                                            </div>
-                                        </li>
+                                            </li>
+                                            @php $total_price = $total_price + ($getDiscountPriceDetails['final_price'] * $item['quantity']) @endphp
+                                        @endforeach
                                         <li class="cart-item text-center">
-                                            <h6 class="text-secondary">Totle = $500</h6>
+                                            <h6 class="text-secondary">Totle = ₹{{ $total_price }}</h6>
                                         </li>
                                         <li class="text-center d-flex">
-                                            <a href="shop-cart.html"
+                                            <a href="{{ url('/cart') }}"
                                                 class="btn btn-sm btn-primary me-2 btnhover w-100">View Cart</a>
-                                            <a href="shop-checkout.html"
+                                            <a href="{{ url('/checkout') }}"
                                                 class="btn btn-sm btn-outline-primary btnhover w-100">Checkout</a>
                                         </li>
                                     </ul>
@@ -552,21 +534,23 @@
                         <div class="col-xl-3 col-lg-12 wow fadeInUp" data-wow-delay="0.1s">
                             <div class="widget widget_about">
                                 <div class="footer-logo logo-white">
-                                    <a href="index.html"><img src="{{ asset('uploads/logos/' . $logos->first()->logo) }}"
+                                    <a href="index.html"><img
+                                            src="{{ asset('uploads/logos/' . $logos->first()->logo) }}"
                                             alt=""></a>
                                 </div>
-                                <p class="text">Bookhub - BookStore Script System is an online Discovering great books website
+                                <p class="text">Bookhub - BookStore Script System is an online Discovering great
+                                    books website
                                     filled with the latest and best selling Books.</p>
                                 <div class="dz-social-icon style-1">
                                     <ul>
                                         <li><a href="#" target="_blank"><i
                                                     class="fa-brands fa-facebook-f"></i></a></li>
-                                        <li><a href="#"
-                                                target="_blank"><i class="fa-brands fa-youtube"></i></a></li>
-                                        <li><a href="#"
-                                                target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
-                                        <li><a href="#"
-                                                target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+                                        <li><a href="#" target="_blank"><i
+                                                    class="fa-brands fa-youtube"></i></a></li>
+                                        <li><a href="#" target="_blank"><i
+                                                    class="fa-brands fa-linkedin"></i></a></li>
+                                        <li><a href="#" target="_blank"><i
+                                                    class="fa-brands fa-instagram"></i></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -642,8 +626,8 @@
                                 Reserved</p>
                         </div>
                         <div class="col-lg-6 col-md-12 text-end">
-                            <p>Made with <span class="heart"></span> by <a
-                                    href="https://srdcindia.co.in/">Sridipta research & development consultancy pvt. ltd.</a></p>
+                            <p>Made with <span class="heart"></span> by <a href="https://srdcindia.co.in/">Sridipta
+                                    research & development consultancy pvt. ltd.</a></p>
                         </div>
                     </div>
                 </div>

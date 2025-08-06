@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use App\Models\Author;
@@ -71,10 +72,10 @@ class Product extends Model
         return $this->belongsTo('App\Models\Vendor', 'vendor_id')->with('vendorbusinessdetails'); // 'vendor_id' is the Foreign Key of the Relationship
     }
 
-                                                           // A static method (to be able to be called directly without instantiating an object in index.blade.php) to determine the final price of a product because a product can have a discount from TWO things: either a `CATEGORY` discount or `PRODUCT` discout
+    // A static method (to be able to be called directly without instantiating an object in index.blade.php) to determine the final price of a product because a product can have a discount from TWO things: either a `CATEGORY` discount or `PRODUCT` discout
     public static function getDiscountPrice($product_id)
     { // this method is called in front/index.blade.php
-                                                               // Get the product PRICE, DISCOUNT and CATEGORY ID
+        // Get the product PRICE, DISCOUNT and CATEGORY ID
         $productDetails = Product::select('product_price', 'product_discount', 'category_id')->where('id', $product_id)->first();
 
         if (! $productDetails) {
@@ -111,53 +112,88 @@ class Product extends Model
         return round($discounted_price, 2); // Round to 2 decimal places
     }
 
-    public static function getDiscountAttributePrice($product_id, $size)
-    {
-        $proAttrPrice = \App\Models\ProductsAttribute::where([
-            'product_id' => $product_id,
-            'size'       => $size,
-        ])->first();
+    // public static function getDiscountAttributePrice($product_id, $size)
+    // {
+    //     $proAttrPrice = \App\Models\ProductsAttribute::where([
+    //         'product_id' => $product_id,
+    //         'size'       => $size,
+    //     ])->first();
 
-        if (!$proAttrPrice) {
+    //     if (!$proAttrPrice) {
+    //         return [
+    //             'product_price' => 0,
+    //             'final_price'   => 0,
+    //             'discount'      => 0,
+    //         ];
+    //     }
+
+    //     $proAttrPrice = $proAttrPrice->toArray();
+
+    //     $proDetails = Product::select('product_discount', 'category_id')->where('id', $product_id)->first();
+    //     if (!$proDetails) {
+    //         return [
+    //             'product_price' => $proAttrPrice['price'],
+    //             'final_price'   => $proAttrPrice['price'],
+    //             'discount'      => 0,
+    //         ];
+    //     }
+    //     $proDetails = $proDetails->toArray();
+
+    //     $catDetails = Category::select('category_discount')->where('id', $proDetails['category_id'])->first();
+    //     if (!$catDetails) {
+    //         $catDetails = ['category_discount' => 0];
+    //     } else {
+    //         $catDetails = $catDetails->toArray();
+    //     }
+
+    //     if ($proDetails['product_discount'] > 0) {
+    //         $final_price = $proAttrPrice['price'] - ($proAttrPrice['price'] * $proDetails['product_discount'] / 100);
+    //         $discount = $proAttrPrice['price'] - $final_price;
+    //     } elseif ($catDetails['category_discount'] > 0) {
+    //         $final_price = $proAttrPrice['price'] - ($proAttrPrice['price'] * $catDetails['category_discount'] / 100);
+    //         $discount = $proAttrPrice['price'] - $final_price;
+    //     } else {
+    //         $final_price = $proAttrPrice['price'];
+    //         $discount = 0;
+    //     }
+
+    //     return [
+    //         'product_price' => $proAttrPrice['price'],
+    //         'final_price'   => round($final_price, 2),
+    //         'discount'      => round($discount, 2),
+    //     ];
+    // }
+
+    public static function getDiscountPriceDetails($product_id)
+    {
+        $product = Product::select('product_price', 'product_discount', 'category_id')->where('id', $product_id)->first();
+        if (!$product) {
             return [
                 'product_price' => 0,
                 'final_price'   => 0,
                 'discount'      => 0,
             ];
         }
+        $product = $product->toArray();
+        $category = Category::select('category_discount')->where('id', $product['category_id'])->first();
+        $category_discount = $category ? $category->category_discount : 0;
 
-        $proAttrPrice = $proAttrPrice->toArray();
+        $original_price = $product['product_price'];
+        $product_discount = $product['product_discount'] ?? 0;
 
-        $proDetails = Product::select('product_discount', 'category_id')->where('id', $product_id)->first();
-        if (!$proDetails) {
-            return [
-                'product_price' => $proAttrPrice['price'],
-                'final_price'   => $proAttrPrice['price'],
-                'discount'      => 0,
-            ];
-        }
-        $proDetails = $proDetails->toArray();
-
-        $catDetails = Category::select('category_discount')->where('id', $proDetails['category_id'])->first();
-        if (!$catDetails) {
-            $catDetails = ['category_discount' => 0];
+        if ($product_discount > 0) {
+            $final_price = $original_price - ($original_price * $product_discount / 100);
+            $discount = $original_price - $final_price;
+        } elseif ($category_discount > 0) {
+            $final_price = $original_price - ($original_price * $category_discount / 100);
+            $discount = $original_price - $final_price;
         } else {
-            $catDetails = $catDetails->toArray();
-        }
-
-        if ($proDetails['product_discount'] > 0) {
-            $final_price = $proAttrPrice['price'] - ($proAttrPrice['price'] * $proDetails['product_discount'] / 100);
-            $discount = $proAttrPrice['price'] - $final_price;
-        } elseif ($catDetails['category_discount'] > 0) {
-            $final_price = $proAttrPrice['price'] - ($proAttrPrice['price'] * $catDetails['category_discount'] / 100);
-            $discount = $proAttrPrice['price'] - $final_price;
-        } else {
-            $final_price = $proAttrPrice['price'];
+            $final_price = $original_price;
             $discount = 0;
         }
 
         return [
-            'product_price' => $proAttrPrice['price'],
+            'product_price' => $original_price,
             'final_price'   => round($final_price, 2),
             'discount'      => round($discount, 2),
         ];

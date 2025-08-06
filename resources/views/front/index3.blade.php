@@ -1017,7 +1017,7 @@
                 <div class="col-lg-3 col-md-6 col-sm-6 col-6 wow fadeInUp" data-wow-delay="0.4s">
                     <div class="icon-bx-wraper style-2 m-b30 text-center">
                         <div class="icon-bx-lg">
-                            <i class="fa-solid fa-leaf icon-cell"></i>
+                            <i class="fa-solid fa-pen icon-cell"></i>
                         </div>
                         <div class="icon-content">
                             <h2 class="dz-title counter m-b0">{{ number_format($totalAuthors) }}</h2>

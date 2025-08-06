@@ -740,6 +740,13 @@ class ProductsController extends Controller
         // Get the Cart Items of a cerain user (using their `user_id` if they're authenticated/logged in or their `session_id` if they're not authenticated/not logged in (guest))
         $getCartItems = Cart::getCartItems();
 
+        // Calculate total price
+        $total_price = 0;
+        foreach ($getCartItems as $item) {
+            $getDiscountPriceDetails = \App\Models\Product::getDiscountPriceDetails($item['product_id']);
+            $total_price += $getDiscountPriceDetails['final_price'] * $item['quantity'];
+        }
+
         // Static SEO (HTML meta tags): Check the HTML <meta> tags and <title> tag in front/layout/layout.blade.php
         $meta_title    = 'Shopping Cart - Multi Vendor E-commerce';
         $meta_keywords = 'shopping cart, multi vendor';
@@ -753,7 +760,7 @@ class ProductsController extends Controller
             ->get()
             ->toArray();
 
-        return view('front.products.cart')->with(compact('getCartItems', 'meta_title', /* 'meta_description', */'meta_keywords', 'condition', 'logos', 'sections', 'language', 'footerProducts'));
+        return view('front.products.cart')->with(compact('getCartItems', 'total_price', 'meta_title', /* 'meta_description', */'meta_keywords', 'condition', 'logos', 'sections', 'language', 'footerProducts'));
     }
 
     // Update Cart Item Quantity AJAX call in front/products/cart_items.blade.php. Check front/js/custom.js
@@ -779,7 +786,7 @@ class ProductsController extends Controller
             // Get available product `stock` from `products_attributes` table
             $availableStock = ProductsAttribute::select('stock')->where([
                 'product_id' => $cartDetails['product_id'],
-                // 'size'       => $cartDetails['size'],
+                'size'       => $cartDetails['size'],
             ])->first()->toArray();
 
             if ($data['qty'] > $availableStock['stock']) {
@@ -808,12 +815,7 @@ class ProductsController extends Controller
                                            // Get the Cart Items (after UPDATE-ing the Cart Item Quantity) of a cerain user (using their `user_id` if they're authenticated/logged in or their `session_id` if they're not authenticated/not logged in (guest))
                 $getCartItems = Cart::getCartItems();
 
-                $cartItem = Cart::find($request->cart_id);
-                $cartItem->quantity = $request->quantity;
-                $cartItem->save();
-
                 return response()->json([
-                    'success' => true,
                     'status'     => false,
                     'message'    => 'Product Size is not available. Please remove this Product and choose another one!',                              // that size's `status` is zero 0 (inactive/disabled)
                                                                                                                                                       // We'll use that array key 'view' as a JavaScript 'response' property to render the view (    $('#appendCartItems').html(resp.view);    ). Check front/js/custom.js
@@ -867,24 +869,11 @@ class ProductsController extends Controller
             $totalCartItems = Cart::totalCartItems(); // totalCartItems() function is in our custom Helpers/Helper.php file that we have registered in 'composer.json' file    // We created the CSS class 'totalCartItems' in front/layout/header.blade.php to use it in front/js/custom.js to update the total cart items via AJAX, because in pages that we originally use AJAX to update the cart items (such as when we delete a cart item in http://127.0.0.1:8000/cart using AJAX), the number doesn't change in the header automatically because AJAX is already used and no page reload/refresh has occurred
 
             return response()->json([                                                                                                                          // JSON Responses: https://laravel.com/docs/9.x/responses#json-responses
-                                                                                                                                                                   // 'status' => true,
+                'status'         => true,
                 'totalCartItems' => $totalCartItems,                                                                                                               // totalCartItems() function is in our custom Helpers/Helper.php file that we have registered in 'composer.json' file    // We created the CSS class 'totalCartItems' in front/layout/header.blade.php to use it in front/js/custom.js to update the total cart items via AJAX, because in pages that we originally use AJAX to update the cart items (such as when we delete a cart item in http://127.0.0.1:8000/cart using AJAX), the number doesn't change in the header automatically because AJAX is already used and no page reload/refresh has occurred
                                                                                                                                                                    // We'll use that array key 'view' as a JavaScript 'response' property to render the view (    $('#appendCartItems').html(resp.view);    ). Check front/js/custom.js
                 'view'           => (string) \Illuminate\Support\Facades\View::make('front.products.cart_items')->with(compact('getCartItems')),                   // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
                 'headerview'     => (string) \Illuminate\Support\Facades\View::make('front.layout.header_cart_items')->with(compact('getCartItems', 'condition')), // View Responses: https://laravel.com/docs/9.x/responses#view-responses    // Creating & Rendering Views: https://laravel.com/docs/9.x/views#creating-and-rendering-views    // Passing Data To Views: https://laravel.com/docs/9.x/views#passing-data-to-views
-            ]);
-        }
-        if ($request->ajax()) {
-            $cartId = $request->cartid;
-            Cart::where('id', $cartId)->delete();
-
-            // Get new cart items
-            //$getCartItems = Cart::getCartItems();
-            $totalCartItems = Cart::totalCartItems();
-
-            return response()->json([
-                'status' => true,
-                'totalCartItems' => $totalCartItems
             ]);
         }
     }

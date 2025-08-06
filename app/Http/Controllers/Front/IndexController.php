@@ -12,6 +12,7 @@ use App\Models\Section;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Models\Author;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
@@ -111,17 +112,17 @@ class IndexController extends Controller
             'is_featured' => 'Yes',
             'status'      => 1,
         ])
-        ->when($condition !== 'all', function ($query) use ($condition) {
-            $query->where('condition', $condition);
-        })
-        ->when(session('language') && session('language') !== 'all', function ($query) {
-            $query->where('language_id', session('language'));
-        })
-        ->limit(10)
-        ->get();
+            ->when($condition !== 'all', function ($query) use ($condition) {
+                $query->where('condition', $condition);
+            })
+            ->when(session('language') && session('language') !== 'all', function ($query) {
+                $query->where('language_id', session('language'));
+            })
+            ->limit(10)
+            ->get();
 
-        $meta_title       = 'Multi Vendor E-commerce Website';
-        $meta_description = 'Online Shopping Website which deals in Clothing, Electronics & Appliances Products';
+        $meta_title       = 'BookHub - The Only Hub For Students';
+        $meta_description = 'The cross platform where students meets their career through books.';
         $meta_keywords    = 'eshop website, online shopping, multi vendor e-commerce';
 
         // Get total user count for dynamic statistics
@@ -135,6 +136,15 @@ class IndexController extends Controller
 
         // Get total author count for dynamic statistics
         $totalAuthors = Author::where('status', 1)->count();
+
+        $getCartItems = Cart::getCartItems();
+
+        // Calculate total price
+        $total_price = 0;
+        foreach ($getCartItems as $item) {
+            $getDiscountPriceDetails = \App\Models\Product::getDiscountPriceDetails($item['product_id']);
+            $total_price += $getDiscountPriceDetails['final_price'] * $item['quantity'];
+        }
 
         if ($request->ajax()) {
             return view('front.partials.new_products', compact('newProducts'))->render();
@@ -165,7 +175,9 @@ class IndexController extends Controller
             'totalUsers',
             'totalVendors',
             'totalProducts',
-            'totalAuthors'
+            'totalAuthors',
+            'getCartItems',
+            'total_price'
         ));
     }
 
