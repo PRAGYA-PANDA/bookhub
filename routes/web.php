@@ -4,12 +4,13 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Admin\BookAttributeController;
 use App\Http\Controllers\Admin\BookRequestsController;
-use App\Http\Controllers\Admin\ProductsController;
+use App\Http\Controllers\Admin\ProductsController as AdminProductsController;
 use App\Http\Controllers\Admin\SchoolController;
 use App\Http\Controllers\Admin\SectionController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Front\BookRequestController;
 use App\Http\Controllers\Front\IndexController;
+use App\Http\Controllers\Front\ProductsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\EditionController;
 use App\Http\Controllers\Admin\UserController;
@@ -113,24 +114,24 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         ]);
 
         // Products
-        Route::get('products/getauthors', [ProductsController::class, 'getAuthor']);
-        Route::get('products', 'ProductsController@products');                                        // render products.blade.php in the Admin Panel
-        Route::post('update-product-status', 'ProductsController@updateProductStatus');               // Update Products Status using AJAX in products.blade.php
-        Route::get('delete-product/{id}', 'ProductsController@deleteProduct');                        // Delete a product in products.blade.php
-        Route::match(['get', 'post'], 'add-edit-product/{id?}', 'ProductsController@addEditProduct'); // the slug (Route Parameter) {id?} is an Optional Parameter, so if it's passed, this means 'Edit/Update the Product', and if not passed, this means' Add a Product'    // GET request to render the add_edit_product.blade.php view, and POST request to submit the <form> in that view
-        Route::get('delete-product-image/{id}', 'ProductsController@deleteProductImage');             // Delete a product images (in the three folders: small, medium and large) in add_edit_product.blade.php page from BOTH SERVER (FILESYSTEM) & DATABASE
-        Route::get('delete-product-video/{id}', 'ProductsController@deleteProductVideo');             // Delete a product video in add_edit_product.blade.php page from BOTH SERVER (FILESYSTEM) & DATABASE
+        Route::get('products/getauthors', [AdminProductsController::class, 'getAuthor']);
+        Route::get('products', [AdminProductsController::class, 'products']);                                        // render products.blade.php in the Admin Panel
+        Route::post('update-product-status', [AdminProductsController::class, 'updateProductStatus']);               // Update Products Status using AJAX in products.blade.php
+        Route::get('delete-product/{id}', [AdminProductsController::class, 'deleteProduct']);                        // Delete a product in products.blade.php
+        Route::match(['get', 'post'], 'add-edit-product/{id?}', [AdminProductsController::class, 'addEditProduct']); // the slug (Route Parameter) {id?} is an Optional Parameter, so if it's passed, this means 'Edit/Update the Product', and if not passed, this means' Add a Product'    // GET request to render the add_edit_product.blade.php view, and POST request to submit the <form> in that view
+        Route::get('delete-product-image/{id}', [AdminProductsController::class, 'deleteProductImage']);             // Delete a product images (in the three folders: small, medium and large) in add_edit_product.blade.php page from BOTH SERVER (FILESYSTEM) & DATABASE
+        Route::get('delete-product-video/{id}', [AdminProductsController::class, 'deleteProductVideo']);             // Delete a product video in add_edit_product.blade.php page from BOTH SERVER (FILESYSTEM) & DATABASE
 
         // Attributes
-        Route::match(['get', 'post'], 'add-edit-attributes/{id}', 'ProductsController@addAttributes'); // GET request to render the add_edit_attributes.blade.php view, and POST request to submit the <form> in that view
-        Route::post('update-attribute-status', 'ProductsController@updateAttributeStatus');            // Update Attributes Status using AJAX in add_edit_attributes.blade.php
-        Route::get('delete-attribute/{id}', 'ProductsController@deleteAttribute');                     // Delete an attribute in add_edit_attributes.blade.php
-        Route::match(['get', 'post'], 'edit-attributes/{id}', 'ProductsController@editAttributes');    // in add_edit_attributes.blade.php
+        Route::match(['get', 'post'], 'add-edit-attributes/{id}', [AdminProductsController::class, 'addAttributes']); // GET request to render the add_edit_attributes.blade.php view, and POST request to submit the <form> in that view
+        Route::post('update-attribute-status', [AdminProductsController::class, 'updateAttributeStatus']);            // Update Attributes Status using AJAX in add_edit_attributes.blade.php
+        Route::get('delete-attribute/{id}', [AdminProductsController::class, 'deleteAttribute']);                     // Delete an attribute in add_edit_attributes.blade.php
+        Route::match(['get', 'post'], 'edit-attributes/{id}', [AdminProductsController::class, 'editAttributes']);    // in add_edit_attributes.blade.php
 
         // Images
-        Route::match(['get', 'post'], 'add-images/{id}', 'ProductsController@addImages'); // GET request to render the add_edit_attributes.blade.php view, and POST request to submit the <form> in that view
-        Route::post('update-image-status', 'ProductsController@updateImageStatus');       // Update Images Status using AJAX in add_images.blade.php
-        Route::get('delete-image/{id}', 'ProductsController@deleteImage');                // Delete an image in add_images.blade.php
+        Route::match(['get', 'post'], 'add-images/{id}', [AdminProductsController::class, 'addImages']); // GET request to render the add_edit_attributes.blade.php view, and POST request to submit the <form> in that view
+        Route::post('update-image-status', [AdminProductsController::class, 'updateImageStatus']);       // Update Images Status using AJAX in add_images.blade.php
+        Route::get('delete-image/{id}', [AdminProductsController::class, 'deleteImage']);                // Delete an image in add_images.blade.php
 
         // Banners
         Route::get('banners', 'BannersController@banners');
@@ -287,6 +288,15 @@ Route::namespace('App\Http\Controllers\Front')->group(function () {
 
     // Render Cart page (front/products/cart.blade.php)    // this route is accessed from the <a> HTML tag inside the flash message inside cartAdd() method in Front/ProductsController.php (inside front/products/detail.blade.php)
     Route::get('cart', 'ProductsController@cart')->name('cart');
+
+    // Wishlist page
+    Route::get('wishlist', 'ProductsController@wishlist')->name('wishlist');
+
+    // Add to Wishlist AJAX call
+    Route::post('wishlist/add', 'ProductsController@wishlistAdd')->name('wishlist.add');
+
+    // Remove from Wishlist AJAX call
+    Route::post('wishlist/remove', 'ProductsController@wishlistRemove')->name('wishlist.remove');
 
     // Update Cart Item Quantity AJAX call in front/products/cart_items.blade.php. Check front/js/custom.js
 

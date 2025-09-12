@@ -1,9 +1,66 @@
 {{-- Note: This page (view) is rendered by the checkout() method in the Front/ProductsController.php --}}
-@extends('front.layout.layout2')
+@extends('front.layout.layout3')
 
 @section('content')
+
+<div class="dz-bnr-inr overlay-secondary-dark dz-bnr-inr-sm" style="background-image:url(images/background/bg3.jpg);">
+    <div class="container">
+        <div class="dz-bnr-inr-entry">
+            <h1>Checkout</h1>
+            <nav aria-label="breadcrumb" class="breadcrumb-row">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url('/') }}"> Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url('/checkout') }}">Checkout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- inner page banner End-->
+
+{{-- New UI static block removed in favor of functional checkout implementation below --}}
+
+<!-- Checkout Progress Steps -->
+<section class="content-inner py-4">
+    <div class="container">
+        <div class="checkout-steps">
+            <div class="step active">
+                <div class="circle">1</div>
+                <div class="label">Address</div>
+            </div>
+            <div class="separator"></div>
+            <div class="step active">
+                <div class="circle">2</div>
+                <div class="label">Summary</div>
+            </div>
+            <div class="separator"></div>
+            <div class="step">
+                <div class="circle">3</div>
+                <div class="label">Payment</div>
+            </div>
+            <div class="separator"></div>
+            <div class="step">
+                <div class="circle">4</div>
+                <div class="label">Place Order</div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .checkout-steps{display:flex;align-items:center;justify-content:center;gap:16px}
+        .checkout-steps .step{display:flex;flex-direction:column;align-items:center;gap:8px}
+        .checkout-steps .circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;background:#e9ecef;color:#6c757d;border:2px solid #dee2e6}
+        .checkout-steps .label{font-size:12px;color:#6c757d}
+        .checkout-steps .step.active .circle{background:linear-gradient(135deg,#007bff,#0056b3);color:#fff;border-color:#007bff}
+        .checkout-steps .step.active .label{color:#0056b3;font-weight:600}
+        .checkout-steps .separator{height:2px;width:40px;background:#e9ecef}
+        @media(max-width:576px){.checkout-steps{gap:8px}.checkout-steps .separator{width:24px}}
+    </style>
+</section>
+
+
+{{-- old code  --}}
 <!-- Page Introduction Wrapper -->
-<div class="page-style-a">
+{{-- <div class="page-style-a">
     <div class="container">
         <div class="page-intro">
             <h2>Checkout</h2>
@@ -13,12 +70,12 @@
                     <a href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="is-marked">
-                    <a href="checkout.html">Checkout</a>
+                    <a href="{{ url('/checkout') }}">Checkout</a>
                 </li>
             </ul>
         </div>
     </div>
-</div>
+</div> --}}
 <!-- Page Introduction Wrapper /- -->
 
 <!-- Checkout-Page -->
@@ -100,7 +157,7 @@
                                     <h4><i class="fas fa-shopping-cart"></i> Order Summary</h4>
                                 </div>
 
-                                <div class="order-summary">
+                                <div class="order-summary sticky-summary">
                                     <!-- Products List -->
                                     <div class="products-list">
                                         @php $total_price = 0 @endphp
@@ -110,7 +167,10 @@
                                             @endphp
                                             <div class="product-item">
                                                 <div class="product-info">
-                                                    <img width="50px" src="{{ asset('front/images/product_images/small/') }}" alt="Product">
+                                                    <img src="{{ asset('front/images/product_images/large/' . ($item['product']['product_image'] ?? 'no-image.png')) }}"
+                                                                    alt="{{ $item['product']['product_name'] ?? 'Product' }}"
+                                                                    class="img-fluid rounded shadow-sm"
+                                                                    style="width: 100px; height: 100px; object-fit: cover;">
                                                     <div class="product-details">
                                                         <h6>{{ $item['product']['product_name'] }}</h6>
                                                         <small>Size: {{ $item['size'] }} | Qty: {{ $item['quantity'] }}</small>
@@ -203,8 +263,7 @@
 
                             <!-- Place Order Button -->
                             <div class="checkout-section">
-                                <button type="submit" id="placeOrder" class="place-order-btn">
-                                    <i class="fas fa-lock"></i> Place Order Securely
+                                <button type="submit" id="placeOrder" class="place-order-btn">                                                <i class="fas fa-lock"></i> Place Order Securely
                                 </button>
                             </div>
                         </form>
@@ -335,6 +394,8 @@
     border-radius: 8px;
     padding: 20px;
 }
+
+.sticky-summary { position: sticky; top: 90px; }
 
 .products-list {
     margin-bottom: 20px;
@@ -495,6 +556,15 @@
     border: 1px solid #f0f0f0;
     height: fit-content;
 }
+
+/* Fancy radio inputs */
+.payment-option { position: relative; cursor: pointer; }
+.payment-option .radio-box { position: absolute; left: 16px; top: 18px; }
+.payment-option .payment-label { padding-left: 8px; }
+.payment-option:hover { box-shadow: 0 6px 14px rgba(0,0,0,0.06); }
+
+/* Address cards hover */
+.address-item:hover { transform: translateY(-2px); transition: transform 0.2s ease; }
 
 /* Responsive Design */
 @media (max-width: 768px) {

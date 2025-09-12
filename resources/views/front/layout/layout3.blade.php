@@ -47,6 +47,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('front/newtheme/vendor/swiper/swiper-bundle.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('front/newtheme/vendor/animate/animate.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('front/newtheme/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('front/css/custom-wishlist.css') }}">
 
     <!-- GOOGLE FONTS-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -119,6 +120,17 @@
         .submenu1 li:hover a {
             color: var(--primary) !important;
         }
+
+        /* Ensure mini-cart images stay small even after AJAX updates */
+        .cart-list .media-left img,
+        .cart-list img,
+        .headerCartItems img,
+        .cart-item img {
+            width: 60px !important;
+            height: 60px !important;
+            object-fit: cover !important;
+            border-radius: 6px;
+        }
     </style>
 
 </head>
@@ -153,14 +165,15 @@
                         <div class="extra-cell">
                             <ul class="navbar-nav header-right">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="wishlist.html">
+                                    <a class="nav-link" href="{{ url('/wishlist') }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
                                             width="24px" fill="#000000">
                                             <path d="M0 0h24v24H0V0z" fill="none" />
                                             <path
                                                 d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z" />
                                         </svg>
-                                        <span class="badge">21</span>
+                                        <span class="badge totalWishlistItems">{{ isset($headerWishlistItemsCount) ? $headerWishlistItemsCount : 0 }}</span>
+                        {{-- Debug: {{ var_dump($headerWishlistItemsCount ?? 'not set') }} --}}
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -171,48 +184,61 @@
                                             <path
                                                 d="M15.55 13c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.37-.66-.11-1.48-.87-1.48H5.21l-.94-2H1v2h2l3.6 7.59-1.35 2.44C4.52 15.37 5.48 17 7 17h12v-2H7l1.1-2h7.45zM6.16 6h12.15l-2.76 5H8.53L6.16 6zM7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
                                         </svg>
-                                        <span class="badge">5</span>
+                                        <span class="badge totalCartItems">{{ isset($headerCartItems) ? count($headerCartItems) : 0 }}</span>
                                     </button>
-                                    <ul class="dropdown-menu cart-list">
-                                        @foreach ($getCartItems as $item)
-                                            @php
-                                                   $getDiscountPriceDetails = \App\Models\Product::getDiscountPriceDetails($item['product_id']);
-                                            @endphp
-                                            <li class="cart-item">
-                                                <div class="media">
-                                                    <div class="media-left">
-                                                        <a href="books-detail.html">
-                                                            <img alt="" class="media-object"
-                                                                src="{{ asset('front/newtheme/images/books/small/pic1.jpg') }}">
-                                                        </a>
+                                    <ul class="dropdown-menu cart-list headerCartItems">
+                                        @if(isset($headerCartItems) && count($headerCartItems) > 0)
+                                            @foreach ($headerCartItems as $item)
+                                                @php
+                                                       $getDiscountPriceDetail = \App\Models\Product::getDiscountPriceDetails($item['product_id']);
+                                                @endphp
+                                                <li class="cart-item">
+                                                    <div class="media">
+                                                        <div class="media-left">
+                                                            <a href="{{ asset('front/images/product_images/large/' . ($item['product']['product_image'] ?? 'no-image.png')) }}"
+                                class="main-image-link">
+                                                                <img src="{{ asset('front/images/product_images/large/' . ($item['product']['product_image'] ?? 'no-image.png')) }}"
+                                                                    alt="{{ $item['product']['product_name'] ?? 'Product' }}"
+                                                                    class="img-fluid rounded shadow-sm"
+                                                                    style="width: 100px; height: 100px; object-fit: cover;">
+                                                            </a>
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <h6 class="dz-title"><a
+                                                                    href="{{ url('product/' . $item['product_id']) }}"
+                                                                    class="media-heading">{{ $item['product']['product_name'] ?? 'Product' }}</a>
+                                                            </h6>
+                                                            <span class="dz-price">
+                                                                @if ($getDiscountPriceDetail['discount'] > 0)
+                                                                    ₹{{ $getDiscountPriceDetail['final_price'] }} x {{ ($item['quantity'] ?? 1) }}
+                                                                @else
+                                                                    ₹{{ $getDiscountPriceDetail['final_price'] }} x {{ ($item['quantity'] ?? 1) }}
+                                                                @endif
+                                                            </span>
+
+                                                            <a href="javascript:void(0);"><span class="item-close" data-cartid="{{ $item['id'] }}">&times;</span></a>
+
+                                                        </div>
                                                     </div>
-                                                    <div class="media-body">
-                                                        <h6 class="dz-title"><a
-                                                                href="{{ url('product/' . $item['product_id']) }}"
-                                                                class="media-heading">{{ $item['product']['product_name'] }}</a>
-                                                        </h6>
-                                                        <span class="dz-price">
-                                                            @if ($getDiscountPriceDetails['discount'] > 0)
-                                                                ₹{{ $getDiscountPriceDetails['final_price'] }}
-                                                            @else
-                                                                ₹{{ $getDiscountPriceDetails['final_price'] }}
-                                                            @endif
-                                                        </span>
-                                                        <span class="item-close">&times;</span>
-                                                    </div>
-                                                </div>
+                                                </li>
+                                            @endforeach
+                                            <li class="cart-item text-center">
+                                                <h6 class="text-secondary">Total = ₹{{ $headerCartTotal }}</h6>
                                             </li>
-                                            @php $total_price = $total_price + ($getDiscountPriceDetails['final_price'] * $item['quantity']) @endphp
-                                        @endforeach
-                                        <li class="cart-item text-center">
-                                            <h6 class="text-secondary">Totle = ₹{{ $total_price }}</h6>
-                                        </li>
-                                        <li class="text-center d-flex">
-                                            <a href="{{ url('/cart') }}"
-                                                class="btn btn-sm btn-primary me-2 btnhover w-100">View Cart</a>
-                                            <a href="{{ url('/checkout') }}"
-                                                class="btn btn-sm btn-outline-primary btnhover w-100">Checkout</a>
-                                        </li>
+                                            <li class="text-center d-flex">
+                                                <a href="{{ url('/cart') }}"
+                                                    class="btn btn-sm btn-primary me-2 btnhover w-100">View Cart</a>
+                                                <a href="{{ url('/checkout') }}"
+                                                    class="btn btn-sm btn-outline-primary btnhover w-100">Checkout</a>
+                                            </li>
+                                        @else
+                                            <li class="cart-item text-center">
+                                                <h6 class="text-secondary">Your cart is empty</h6>
+                                            </li>
+                                            <li class="text-center">
+                                                <a href="{{ url('/') }}" class="btn btn-sm btn-primary btnhover w-100">Start Shopping</a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </li>
                                 @guest
@@ -731,6 +757,39 @@
     <script src="{{ asset('front/newtheme/js/custom.js') }}"></script><!-- CUSTOM JS -->
 
 
+    <script>
+        // Header mini-cart: delete item via AJAX
+        $(document).on('click', '.cart-list .item-close', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var cartId = $(this).data('cartid');
+            var $li = $(this).closest('li.cart-item');
+            if (!cartId) return;
+
+            $.ajax({
+                url: '{{ route('cartDelete') }}',
+                type: 'POST',
+                data: {
+                    cartid: cartId,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(resp) {
+                    if (resp.status) {
+                        // Auto refresh the page to ensure all UI, totals, and fragments are fully synced
+                        window.location.reload();
+                        return;
+                    } else {
+                        alert(resp.message || 'Could not delete item.');
+                    }
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                    alert('Something went wrong.');
+                }
+            });
+        });
+    </script>
     <script>
         const li = document.querySelector(".ul-menu li");
         const submenu = document.querySelector(".submenu");

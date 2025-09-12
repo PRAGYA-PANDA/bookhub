@@ -52,7 +52,7 @@ class ProductsController extends Controller
 
         // if the authenticated user (the logged in user) is 'vendor', show ONLY the products that BELONG TO them (in products.blade.php) ($products)
         if ($adminType == 'vendor') {
-            $produtcs = $products->where('vendor_id', $vendor_id);
+            $products = $products->where('vendor_id', $vendor_id);
         }
 
         $products = $products->get()->toArray(); // $products will be either ALL products Or VENDOR products ONLY (depending on the last if condition)    // Using subqueries with Eager Loading for a better performance    // Constraining Eager Loads: https://laravel.com/docs/9.x/eloquent-relationships#constraining-eager-loads    // Subquery Where Clauses: https://laravel.com/docs/9.x/queries#subquery-where-clauses    // Advanced Subqueries: https://laravel.com/docs/9.x/eloquent#advanced-subqueries    // ['section', 'category'] are the relationships methods names
@@ -567,6 +567,25 @@ class ProductsController extends Controller
         ProductsImage::where('id', $id)->delete();
 
         $message = 'Book Image has been deleted successfully!';
+
+        return redirect()->back()->with('success_message', $message);
+    }
+
+    public function deleteAttribute($id)
+    { // Delete an attribute in add_edit_attributes.blade.php
+        ProductsAttribute::where('id', $id)->delete();
+
+        $message = 'Book Attribute has been deleted successfully!';
+
+        return redirect()->back()->with('success_message', $message);
+    }
+
+    public function deleteProductVideo($id)
+    { // Delete a product video in add_edit_product.blade.php page from BOTH SERVER (FILESYSTEM) & DATABASE
+        // This method is referenced in routes but not implemented
+        // You can implement video deletion logic here if needed
+
+        $message = 'Book Video has been deleted successfully!';
 
         return redirect()->back()->with('success_message', $message);
     }

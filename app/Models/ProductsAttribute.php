@@ -20,13 +20,10 @@ class ProductsAttribute extends Model
 
 
     public static function getProductStock($product_id, $size)
-    { // Get the `stock` available for that specific product (`product_id`) with that specific size (`size`) (in `products_attributes` table)?
-        $getProductStock = ProductsAttribute::select('stock')->where([
-            'product_id' => $product_id,
-            // 'size'       => $size
-        ])->first();
-
-        return $getProductStock->stock ?? 0;
+    {
+        // Aggregate total stock for the product across all attribute rows
+        // (size is currently unused in the storefront; if size-level stock is needed later, filter by size)
+        return (int) ProductsAttribute::where('product_id', $product_id)->sum('stock');
     }
 
 

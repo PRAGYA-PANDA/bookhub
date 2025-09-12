@@ -10,7 +10,7 @@
                         $discountedPrice = \App\Models\Product::getDiscountPrice($products->id);
                         $hasDiscount = $discountedPrice > 0;
                     @endphp
-                    <div class="swiper-slide" style="background-color: #f18701 !important;">
+                    <div class="swiper-slide" style="background-color: #ecab56 !important;">
                         <div class="container">
                             <div class="banner-content">
                                 <div class="row">
@@ -190,16 +190,22 @@
                         <div class="swiper-slide">
                             <div class="books-card style-1 wow fadeInUp" data-wow-delay="0.1s">
                                 <div class="dz-media">
-                                    <img src="{{ asset('front/images/product_images/small/' . $sliderProduct['product_image']) }}"
-                                        alt="book" style="height: 250px; width: 357px;">
+                                    <a href="{{ url('product/' . $sliderProduct['id']) }}">
+                                        <img src="{{ asset('front/images/product_images/small/' . $sliderProduct['product_image']) }}"
+                                            style="height: 250px; width: 200px; object-fit: fill !important;" alt="book">
+                                    </a>
                                 </div>
                                 <div class="dz-content">
-                                    <h4 class="title">{{ $sliderProduct['product_name'] }}</h4>
+                                    <h4 class="title"><a
+                                        href="{{ url('product/' . $sliderProduct['id']) }}">{{ $sliderProduct['product_name'] }}</a></h4>
                                     <span
                                         class="price">₹{{ \App\Models\Product::getDiscountPrice($sliderProduct['id']) }}</span>
-                                    <a href="{{ url('product/' . $sliderProduct['id']) }}"
-                                        class="btn btn-secondary btnhover2"><i class="flaticon-shopping-cart-1 m-r10"></i>
-                                        Add to cart</a>
+                                        <form action="{{ url('cart/add') }}" method="POST" class="d-flex align-items-center">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $sliderProduct['id'] }}">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="submit" class="btn btn-primary btnhover2"><i class="flaticon-shopping-cart-1"></i> <span>&nbsp;&nbsp;Add to cart</span></button>
+                                        </form>
                                 </div>
                             </div>
                         </div>

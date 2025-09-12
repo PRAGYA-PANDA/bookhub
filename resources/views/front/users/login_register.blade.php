@@ -1,4 +1,4 @@
-@extends('front.layout.layout2')
+@extends('front.layout.layout3')
 
 @section('content')
     <!-- Page Introduction Wrapper -->
@@ -11,11 +11,11 @@
                         <ul class="bread-crumb d-inline-block">
                             <li class="has-separator d-inline-block mx-2">
                                 <a href="{{ url('/') }}" class="btn btn-light text-decoration-none font-weight-bold"
-                                    style="color: #6c5dd4; border: none;">Home</a>
+                                    style="color: #cf8938; border: none;">Home</a>
                             </li>
                             <li class="is-marked d-inline-block mx-2">
                                 <a href="" class="btn btn-light text-decoration-none font-weight-bold"
-                                    style="color: #6c5dd4; border: none;">Account</a>
+                                    style="color: #cf8938; border: none;">Account</a>
                             </li>
                         </ul>
                     </div>
@@ -63,7 +63,7 @@
                 <div class="col-lg-5">
                     <div class="login-wrapper bg-white p-4 rounded shadow-sm">
                         <div class="text-center mb-4">
-                            <i class="fas fa-user-circle mb-3" style="font-size: 48px; color:#6c5dd4"></i>
+                            <i class="fas fa-user-circle mb-3" style="font-size: 48px; color:#cf8938"></i>
                             <h2 class="account-h2">Login</h2>
                             <h6 class="account-h6 text-muted">Welcome back! Sign in to your account.</h6>
                         </div>
@@ -97,7 +97,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn btn-primary w-100 rounded" style="background-color: #6c5dd4; border: none;">
+                            <button class="btn btn-primary w-100 rounded" style="background-color: #cf8938; border: none;">
                                 <i class="fas fa-walking mr-2"></i>Login
                             </button>
 
@@ -110,7 +110,7 @@
                 <div class="col-lg-5">
                     <div class="reg-wrapper bg-white p-4 rounded shadow-sm">
                         <div class="text-center mb-4">
-                            <i class="fas fa-user-plus mb-3" style="font-size: 48px; color:#6c5dd4"></i>
+                            <i class="fas fa-user-plus mb-3" style="font-size: 48px; color:#cf8938"></i>
                             <h2 class="account-h2">Register</h2>
                             <h6 class="account-h6 text-muted">Create an account to access your order history.</h6>
                         </div>
@@ -164,8 +164,8 @@
                             </div>
 
                             <button class="btn btn-primary w-100  rounded"
-                                style="background-color: #6c5dd4; border: none;">
-                                <i class="fas fa-user-plus mr-2"></i>Register
+                                style="background-color: #cf8938; border: none;">
+                                <i class="fas fa-user mr-2"></i>Register
                             </button>
                         </form>
                     </div>

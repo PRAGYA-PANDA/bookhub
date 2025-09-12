@@ -112,57 +112,54 @@ class Product extends Model
         return round($discounted_price, 2); // Round to 2 decimal places
     }
 
-    // public static function getDiscountAttributePrice($product_id, $size)
-    // {
-    //     $proAttrPrice = \App\Models\ProductsAttribute::where([
-    //         'product_id' => $product_id,
-    //         'size'       => $size,
-    //     ])->first();
+    public static function getDiscountAttributePrice($product_id, $size = null)
+    {
+        // If a size is provided and there is an attribute-level price, prefer it.
+        $attribute = null;
+        if (!empty($size)) {
+            $attribute = \App\Models\ProductsAttribute::where([
+                'product_id' => $product_id,
+                'size'       => $size,
+            ])->first();
+        }
 
-    //     if (!$proAttrPrice) {
-    //         return [
-    //             'product_price' => 0,
-    //             'final_price'   => 0,
-    //             'discount'      => 0,
-    //         ];
-    //     }
+        // If attribute exists, compute discount against attribute price using product/category discounts
+        if ($attribute) {
+            $attributePrice = (float) $attribute->price;
 
-    //     $proAttrPrice = $proAttrPrice->toArray();
+            $productDetails = Product::select('product_discount', 'category_id')->where('id', $product_id)->first();
+            $productDiscount = $productDetails ? (float) ($productDetails->product_discount ?? 0) : 0;
 
-    //     $proDetails = Product::select('product_discount', 'category_id')->where('id', $product_id)->first();
-    //     if (!$proDetails) {
-    //         return [
-    //             'product_price' => $proAttrPrice['price'],
-    //             'final_price'   => $proAttrPrice['price'],
-    //             'discount'      => 0,
-    //         ];
-    //     }
-    //     $proDetails = $proDetails->toArray();
+            $categoryDiscount = 0;
+            if ($productDetails) {
+                $categoryDiscount = (float) (Category::where('id', $productDetails->category_id)->value('category_discount') ?? 0);
+            }
 
-    //     $catDetails = Category::select('category_discount')->where('id', $proDetails['category_id'])->first();
-    //     if (!$catDetails) {
-    //         $catDetails = ['category_discount' => 0];
-    //     } else {
-    //         $catDetails = $catDetails->toArray();
-    //     }
+            if ($productDiscount > 0) {
+                $finalPrice = $attributePrice - ($attributePrice * $productDiscount / 100);
+            } elseif ($categoryDiscount > 0) {
+                $finalPrice = $attributePrice - ($attributePrice * $categoryDiscount / 100);
+            } else {
+                $finalPrice = $attributePrice;
+            }
 
-    //     if ($proDetails['product_discount'] > 0) {
-    //         $final_price = $proAttrPrice['price'] - ($proAttrPrice['price'] * $proDetails['product_discount'] / 100);
-    //         $discount = $proAttrPrice['price'] - $final_price;
-    //     } elseif ($catDetails['category_discount'] > 0) {
-    //         $final_price = $proAttrPrice['price'] - ($proAttrPrice['price'] * $catDetails['category_discount'] / 100);
-    //         $discount = $proAttrPrice['price'] - $final_price;
-    //     } else {
-    //         $final_price = $proAttrPrice['price'];
-    //         $discount = 0;
-    //     }
+            $discount = max(0, $attributePrice - $finalPrice);
 
-    //     return [
-    //         'product_price' => $proAttrPrice['price'],
-    //         'final_price'   => round($final_price, 2),
-    //         'discount'      => round($discount, 2),
-    //     ];
-    // }
+            return [
+                'product_price' => round($attributePrice, 2),
+                'final_price'   => round($finalPrice, 2),
+                'discount'      => round($discount, 2),
+            ];
+        }
+
+        // Fallback: when size not provided or no attribute exists, use the product-level price rules
+        $details = self::getDiscountPriceDetails($product_id);
+        return [
+            'product_price' => $details['product_price'] ?? 0,
+            'final_price'   => $details['final_price'] ?? 0,
+            'discount'      => $details['discount'] ?? 0,
+        ];
+    }
 
     public static function getDiscountPriceDetails($product_id)
     {

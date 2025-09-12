@@ -2,6 +2,167 @@
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
+<style>
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 4px;
+    width: fit-content;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.qty-btn {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #495057;
+    font-size: 12px;
+}
+
+.qty-btn:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.qty-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.qty-btn:disabled {
+    background: #f8f9fa;
+    color: #adb5bd;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.qty-input {
+    width: 50px;
+    height: 32px;
+    text-align: center;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    margin: 0 8px;
+    font-weight: 600;
+    color: #495057;
+    background: #ffffff;
+    font-size: 14px;
+}
+
+.qty-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+}
+
+.qty-minus {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+}
+
+.qty-plus {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+}
+
+.qty-input {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .quantity-controls {
+        padding: 2px;
+    }
+
+    .qty-btn {
+        width: 28px;
+        height: 28px;
+    }
+
+    .qty-input {
+        width: 40px;
+        height: 28px;
+        margin: 0 4px;
+        font-size: 12px;
+    }
+}
+
+/* Notification styles */
+.qty-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 9999;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.qty-notification.show {
+    transform: translateX(0);
+}
+
+.qty-notification-info {
+    background: #17a2b8;
+}
+
+.qty-notification-success {
+    background: #28a745;
+}
+
+.qty-notification-warning {
+    background: #ffc107;
+    color: #212529;
+}
+
+.qty-notification-error {
+    background: #dc3545;
+}
+
+/* Disabled button styles */
+.qty-btn.disabled {
+    background: #f8f9fa;
+    color: #adb5bd;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Prevent multiple clicks during update */
+.product-item-quantity.updating .qty-btn {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.product-item-quantity.updating .qty-input {
+    background: #f8f9fa;
+    color: #6c757d;
+}
+</style>
+
 <!-- Products-List-Wrapper -->
 <div class="table-responsive">
     <table class="table check-tbl">
@@ -27,46 +188,57 @@
 
                 <tr>
                     <td class="product-item-img">
-                        <img src="{{ asset('front/images/books/grid/book3.jpg') }}" alt="Product-img">
+                        @if (!empty($item['product']['product_image']))
+                            <img src="{{ asset('front/images/product_images/small/' . $item['product']['product_image']) }}" alt="{{ $item['product']['product_name'] ?? 'Product' }}" class="img-fluid" style="max-width: 80px; height: auto;">
+                        @else
+                            <img src="{{ asset('front/images/product_images/small/no-image.png') }}" alt="No Image" class="img-fluid" style="max-width: 80px; height: auto;">
+                        @endif
                     </td>
                     <td class="product-item-name">
                         <a href="{{ url('product/' . $item['product_id']) }}">
-                            {{ $item['product']['product_name'] }}
+                            {{ $item['product']['product_name'] ?? 'Product Name Not Available' }}
                         </a>
                     </td>
                     <td class="product-item-price">
-                        @if ($getDiscountPriceDetails['discount'] > 0)
+                        @if (isset($getDiscountPriceDetails['discount']) && $getDiscountPriceDetails['discount'] > 0)
                             <div class="item-new-price">
-                                ₹{{ $getDiscountPriceDetails['final_price'] }}
+                                ₹{{ $getDiscountPriceDetails['final_price'] ?? 0 }}
                             </div>
                             <div class="item-old-price" style="text-decoration: line-through; color: #999;">
-                                ₹{{ $getDiscountPriceDetails['product_price'] }}
+                                ₹{{ $getDiscountPriceDetails['product_price'] ?? 0 }}
                             </div>
                         @else
                             <div class="item-new-price">
-                                ₹{{ $getDiscountPriceDetails['final_price'] }}
+                                ₹{{ $getDiscountPriceDetails['final_price'] ?? 0 }}
                             </div>
                         @endif
                     </td>
                     <td class="product-item-quantity">
-                        <div class="quantity btn-quantity style-1 me-3">
-                            <input type="text" class="quantity-text-field" value="{{ $item['quantity'] }}" readonly>
-                            <a data-max="1000" class="plus-a" data-cartid="{{ $item['id'] }}">&#43;</a>
-                            <a data-min="1" class="minus-a" data-cartid="{{ $item['id'] }}">&#45;</a>
+                        <div class="quantity-controls">
+                            <button type="button" class="qty-btn qty-minus" data-min="1" data-cartid="{{ $item['id'] }}" title="Decrease quantity">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="text" class="qty-input" value="{{ $item['quantity'] }}" data-original-qty="{{ $item['quantity'] }}" readonly>
+                            <button type="button" class="qty-btn qty-plus" data-max="1000" data-cartid="{{ $item['id'] }}" title="Increase quantity">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
                     </td>
                     <td class="product-item-totle">
-                        ₹{{ $getDiscountPriceDetails['final_price'] * $item['quantity'] }}
+                        ₹{{ ($getDiscountPriceDetails['final_price'] ?? 0) * ($item['quantity'] ?? 1) }}
                     </td>
                     <td class="product-item-close">
-                        <button class="button button-outline-secondary fas fa-trash deleteCartItem"
-                            data-cartid="{{ $item['id'] }}">
+                        <button class="btn btn-outline-danger btn-sm deleteCartItem" data-cartid="{{ $item['id'] }}" title="Remove item">
+                            <i class="fas fa-trash"></i>
                         </button>
                     </td>
                 </tr>
 
                 {{-- This is placed here INSIDE the foreach loop to calculate the total price of all products in Cart --}}
-                @php $total_price = $total_price + ($getDiscountPriceDetails['final_price'] * $item['quantity']) @endphp
+                @php
+                    $itemTotal = ($getDiscountPriceDetails['final_price'] ?? 0) * ($item['quantity'] ?? 1);
+                    $total_price = $total_price + $itemTotal;
+                @endphp
             @endforeach
         </tbody>
     </table>
@@ -81,43 +253,114 @@
 
 <script>
     $(document).ready(function() {
+        // Initialize button states for all quantity controls
+        $('.product-item-quantity').each(function() {
+            updateButtonStates($(this));
+        });
+
         // Plus button click handler
-        $(document).on('click', '.plus-a', function(e) {
+        $(document).on('click', '.qty-plus', function(e) {
             e.preventDefault();
 
             let $btn = $(this);
             let $row = $btn.closest('.product-item-quantity');
-            let $input = $row.find('.quantity-text-field');
+
+            // Prevent multiple rapid clicks
+            if ($row.hasClass('updating')) {
+                return;
+            }
+
+            let $input = $row.find('.qty-input');
+            let $minusBtn = $row.find('.qty-minus');
             let maxQty = parseInt($btn.data('max'));
             let cartId = $btn.data('cartid');
 
             let currentQty = parseInt($input.val());
             if (currentQty < maxQty) {
                 let newQty = currentQty + 1;
-                updateCartQuantity(cartId, newQty, $input);
+                updateCartQuantity(cartId, newQty, $input, $row);
             } else {
-                alert('Maximum stock limit reached.');
+                showNotification('Maximum stock limit reached.', 'warning');
             }
         });
 
         // Minus button click handler
-        $(document).on('click', '.minus-a', function(e) {
+        $(document).on('click', '.qty-minus', function(e) {
             e.preventDefault();
 
             let $btn = $(this);
             let $row = $btn.closest('.product-item-quantity');
-            let $input = $row.find('.quantity-text-field');
+
+            // Prevent multiple rapid clicks
+            if ($row.hasClass('updating')) {
+                return;
+            }
+
+            let $input = $row.find('.qty-input');
+            let $plusBtn = $row.find('.qty-plus');
             let minQty = parseInt($btn.data('min'));
             let cartId = $btn.data('cartid');
 
             let currentQty = parseInt($input.val());
             if (currentQty > minQty) {
                 let newQty = currentQty - 1;
-                updateCartQuantity(cartId, newQty, $input);
+                updateCartQuantity(cartId, newQty, $input, $row);
             } else {
-                alert('Minimum quantity is 1.');
+                showNotification('Minimum quantity is 1.', 'warning');
             }
         });
+
+        // Update button states based on quantity
+        function updateButtonStates($row) {
+            let $input = $row.find('.qty-input');
+            let $minusBtn = $row.find('.qty-minus');
+            let $plusBtn = $row.find('.qty-plus');
+            let currentQty = parseInt($input.val());
+            let minQty = parseInt($minusBtn.data('min'));
+            let maxQty = parseInt($plusBtn.data('max'));
+
+            // Disable/enable minus button
+            if (currentQty <= minQty) {
+                $minusBtn.prop('disabled', true).addClass('disabled');
+            } else {
+                $minusBtn.prop('disabled', false).removeClass('disabled');
+            }
+
+            // Disable/enable plus button
+            if (currentQty >= maxQty) {
+                $plusBtn.prop('disabled', true).addClass('disabled');
+            } else {
+                $plusBtn.prop('disabled', false).removeClass('disabled');
+            }
+        }
+
+                // Show notification
+        function showNotification(message, type = 'info') {
+            // Remove any existing notifications first
+            $('.qty-notification').remove();
+
+            // Create notification element
+            let $notification = $(`
+                <div class="qty-notification qty-notification-${type}">
+                    <span>${message}</span>
+                </div>
+            `);
+
+            $('body').append($notification);
+
+            // Show notification
+            setTimeout(() => {
+                $notification.addClass('show');
+            }, 100);
+
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                $notification.removeClass('show');
+                setTimeout(() => {
+                    $notification.remove();
+                }, 300);
+            }, 3000);
+        }
 
         // Delete cart item click handler
         $(document).on('click', '.deleteCartItem', function(e) {
@@ -132,7 +375,15 @@
         });
 
         // Function to update cart quantity
-        function updateCartQuantity(cartId, qty, $input) {
+        function updateCartQuantity(cartId, qty, $input, $row) {
+            // Prevent multiple calls
+            if ($row.hasClass('updating')) {
+                return;
+            }
+
+            // Add updating class to prevent multiple calls
+            $row.addClass('updating');
+
             $.ajax({
                 url: '{{ route('cart.update') }}',
                 method: 'POST',
@@ -145,6 +396,16 @@
                     if (resp.status) {
                         // Update the input field
                         $input.val(qty);
+
+                        // Update button states
+                        updateButtonStates($row);
+
+                        // Show success notification only if quantity actually changed
+                        let currentQty = parseInt($input.attr('data-original-qty') || $input.val());
+                        if (qty !== currentQty) {
+                            showNotification('Quantity updated successfully!', 'success');
+                            $input.attr('data-original-qty', qty);
+                        }
 
                         // Update total cart items count
                         if (resp.totalCartItems !== undefined) {
@@ -161,12 +422,16 @@
                             $('.headerCartItems').html(resp.headerview);
                         }
                     } else {
-                        alert(resp.message || 'Could not update quantity.');
+                        showNotification(resp.message || 'Could not update quantity.', 'error');
                     }
                 },
                 error: function(xhr) {
                     console.log(xhr.responseText);
-                    alert('Something went wrong. Please try again.');
+                    showNotification('Something went wrong. Please try again.', 'error');
+                },
+                complete: function() {
+                    // Remove updating class
+                    $row.removeClass('updating');
                 }
             });
         }

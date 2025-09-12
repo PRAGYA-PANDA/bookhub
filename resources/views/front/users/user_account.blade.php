@@ -1,8 +1,7 @@
-{{-- This page is accessed from My Account tab in the dropdown menu in the header (in front/layout/header.blade.php). Check userAccount() method in Front/UserController.php --}}
-@extends('front.layout.layout2')
+@extends('front.layout.layout3')
 
 @section('content')
-
+{{-- Hybrid code combining old tab concept with new styling --}}
     <style>
         /* WooCommerce inspired professional styling */
         .woocommerce-account {
@@ -454,11 +453,6 @@
                         </nav>
                     </div>
 
-                    <!-- Hidden form in your layout -->
-                    <form id="logout-form" action="{{ route('logout') }}" method="" style="display: none;">
-
-                    </form>
-
                     <!-- Content Area -->
                     <div class="col-lg-9">
                         <div class="woocommerce-MyAccount-content">
@@ -521,12 +515,6 @@
                                                     <div class="info-value">{{ $user->country ?: 'Not provided' }}</div>
                                                 </div>
                                             </div>
-                                            {{-- <a href="#edit-account" id="edit-account-tab" data-bs-toggle="tab"
-                                                role="tab" aria-controls="edit-account" aria-selected="false"
-                                                class="woocommerce-Button">Edit
-                                                Account Details</a> --}}
-
-
                                         </div>
                                     </div>
                                 </div>
@@ -607,7 +595,6 @@
                                         </div>
                                     @endif
 
-
                                     <form class="woocommerce-form" id="accountForm" action="{{ route('useraccount') }}"
                                         method="POST">
                                         @csrf
@@ -679,6 +666,11 @@
                                 <!-- Change Password Tab -->
                                 <div class="tab-pane fade" id="change-password" role="tabpanel"
                                     aria-labelledby="change-password-tab">
+                                <div class="woocommerce-account-header">
+                                    <h1>Change Password</h1>
+                                    <p>Update your account password.</p>
+                                </div>
+
                                     @if (session('success_message'))
                                         <div class="alert alert-success">{{ session('success_message') }}</div>
                                     @endif
@@ -714,30 +706,6 @@
                                     </form>
                                 </div>
                             </div>
-
-                            <!-- Flash Messages -->
-                            {{-- @if (Session::has('success_message'))
-                                <div class="woocommerce-message">
-                                    {{ Session::get('success_message') }}
-                                </div>
-                            @endif
-
-                            @if (Session::has('error_message'))
-                                <div class="woocommerce-error">
-                                    {{ Session::get('error_message') }}
-                                </div>
-                            @endif
-
-                            @if ($errors->any())
-                                <div class="woocommerce-error">
-                                    <strong>Please fix the following errors:</strong>
-                                    <ul style="margin: 10px 0 0 20px;">
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif --}}
                         </div>
                     </div>
                 </div>
@@ -747,7 +715,6 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
     <script>
         $(document).ready(function() {
             // Bootstrap 5 handles tab switching automatically
@@ -756,23 +723,6 @@
                 $('.woocommerce-MyAccount-navigation .nav-link').removeClass('active');
                 $(e.target).addClass('active');
             });
-
-            // $('.nav-customer-logout').on('click', function(e) {
-            //     e.preventDefault();
-            //     $('#logout-form').submit();
-            // });
-
-            // Form submissions
-            // $('#accountForm').on('submit', function(e) {
-            //     e.preventDefault();
-            //     // Add your account form submission logic here
-            // });
-
-            // $('#passwordForm').on('submit', function(e) {
-            //     e.preventDefault();
-            //     // Add your password form submission logic here
-            // });
         });
     </script>
-
 @endsection

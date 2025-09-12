@@ -189,7 +189,8 @@
                 <a @if (Session::get('page') == 'schools') style="background: #052CA3 !important; color: #FFF !important" @endif
                     class="nav-link" href="{{ route('admin.schools.index') }}">
                     <i class="icon-layout menu-icon"></i>
-                    <span class="menu-title">Schools</span>
+                    <span class="menu-title">Schools Management</span>
+                    <i class="menu-arrow"></i>
                 </a>
             </li>
 

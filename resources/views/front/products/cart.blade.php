@@ -9,7 +9,7 @@
                 <h1>Cart</h1>
                 <nav aria-label="breadcrumb" class="breadcrumb-row">
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}"> Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
                         <li class="breadcrumb-item">Cart</li>
                     </ul>
                 </nav>
@@ -30,7 +30,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="widget">
@@ -96,9 +96,9 @@
             // Apply coupon form submission
             $('#applyCoupon').on('submit', function(e) {
                 e.preventDefault();
-                
+
                 let couponCode = $(this).find('input[name="code"]').val();
-                
+
                 $.ajax({
                     url: '{{ route("applyCoupon") }}',
                     method: 'POST',
@@ -111,18 +111,18 @@
                             // Update coupon discount
                             $('#couponDiscount').text(resp.couponAmount);
                             $('#grandTotal').text(resp.grand_total);
-                            
+
                             // Show success message
                             alert('Coupon applied successfully!');
                         } else {
                             alert(resp.message || 'Invalid coupon code!');
                         }
-                        
+
                         // Update cart view if provided
                         if (resp.view) {
                             $('#appendCartItems').html(resp.view);
                         }
-                        
+
                         // Update header cart view if provided
                         if (resp.headerview) {
                             $('.headerCartItems').html(resp.headerview);
