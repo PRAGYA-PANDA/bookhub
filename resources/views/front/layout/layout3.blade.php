@@ -391,10 +391,10 @@
                                     </li>
                                 </ul>
 
-                                <input type="text" class="form-control"
+                                <input type="text" class="form-control" id="headerSearchInput"
                                     aria-label="Text input with dropdown button" placeholder="Search Books Here"
                                     style="border-top-left-radius:0px !important; border-bottom-left-radius:0px !important;">
-                                <button class="btn" type="button"><i class="flaticon-loupe"></i></button>
+                                <button class="btn" id="headerSearchButton" type="button"><i class="flaticon-loupe"></i></button>
                             </div>
                         </div>
                     </div>
@@ -437,9 +437,9 @@
                             </div>
                             <div class="search-input">
                                 <div class="input-group">
-                                    <input type="text" class="form-control"
+                                    <input type="text" class="form-control" id="mobileSearchInput"
                                         aria-label="Text input with dropdown button" placeholder="Search Books Here">
-                                    <button class="btn" type="button"><i class="flaticon-loupe"></i></button>
+                                    <button class="btn" id="mobileSearchButton" type="button"><i class="flaticon-loupe"></i></button>
                                 </div>
                             </div>
                             <ul class="nav navbar-nav">
@@ -757,6 +757,40 @@
     <script src="{{ asset('front/newtheme/js/custom.js') }}"></script><!-- CUSTOM JS -->
 
 
+    <script>
+        // Global search handlers for header and sticky inputs
+        (function() {
+            function goToSearch(term) {
+                var base = document.querySelector('meta[name="base-url"]').getAttribute('content') || '';
+                var url = base.replace(/\/$/, '') + '/search-products';
+                if (term && term.trim().length) {
+                    window.location.href = url + '?search=' + encodeURIComponent(term.trim());
+                } else {
+                    window.location.href = url;
+                }
+            }
+
+            function bindSearch(inputId, buttonId) {
+                var input = document.getElementById(inputId);
+                var button = document.getElementById(buttonId);
+                if (!input || !button) return;
+
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    goToSearch(input.value);
+                });
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        goToSearch(input.value);
+                    }
+                });
+            }
+
+            bindSearch('headerSearchInput', 'headerSearchButton');
+            bindSearch('mobileSearchInput', 'mobileSearchButton');
+        })();
+    </script>
     <script>
         // Header mini-cart: delete item via AJAX
         $(document).on('click', '.cart-list .item-close', function(e) {

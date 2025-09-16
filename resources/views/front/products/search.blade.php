@@ -1,4 +1,4 @@
-@extends('front.layout.layout')
+@extends('front.layout.layout3')
 
 @section('content')
     <div class="container py-5">
@@ -218,7 +218,7 @@
                                                 <span class="h5 mb-0">₹{{ $product->product_price }}</span>
                                             @endif
                                         </div>
-                                        <span class="badge" style="background-color: #6c5dd4;">
+                                        <span class="badge" style="background-color: #cf8938;">
                                             {{ ucfirst($product->condition) }}
                                         </span>
                                     </div>
@@ -255,7 +255,7 @@
                                                 <label class="form-label">Message (optional)</label>
                                                 <textarea name="message" rows="3" class="form-control"></textarea>
                                             </div>
-                                            <button type="submit" class="btn btn-primary" style="background-color: #6c5dd4;">Submit Request</button>
+                                            <button type="submit" class="btn btn-primary" style="background-color: #cf8938;">Submit Request</button>
                                         </form>
                                     @else
                                         <div class="alert alert-warning">
@@ -294,15 +294,15 @@
             }
 
             .form-range::-webkit-slider-thumb {
-                background: #6c5dd4;
+                background: #cf8938;
             }
 
             .form-range::-moz-range-thumb {
-                background: #6c5dd4;
+                background: #cf8938;
             }
 
             .form-range::-ms-thumb {
-                background: #6c5dd4;
+                background: #cf8938;
             }
         </style>
 
