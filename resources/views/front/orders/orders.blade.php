@@ -7,22 +7,21 @@
 
 @section('content')
     <!-- Page Introduction Wrapper -->
-    <div class="page-style-a">
+    <div class="dz-bnr-inr overlay-secondary-dark dz-bnr-inr-sm" style="background-image:url(images/background/bg3.jpg);">
         <div class="container">
-            <div class="page-intro">
-                <h2>My Orders</h2>
-                <ul class="bread-crumb">
-                    <li class="has-separator">
-                        <i class="ion ion-md-home"></i>
-                        <a href="{{ url('/') }}">Home</a>
-                    </li>
-                    <li class="is-marked">
-                        <a href="#">Orders</a>
-                    </li>
-                </ul>
+            <div class="dz-bnr-inr-entry">
+                <h1>My Orders</h1>
+                <nav aria-label="breadcrumb" class="breadcrumb-row">
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}"> Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('user/orders') }}">Orders</a></li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
+    <br><br>
+
     <!-- Page Introduction Wrapper /- -->
     <!-- Cart-Page -->
     <div class="page-cart u-s-p-t-80">
@@ -40,10 +39,9 @@
                                 <td>
                                     <a href="{{ url('user/orders/' . $order['id']) }}">{{ $order['id'] }}</a>
                                 </td>
-                                <td> {{-- We'll display products codes --}}
+                                <td> {{-- We'll display products names, comma-separated --}}
                                     @foreach ($order['orders_products'] as $product)
-                                        {{ $product['product_code'] }}
-                                        <br>
+                                        {{ $product['product_name'] }}@if(!$loop->last), @endif
                                     @endforeach
                                 </td>
                                 <td>{{ $order['payment_method'] }}</td>

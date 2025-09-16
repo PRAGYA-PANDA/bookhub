@@ -27,7 +27,7 @@
             <div class="step active">
                 <div class="circle">1</div>
                 <div class="label">Address</div>
-            </div>
+                        </div>
             <div class="separator"></div>
             <div class="step active">
                 <div class="circle">2</div>
@@ -223,9 +223,13 @@
                                         <input type="radio" class="radio-box" name="payment_gateway" id="cash-on-delivery" value="COD">
                                         <label class="payment-label" for="cash-on-delivery">
                                             <div class="payment-info">
-                                                <i class="fas fa-money-bill-wave"></i>
-                                                <span>Cash on Delivery</span>
+                                                <div class="payment-title">
+                                                    <i class="fas fa-money-bill-wave"></i>
+                                                    <span>Cash on Delivery</span>
+                                                </div>
+                                                <small class="payment-note">Pay with cash upon delivery</small>
                                             </div>
+                                            <div class="payment-badge">No extra fee</div>
                                         </label>
                                     </div>
 
@@ -233,8 +237,14 @@
                                         <input type="radio" class="radio-box" name="payment_gateway" id="paypal" value="Paypal">
                                         <label class="payment-label" for="paypal">
                                             <div class="payment-info">
-                                                <i class="fab fa-paypal"></i>
-                                                <span>PayPal</span>
+                                                <div class="payment-title">
+                                                    <i class="fab fa-paypal"></i>
+                                                    <span>PayPal</span>
+                                                </div>
+                                                <small class="payment-note">Pay securely using your PayPal account</small>
+                                            </div>
+                                            <div class="brand-logos">
+                                                <img src="{{ asset('front/images/payments/paypal.svg') }}" alt="PayPal" />
                                             </div>
                                         </label>
                                     </div>
@@ -243,8 +253,15 @@
                                         <input type="radio" class="radio-box" name="payment_gateway" id="iyzipay" value="iyzipay">
                                         <label class="payment-label" for="iyzipay">
                                             <div class="payment-info">
-                                                <i class="fas fa-credit-card"></i>
-                                                <span>iyzipay</span>
+                                                <div class="payment-title">
+                                                    <i class="fas fa-credit-card"></i>
+                                                    <span>iyzipay</span>
+                                                </div>
+                                                <small class="payment-note">Cards supported via iyzico</small>
+                                            </div>
+                                            <div class="brand-logos">
+                                                <img src="{{ asset('front/images/payments/visa.svg') }}" alt="Visa" />
+                                                <img src="{{ asset('front/images/payments/mastercard.svg') }}" alt="Mastercard" />
                                             </div>
                                         </label>
                                     </div>
@@ -560,7 +577,13 @@
 /* Fancy radio inputs */
 .payment-option { position: relative; cursor: pointer; }
 .payment-option .radio-box { position: absolute; left: 16px; top: 18px; }
-.payment-option .payment-label { padding-left: 8px; }
+.payment-option .payment-label { padding-left: 32px; width: 100%; display: flex; align-items: center; justify-content: space-between; }
+.payment-option .payment-title { display: flex; align-items: center; gap: 10px; font-weight: 600; color: #2f3d4a; }
+.payment-option .payment-note { display: block; color: #6c757d; margin-top: 2px; }
+.payment-option .brand-logos img { height: 18px; margin-left: 8px; opacity: 0.9; filter: grayscale(20%); }
+.payment-option .payment-badge { background: #eaf7ea; color: #1e7e34; font-size: 12px; padding: 4px 8px; border-radius: 999px; margin-left: 12px; white-space: nowrap; }
+.payment-option:hover { box-shadow: 0 6px 14px rgba(0,0,0,0.06); border-color: #bcd0ff; }
+.payment-option input[type="radio"]:checked + label { border: 2px solid #007bff; border-radius: 8px; background: #f8fbff; }
 .payment-option:hover { box-shadow: 0 6px 14px rgba(0,0,0,0.06); }
 
 /* Address cards hover */

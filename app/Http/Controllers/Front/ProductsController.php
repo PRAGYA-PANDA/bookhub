@@ -1369,7 +1369,6 @@ class ProductsController extends Controller
 
                 $cartItem->product_id   = $item['product_id'];
                 $cartItem->product_name = $getProductDetails['product_name'];
-                $cartItem->product_size = $item['size'];
 
                 $getDiscountAttributePrice = Product::getDiscountAttributePrice($item['product_id'], $item['size']); // from the `products_attributes` table, not the `products` table
                 $cartItem->product_price   = $getDiscountAttributePrice['final_price'];
@@ -1384,6 +1383,9 @@ class ProductsController extends Controller
                 $cartItem->product_qty = $item['quantity'];
 
                 $getProductStock = ProductsAttribute::getProductStock($item['product_id'], $item['size']);
+
+                // Persist the order product row now that all fields are set
+                $cartItem->save();
             }
 
             Session::put('order_id', $order_id);

@@ -289,7 +289,7 @@
                                                         <span class="ms-2">Profile</span>
                                                     </div>
                                                 </a>
-                                                <a href="shop-cart.html"
+                                                <a href="{{ url('user/orders') }}"
                                                     class="dropdown-item d-flex justify-content-between align-items-center ai-icon">
                                                     <div>
                                                         <svg xmlns="http://www.w3.org/2000/svg" height="20px"
@@ -301,7 +301,7 @@
                                                         <span class="ms-2">My Order</span>
                                                     </div>
                                                 </a>
-                                                <a href="wishlist.html"
+                                                <a href="{{ url('wishlist') }}" method="POST"
                                                     class="dropdown-item d-flex justify-content-between align-items-center ai-icon">
                                                     <div>
                                                         <svg xmlns="http://www.w3.org/2000/svg" height="20px"
