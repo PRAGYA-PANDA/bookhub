@@ -3,7 +3,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
-// Auth without a namespace here works fine because the Admin.php model extends Authenticatable
 use App\Models\Category;
 use App\Models\Country;
 use App\Models\Coupon;
@@ -26,33 +25,32 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        // Correcting issues in the Skydash Admin Panel Sidebar using Session:
+        
         Session::put('page', 'dashboard');
 
-        $sectionsCount   = Section::count();
-        $categoriesCount = Category::count();
-        $productsCount   = Product::count();
+        $sectionsCount   = Section::where('status', 1)->count();
+        $categoriesCount = Category::where('status', 1)->count();
+        $productsCount   = Product::where('status', 1)->count();
         $ordersCount     = Order::count();
-        $couponsCount    = Coupon::count();
-        $brandsCount     = Publisher::count();
+        $couponsCount    = Coupon::where('status', 1)->count();
+        $vendorsCount     = Vendor::count();;
         $usersCount      = User::count();
 
-        return view('admin/dashboard')->with(compact('sectionsCount', 'categoriesCount', 'productsCount', 'ordersCount', 'couponsCount', 'brandsCount', 'usersCount')); // is the same as:    return view('admin.dashboard');
+
+        return view('admin/dashboard')->with(compact('sectionsCount', 'categoriesCount', 'productsCount', 'ordersCount', 'couponsCount', 'vendorsCount', 'usersCount')); // is the same as:    return view('admin.dashboard');
     }
 
     public function login(Request $request)
-    { // Logging in using our 'admin' guard (whether 'vendor' or 'admin' (depending on the `type` and `vendor_id` columns in `admins` table)) we created in auth.php
+    { 
         if ($request->isMethod('post')) {
             $data = $request->all();
-            // dd($data);
-
-            // Validation
+            
             $rules = [
                 'email'    => 'required|email|max:255',
                 'password' => 'required',
             ];
 
-            $customMessages = [ // Specifying A Custom Message For A Given Attribute: https://laravel.com/docs/9.x/validation#specifying-a-custom-message-for-a-given-attribute
+            $customMessages = [ 
                 'email.required'    => 'Email Address is required!',
                 'email.email'       => 'Valid Email Address is required',
                 'password.required' => 'Password is required!',
@@ -60,20 +58,20 @@ class AdminController extends Controller
 
             $this->validate($request, $rules, $customMessages);
 
-                                                                                                                   // Authentication (login/logging in/loggin user in): https://laravel.com/docs/9.x/authentication
-            if (Auth::guard('admin')->attempt(['email' => $data['email'], 'password' => $data['password']])) {     // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances
-                if (Auth::guard('admin')->user()->type == 'vendor' && Auth::guard('admin')->user()->confirm == 'No') { // if the entity trying to login is 'vendor' and not 'admin' (i.e. `type` column is `vendor`, and `vendor_id` is not zero 0 in `admins` table)    // check the `type` column in the `admins` table for if the logging in user is 'venodr', and check the `confirm` column if the vendor is not yet confirmed (`confirm` = 'No'), then don't allow logging in    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances
+                                                                                                                   
+            if (Auth::guard('admin')->attempt(['email' => $data['email'], 'password' => $data['password']])) {     
+                if (Auth::guard('admin')->user()->type == 'vendor' && Auth::guard('admin')->user()->confirm == 'No') { 
                     return redirect()->back()->with('error_message', 'Please confirm your email to activate your Vendor Account');
 
-                } else if (Auth::guard('admin')->user()->type != 'vendor' && Auth::guard('admin')->user()->status == '0') { // if the entity trying to login is 'admin' and not 'vendor' (i.e. `type` column is `superadmin` or `admin`, and `vendor_id` is zero 0 in `admins` table)    // check the `type` column in the `admins` table for if the logging in user is 'admin' or 'superadmin' (not 'vendor'), and check the `status` column if the 'admin' or 'superadmin' is inactive/disabled (`status` = 0), then don't allow logging in    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances
+                } else if (Auth::guard('admin')->user()->type != 'vendor' && Auth::guard('admin')->user()->status == '0') { 
                     return redirect()->back()->with('error_message', 'Your admin account is not active');
 
-                } else {                             // otherwise, login successfully!
-                    return redirect('/admin/dashboard'); // Let them LOGIN!!
+                } else {                             
+                    return redirect('/admin/dashboard');
                 }
 
-            } else {                                                                       // If login credentials are incorrect
-                return redirect()->back()->with('error_message', 'Invalid Email or Password'); // Redirecting With Flashed Session Data: https://laravel.com/docs/9.x/responses#redirecting-with-flashed-session-data
+            } else {                                                                       
+                return redirect()->back()->with('error_message', 'Invalid Email or Password'); 
             }
         }
 
@@ -82,25 +80,24 @@ class AdminController extends Controller
 
     public function logout()
     {
-        Auth::guard('admin')->logout(); // Logging out using our 'admin' guard that we created in auth.php    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances
+        Auth::guard('admin')->logout(); 
         return redirect('admin/login');
     }
 
     public function updateAdminPassword(Request $request)
     {
-        // Correcting issues in the Skydash Admin Panel Sidebar using Session
+       
         Session::put('page', 'update_admin_password');
 
-        // Handling the update admin password <form> submission (POST request) in update_admin_password.blade.php
+        
         if ($request->isMethod('post')) {
             $data = $request->all();
-            // dd($data);
+            
 
-                                                                                                  // Check first if the entered admin current password is corret
-            if (Hash::check($data['current_password'], Auth::guard('admin')->user()->password)) { // ['current_password'] comes from the AJAX call in admin/js/custom.js page from the 'data' object inside $.ajax() method    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances
-                                                                                                      // Check if the new password is matching with confirm password
+                                                                                                  
+            if (Hash::check($data['current_password'], Auth::guard('admin')->user()->password)) { 
                 if ($data['confirm_password'] == $data['new_password']) {
-                    Admin::where('id', Auth::guard('admin')->user()->id)->update([ // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances
+                    Admin::where('id', Auth::guard('admin')->user()->id)->update([ 
                         'password' => bcrypt($data['new_password']),
                     ]); // we persist (update) the hashed password (not the password itself)
 

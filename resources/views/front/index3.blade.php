@@ -1,8 +1,79 @@
 @extends('front.layout.layout3')
 
 @section('content')
+
+
+
+<style>
+    /* Ensure consistent banner height with responsive breakpoints */
+    #carouselExampleAutoplaying .carousel-item img {
+        width: 100%;
+        height: 360px;
+        object-fit: cover;
+    }
+    @media (min-width: 576px) {
+        #carouselExampleAutoplaying .carousel-item img { height: 420px; }
+    }
+    @media (min-width: 992px) {
+        #carouselExampleAutoplaying .carousel-item img { height: 520px; }
+    }
+    @media (min-width: 1400px) {
+        #carouselExampleAutoplaying .carousel-item img { height: 600px; }
+    }
+    /* Utility in case any .dz-media images need cover behavior */
+    .img-cover {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+@php
+    $hasSliderBanners = !empty($sliderBanners) && is_iterable($sliderBanners) && count($sliderBanners) > 0;
+@endphp
+<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      @if($hasSliderBanners)
+        @foreach ($sliderBanners as $banner)
+          @php
+              $image = $banner['image'] ?? null;
+              $alt   = $banner['alt']   ?? ($banner['title'] ?? '');
+              $link  = $banner['link']  ?? null;
+          @endphp
+          @if(!empty($image))
+            <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+              <a href="{{ !empty($link) ? url($link) : 'javascript:;' }}">
+                <img src="{{ asset('front/images/banner_images/' . $image) }}" class="d-block w-100" alt="{{ $alt }}">
+              </a>
+              @if(!empty($banner['title']))
+                <div class="carousel-caption d-none d-md-block">
+                  {{-- <h5>{{ $banner['title'] }}</h5> --}}
+                </div>
+              @endif
+            </div>
+          @endif
+        @endforeach
+      @else
+        <div class="carousel-item active">
+          <div style="height: 300px; background:#f2f2f2;" class="d-flex align-items-center justify-content-center">
+            <span>No banners available</span>
+          </div>
+        </div>
+      @endif
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+
+
     <!--Swiper Banner Start -->
-    <div class="main-slider style-1">
+    {{-- <div class="main-slider style-1">
         <div class="main-swiper">
             <div class="swiper-wrapper">
                 @foreach ($slidingProducts as $products)
@@ -65,18 +136,7 @@
                                                         Details</a>
                                                 </div>
                                             </div>
-                                            {{-- <div class="partner">
-                                            <p>Our partner</p>
-                                            <div class="brand-logo">
-                                                <img src="{{ asset('front/newtheme/images/partner/partner-1.png') }}"
-                                                    alt="client">
-                                                <img class="mid-logo"
-                                                    src="{{ asset('front/newtheme/images/partner/partner-2.png') }}"
-                                                    alt="client">
-                                                <img src="{{ asset('front/newtheme/images/partner/partner-3.png') }}"
-                                                    alt="client">
-                                            </div>
-                                        </div> --}}
+
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -84,7 +144,7 @@
                                             <img src="{{ asset('front/images/product_images/small/' . $products['product_image']) }}"
                                                 alt="banner-media" style="height: 758px; width: 774px;">
                                         </div>
-                                        {{-- <p class="pattern" data-swiper-parallax="-100">{{ $products['condition'] }}</p> --}}
+
                                     </div>
                                 </div>
                             </div>
@@ -130,13 +190,7 @@
                                                 OFF</span>
                                         @endif
                                     </div>
-                                    {{-- <div class="rate">
-                                    <i class="flaticon-star text-yellow"></i>
-                                    <i class="flaticon-star text-yellow"></i>
-                                    <i class="flaticon-star text-yellow"></i>
-                                    <i class="flaticon-star text-yellow"></i>
-                                    <i class="flaticon-star text-yellow"></i>
-                                </div> --}}
+
                                 </div>
                             </div>
                         </div>
@@ -144,7 +198,7 @@
                 @endforeach
             </div>
         </div>
-    </div>
+    </div> --}}
     <!--Swiper Banner End-->
 
     <!-- Client Start-->
@@ -192,7 +246,7 @@
                                 <div class="dz-media">
                                     <a href="{{ url('product/' . $sliderProduct['id']) }}">
                                         <img src="{{ asset('front/images/product_images/small/' . $sliderProduct['product_image']) }}"
-                                            style="height: 250px; width: 200px; object-fit: fill !important;" alt="book">
+                                            style="height: 250px; width: 200px; object-fit: cover !important;" alt="book">
                                     </a>
                                 </div>
                                 <div class="dz-content">
@@ -292,7 +346,7 @@
                                 <div class="dz-media">
                                     <a href="{{ url('product/' . $product['id']) }}">
                                         <img src="{{ asset('front/images/product_images/small/' . $product['product_image']) }}"
-                                            style="height: 256px;  width: 357px !important;" alt="book">
+                                            style="height: 256px;  width: 357px !important; object-fit: cover;" alt="book">
                                     </a>
                                 </div>
                                 <div class="dz-content">
@@ -456,7 +510,7 @@
                             <div class="books-card style-2">
                                 <div class="dz-media">
                                     <img src="{{ asset('front/images/product_images/small/' . $products['product_image']) }}"
-                                        alt="banner-media" style="height: 500px; width: 1000px; object-fit: fill;">
+                                        alt="banner-media" style="height: 500px; width: 1000px; object-fit: cover;">
                                 </div>
                                 <div class="dz-content">
                                     <h6 class="font-family: poppins text-dark" data-swiper-parallax="-10">

@@ -9,10 +9,10 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Coupons</h4>
-                            
 
 
-                            
+
+
                             <a href="{{ url('admin/add-edit-coupon') }}" style="max-width: 150px; float: right; display: inline-block" class="btn btn-block btn-primary">Add Coupon</a>
 
                             {{-- Displaying The Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors AND https://laravel.com/docs/9.x/blade#validation-errors --}}
@@ -45,7 +45,8 @@
                                     <tbody>
                                         @foreach ($coupons as $coupon)
                                             <tr>
-                                                <td>{{ $coupon['id'] }}</td>
+                                                
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $coupon['coupon_code'] }}</td>
                                                 <td>{{ $coupon['coupon_type'] }}</td>
                                                 <td>

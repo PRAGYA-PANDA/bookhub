@@ -60,11 +60,20 @@
                                     </tr>
                                     <tr>
                                         <td>Coupon Discount</td>
-                                        <td>₹<span id="couponDiscount">{{ \Illuminate\Support\Facades\Session::get('couponAmount', 0) }}</span></td>
+                                        <td>₹<span id="couponDiscount">{{ number_format((float) \Illuminate\Support\Facades\Session::get('couponAmount', 0), 2) }}</span>
+                                            <script>
+                                                (function(){
+                                                    const fmt2 = n => (Number(n) || 0).toFixed(2);
+                                                    const el = document.getElementById('couponDiscount');
+                                                    if (el && el.textContent) {
+                                                        el.textContent = fmt2(el.textContent);
+                                                    }
+                                                })();
+                                            </script></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Total</strong></td>
-                                        <td><strong>₹<span id="grandTotal">{{ ($total_price ?? 0) - \Illuminate\Support\Facades\Session::get('couponAmount', 0) }}</span></strong></td>
+                                        <td><strong>₹<span id="grandTotal">{{ number_format((($total_price ?? 0) - \Illuminate\Support\Facades\Session::get('couponAmount', 0)), 2) }}</span></strong></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -108,9 +117,10 @@
                     },
                     success: function(resp) {
                         if (resp.status) {
-                            // Update coupon discount
-                            $('#couponDiscount').text(resp.couponAmount);
-                            $('#grandTotal').text(resp.grand_total);
+                            // Update coupon discount with 2 decimals
+                            const fmt = (n) => (Number(n) || 0).toFixed(2);
+                            $('#couponDiscount').text(fmt(resp.couponAmount));
+                            $('#grandTotal').text(fmt(resp.grand_total));
 
                             // Show success message
                             alert('Coupon applied successfully!');

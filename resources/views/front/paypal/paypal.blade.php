@@ -1,5 +1,5 @@
 {{-- This page is rendered by paypal() method inside Front/PaypalController.php --}}
-@extends('front.layout.layout')
+@extends('front.layout.layout3')
 
 
 @section('content')

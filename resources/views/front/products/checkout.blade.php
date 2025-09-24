@@ -198,11 +198,20 @@
                                             <span>Coupon Discount</span>
                                             <span>
                                                 @if (\Illuminate\Support\Facades\Session::has('couponAmount'))
-                                                    <span class="couponAmount">-₹{{ \Illuminate\Support\Facades\Session::get('couponAmount') }}</span>
+                                                <span id="couponDiscount">{{ number_format((float) \Illuminate\Support\Facades\Session::get('couponAmount', 0), 2) }}</span>
                                                 @else
                                                     ₹0
                                                 @endif
                                             </span>
+                                                <script>
+                                                    (function(){
+                                                        const fmt2 = n => (Number(n) || 0).toFixed(2);
+                                                        const el = document.getElementById('couponDiscount');
+                                                        if (el && el.textContent) {
+                                                            el.textContent = fmt2(el.textContent);
+                                                        }
+                                                    })();
+                                                </script>
                                         </div>
                                         <div class="price-row total-row">
                                             <span><strong>Grand Total</strong></span>

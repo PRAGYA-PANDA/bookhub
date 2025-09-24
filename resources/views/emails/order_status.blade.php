@@ -18,7 +18,7 @@
             <tr><td>Your Order #{{ $order_id }} status has been updated to {{ $order_status }}</td></tr>
             <tr><td>&nbsp;</td></tr>
 
-            
+
             @if (!empty($courier_name) && !empty($tracking_number))
                 <tr>
                     <td>Courier Name is {{ $courier_name }} and Tracking Number is {{ $tracking_number }}</td>
@@ -32,18 +32,18 @@
                 <table style="width: 95%" cellpadding="5" cellspacing="5" bgcolor="#f7f4f4">
                     <tr bgcolor="#cccccc">
                         <td>Product Name</td>
-                        <td>Product Code</td>
+                        {{-- <td>Product Code</td>
                         <td>Product Size</td>
-                        <td>Product Color</td>
+                        <td>Product Color</td> --}}
                         <td>Product Quantity</td>
                         <td>Product Price</td>
                     </tr>
                     @foreach ($orderDetails['orders_products'] as $order)
                         <tr bgcolor="#f9f9f9">
                             <td>{{ $order['product_name'] }}</td>
-                            <td>{{ $order['product_code'] }}</td>
+                            {{-- <td>{{ $order['product_code'] }}</td>
                             <td>{{ $order['product_size'] }}</td>
-                            <td>{{ $order['product_color'] }}</td>
+                            <td>{{ $order['product_color'] }}</td> --}}
                             <td>{{ $order['product_qty'] }}</td>
                             <td>{{ $order['product_price'] }}</td>
                         </tr>
@@ -96,7 +96,7 @@
                     <tr>
                         <td>{{ $orderDetails['mobile'] }}</td>
                     </tr>
-                </table>    
+                </table>
             </td></tr>
             <tr><td>&nbsp;</td></tr>
             <tr><td>For any queries, you can contact us at <a href="mailto:info@MultiVendorEcommerceApplication.com.eg">info@MultiVendorEcommerceApplication.com.eg</a></td></tr>

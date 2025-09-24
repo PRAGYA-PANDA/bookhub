@@ -15,7 +15,7 @@
                 <h3 class="pull-right">
                     Order # {{ $orderDetails['id'] }}
 
-                    {{-- Laravel barcode/QR code generation package (to show barcodes/QR codes for both Product ID and Product Code): https://github.com/milon/barcode --}} 
+                    {{-- Laravel barcode/QR code generation package (to show barcodes/QR codes for both Product ID and Product Code): https://github.com/milon/barcode --}}
                     @php
                         echo DNS1D::getBarcodeHTML($orderDetails['id'], 'C39');       // This is the product `id` Barcode
                         // echo DNS2D::getBarcodeHTML($orderDetails['id'], 'QRCODE'); // This is the product `id` QR code
@@ -75,7 +75,7 @@
     		</div>
     	</div>
     </div>
-    
+
     <div class="row">
     	<div class="col-md-12">
     		<div class="panel panel-default">
@@ -87,9 +87,10 @@
     					<table class="table table-condensed">
     						<thead>
                                 <tr>
-        							<td><strong>Product Code</strong></td>
+        							{{-- <td><strong>Product Code</strong></td>
         							<td class="text-center"><strong>Size</strong></td>
-        							<td class="text-center"><strong>Color</strong></td>
+        							<td class="text-center"><strong>Color</strong></td> --}}
+                                    <td><strong>Product Name</strong></td>
         							<td class="text-center"><strong>Price</strong></td>
         							<td class="text-center"><strong>Quantity</strong></td>
         							<td class="text-right"><strong>Totals</strong></td>
@@ -105,17 +106,10 @@
 
                                 @foreach ($orderDetails['orders_products'] as $product)
                                     <tr>
-                                        <td>
-                                            {{ $product['product_code'] }}
 
-                                            {{-- Laravel barcode/QR code generation package (to show barcodes/QR codes for both Product ID and Product Code): https://github.com/milon/barcode --}} 
-                                            @php
-                                                echo DNS1D::getBarcodeHTML($product['product_code'], 'C39');       // This is the product `product_code` Barcode
-                                                // echo DNS2D::getBarcodeHTML($product['product_code'], 'QRCODE'); // This is the product `product_code` QR code
-                                            @endphp
-                                        </td>
-                                        <td class="text-center">{{ $product['product_size'] }}</td>
-                                        <td class="text-center">{{ $product['product_color'] }}</td>
+                                        {{-- <td class="text-center">{{ $product['product_size'] }}</td> --}}
+                                        {{-- <td class="text-center">{{ $product['product_color'] }}</td> --}}
+                                        <td class="text-center">{{ $product['product_name'] }}</td>
                                         <td class="text-center">INR {{ $product['product_price'] }}</td>
                                         <td class="text-center">{{ $product['product_qty'] }}</td>
                                         <td class="text-right">INR {{ $product['product_price'] * $product['product_qty'] }}</td>

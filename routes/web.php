@@ -134,10 +134,10 @@ Route::prefix('/admin')->namespace('App\Http\Controllers\Admin')->group(function
         Route::get('delete-image/{id}', [AdminProductsController::class, 'deleteImage']);                // Delete an image in add_images.blade.php
 
         // Banners
-        Route::get('banners', 'BannersController@banners');
-        Route::post('update-banner-status', 'BannersController@updateBannerStatus');               // Update Categories Status using AJAX in banners.blade.php
-        Route::get('delete-banner/{id}', 'BannersController@deleteBanner');                        // Delete a banner in banners.blade.php
-        Route::match(['get', 'post'], 'add-edit-banner/{id?}', 'BannersController@addEditBanner'); // the slug (Route Parameter) {id?} is an Optional Parameter, so if it's passed, this means 'Edit/Update the Banner', and if not passed, this means' Add a Banner'    // GET request to render the add_edit_banner.blade.php view, and POST request to submit the <form> in that view
+        Route::get('banners', 'BannerController@banners');
+        Route::post('update-banner-status', 'BannerController@updateBannerStatus');               // Update Categories Status using AJAX in banners.blade.php
+        Route::get('delete-banner/{id}', 'BannerController@deleteBanner');                        // Delete a banner in banners.blade.php
+        Route::match(['get', 'post'], 'add-edit-banner/{id?}', 'BannerController@addEditBanner'); // the slug (Route Parameter) {id?} is an Optional Parameter, so if it's passed, this means 'Edit/Update the Banner', and if not passed, this means' Add a Banner'    // GET request to render the add_edit_banner.blade.php view, and POST request to submit the <form> in that view
 
         // Filters
         Route::get('filters', 'FilterController@filters');                                                   // Render filters.blade.php page

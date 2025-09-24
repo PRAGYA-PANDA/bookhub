@@ -3,14 +3,22 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\HeaderLogo;
+use App\Models\Language;
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 class IyzipayController extends Controller
 {
-    public function iyzipay() {
+    public function iyzipay(Request $request) {
+        $logos     = HeaderLogo::first();
+        $sections  = Section::all();
+        $language  = Language::get();
+        $condition = $request->query('condition');
+
         if (Session::has('order_id')) {
-            return view('front.iyzipay.iyzipay');
+            return view('front.iyzipay.iyzipay', compact('condition', 'sections', 'language', 'logos'));
 
         } else {
             return redirect('cart'); // redirect user to cart.blade.php page
@@ -57,7 +65,7 @@ class IyzipayController extends Controller
         $buyer->setLastLoginDate("");
         $buyer->setRegistrationDate("");
         $buyer->setRegistrationAddress($orderDetails['address']);
-        $buyer->setIp(""); 
+        $buyer->setIp("");
         $buyer->setCity($orderDetails['city']); // real data (our order details)
         // $buyer->setCountry("Turkey"); // dummy data
         $buyer->setCountry($orderDetails['country']); // real data (our order details)

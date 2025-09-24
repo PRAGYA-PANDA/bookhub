@@ -49,7 +49,7 @@
 
 
 
-                            {{-- Displaying Laravel Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors --}}    
+                            {{-- Displaying Laravel Validation Errors: https://laravel.com/docs/9.x/validation#quick-displaying-the-validation-errors --}}
                             @if ($errors->any())
                                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
 
@@ -79,7 +79,7 @@
                             @endif
 
 
-                            
+
                             <form class="forms-sample"   @if (empty($coupon['id'])) action="{{ url('admin/add-edit-coupon') }}" @else action="{{ url('admin/add-edit-coupon/' . $coupon['id']) }}" @endif   method="post" enctype="multipart/form-data">  <!-- If the id is not passed in from the route, this measn 'Add a new Coupon', but if the id is passed in from the route, this means 'Edit the Coupon' --> <!-- Using the enctype="multipart/form-data" to allow uploading files (images) -->
                                 @csrf
 
@@ -108,29 +108,29 @@
                                     <label for="coupon_type">Coupon Type:</label><br>
                                     <span><input type="radio" name="coupon_type" value="Multiple Times"  @if (isset($coupon['coupon_type']) && $coupon['coupon_type'] == 'Multiple Times') checked @endif>&nbsp;Multiple Times&nbsp;&nbsp;</span>
                                     <span><input type="radio" name="coupon_type" value="Single Time"     @if (isset($coupon['coupon_type']) && $coupon['coupon_type'] == 'Single Time')    checked @endif>&nbsp;Single Time&nbsp;&nbsp;</span>
-                                </div>                                
+                                </div>
                                 <div class="form-group">
                                     <label for="amount_type">Amount Type:</label><br>
                                     <span><input type="radio" name="amount_type" value="Percentage"  @if (isset($coupon['amount_type']) && $coupon['amount_type'] == 'Percentage') checked @endif>&nbsp;Percentage&nbsp;(in %)&nbsp;</span>
                                     <span><input type="radio" name="amount_type" value="Fixed"       @if (isset($coupon['amount_type']) && $coupon['amount_type'] == 'Fixed')      checked @endif>&nbsp;Fixed&nbsp;(in INR or USD)</span>
-                                </div>                                
+                                </div>
                                 <div class="form-group">
                                     <label for="amount">Amount:</label>
                                     <input type="text" class="form-control" id="amount" placeholder="Enter Coupon Amount" name="amount"  @if (isset($coupon['amount'])) value="{{ $coupon['amount'] }}" @else value="{{ old('amount') }}" @endif>  {{-- Repopulating Forms (using old() method): https://laravel.com/docs/9.x/validation#repopulating-forms --}}
                                 </div>
-                                
 
-                                
+
+
                                 <div class="form-group">
                                     <label for="categories">Select Category:</label>
-                                    <select name="categories[]" class="form-control text-dark" multiple> {{-- "multiple" HTML attribute: https://www.w3schools.com/tags/att_multiple.asp --}} {{-- We used the Square Brackets [] in name="categories[]" is an array because we used the "multiple" HTML attribute to be able to choose multiple categories (more than one category) at the same time --}}
-                                        @foreach ($categories as $section) {{-- $categories are ALL the `sections` with their related 'parent' categories (if any (if exist)) and their subcategories or `child` categories (if any (if exist)) --}} {{-- Check CouponsController.php --}}
-                                            <optgroup label="{{ $section['name'] }}"> {{-- sections --}}
-                                                @foreach ($section['categories'] as $category) {{-- parent categories --}} {{-- Check CouponsController.php --}}
+                                    <select name="categories[]" class="form-control text-dark" multiple>
+                                        @foreach ($categories as $section)
+                                            <optgroup label="{{ $section['name'] }}">
+                                                @foreach ($section['categories'] as $category)
 
-                                                    <option value="{{ $category['id'] }}"  @if (in_array($category['id'], $selCats)) selected @endif>&nbsp;&nbsp;&nbsp;--&nbsp;{{ $category['category_name'] }}</option> {{-- parent categories --}}
-                                                    @foreach ($category['sub_categories'] as $subcategory) {{-- subcategories or child categories --}} {{-- Check CouponsController.php --}}
-                                                        <option value="{{ $subcategory['id'] }}" @if (in_array($subcategory['id'], $selCats)) selected @endif>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;{{ $subcategory['category_name'] }}</option> {{-- subcategories or child categories --}}
+                                                    <option value="{{ $category['id'] }}"  @if (in_array($category['id'], $selCats)) selected @endif>&nbsp;&nbsp;&nbsp;--&nbsp;{{ $category['category_name'] }}</option>
+                                                    @foreach ($category['sub_categories'] as $subcategory)
+                                                        <option value="{{ $subcategory['id'] }}" @if (in_array($subcategory['id'], $selCats)) selected @endif>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;{{ $subcategory['category_name'] }}</option> 
                                                     @endforeach
 
                                                 @endforeach
@@ -140,15 +140,6 @@
                                 </div>
 
 
-
-                                <div class="form-group">
-                                    <label for="brands">Select Brand:</label>
-                                    <select name="brands[]" class="form-control text-dark" multiple> {{-- "multiple" HTML attribute: https://www.w3schools.com/tags/att_multiple.asp --}} {{-- We used the Square Brackets [] in name="brands[]" is an array because we used the "multiple" HTML attribute to be able to choose multiple brands (more than one brand) at the same time --}}
-                                        @foreach ($brands as $brand)
-                                            <option value="{{ $brand['id'] }}" @if (in_array($brand['id'], $selBrands)) selected @endif>{{ $brand['name'] }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
                                 <div class="form-group">
                                     <label for="users">Select User (by email):</label>
                                     <select name="users[]" class="form-control text-dark" multiple> {{-- "multiple" HTML attribute: https://www.w3schools.com/tags/att_multiple.asp --}} {{-- We used the Square Brackets [] in name="users[]" is an array because we used the "multiple" HTML attribute to be able to choose multiple users (more than one user) at the same time --}}

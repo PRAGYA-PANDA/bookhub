@@ -446,7 +446,7 @@ class OrderController extends Controller
                         width: 60px;
                         height: 60px;
                         margin-right: 10px;
-                        background-color: #8BC34A;
+                        background-color: #cf8938;;
                         border-radius: 50%;
                         text-align: center;
                     }
@@ -459,7 +459,7 @@ class OrderController extends Controller
                         line-height: 1.7em;
                     }
                     header .company-address .title {
-                        color: #8BC34A;
+                        color: #cf8938;;
                         font-weight: 400;
                         font-size: 1.5em;
                         text-transform: uppercase;
@@ -468,7 +468,7 @@ class OrderController extends Controller
                         float: right;
                         height: 60px;
                         padding: 0 10px;
-                        background-color: #8BC34A;
+                        background-color: #cf8938;;
                         color: white;
                     }
                     header .company-contact span {
@@ -503,7 +503,7 @@ class OrderController extends Controller
                         line-height: 20px;
                     }
                     section .details .client .name {
-                        color: #8BC34A;
+                        color: #cf8938;;
                     }
                     section .details .data {
                         width: 50%;
@@ -511,7 +511,7 @@ class OrderController extends Controller
                     }
                     section .details .title {
                         margin-bottom: 15px;
-                        color: #8BC34A;
+                        color: #cf8938;;
                         font-size: 3em;
                         font-weight: 400;
                         text-transform: uppercase;
@@ -535,7 +535,7 @@ class OrderController extends Controller
                     }
                     section table thead th {
                         padding: 5px 10px;
-                        background: #8BC34A;
+                        background: #cf8938;
                         border-bottom: 5px solid #FFFFFF;
                         border-right: 4px solid #FFFFFF;
                         text-align: right;
@@ -565,7 +565,7 @@ class OrderController extends Controller
                     }
                     section table tbody h3 {
                         margin-bottom: 5px;
-                        color: #8BC34A;
+                        color: #cf8938;;
                         font-weight: 600;
                     }
                     section table tbody .desc {
@@ -588,7 +588,7 @@ class OrderController extends Controller
                     }
                     section table.grand-total tr:last-child td {
                         font-weight: 600;
-                        color: #8BC34A;
+                        color: #cf8938;;
                         font-size: 1.18181818181818em;
                     }
 
@@ -597,7 +597,7 @@ class OrderController extends Controller
                     }
                     footer .thanks {
                         margin-bottom: 40px;
-                        color: #8BC34A;
+                        color: #cf8938;;
                         font-size: 1.16666666666667em;
                         font-weight: 600;
                     }
@@ -606,7 +606,7 @@ class OrderController extends Controller
                     }
                     footer .end {
                         padding-top: 5px;
-                        border-top: 2px solid #8BC34A;
+                        border-top: 2px solid #cf8938;
                         text-align: center;
                     }
                 </style>
@@ -616,7 +616,7 @@ class OrderController extends Controller
                 <header class="clearfix">
                     <div class="container">
                         <div class="company-address">
-                            <h2 class="title">Multi-vendor E-commerce Application</h2>
+                            <h2 class="title">BookHub</h2>
                             <p>
                                 37 Salah Salem St.<br>
                                 Cairo, Egypt
@@ -661,9 +661,7 @@ class OrderController extends Controller
                         <table border="0" cellspacing="0" cellpadding="0">
                             <thead>
                                 <tr>
-                                    <th class="desc">Product Code</th>
-                                    <th class="qty">Size</th>
-                                    <th class="qty">Color</th>
+                                    <th class="desc">Product Name</th>
                                     <th class="qty">Quantity</th>
                                     <th class="unit">Unit price</th>
                                     <th class="total">Total</th>
@@ -677,9 +675,8 @@ class OrderController extends Controller
                                 // We CONCATENATE $invoiceHTML
                                 $invoiceHTML .= '
                                     <tr>
-                                        <td class="desc">' . $product['product_code'] . '</td>
-                                        <td class="qty">' . $product['product_size'] . '</td>
-                                        <td class="qty">' . $product['product_color'] . '</td>
+
+                                        <td class="desc">' . $product['product_name'] . '</td>
                                         <td class="qty">' . $product['product_qty'] . '</td>
                                         <td class="unit">INR ' . $product['product_price'] . '</td>
                                         <td class="total">INR ' . $product['product_price'] * $product['product_qty'] . '</td>

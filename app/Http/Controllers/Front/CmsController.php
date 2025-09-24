@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\HeaderLogo;
+use App\Models\Language;
+use App\Models\Section;
 use Illuminate\Http\Request;
 
 class CmsController extends Controller
@@ -58,6 +61,10 @@ class CmsController extends Controller
             \Illuminate\Support\Facades\Mail::send('emails.inquiry', $messageData, function ($message) use ($email) {
                 $message->to($email)->subject('Inquiry from a user');
             });
+            $logos     = HeaderLogo::first();
+            $sections  = Section::all();
+            $language  = Language::get();
+            $condition = $request->query('condition');
 
 
             // Return the user back with a Success Message
@@ -66,6 +73,6 @@ class CmsController extends Controller
         }
 
 
-        return view('front.pages.contact',compact('condition'));
+        return view('front.pages.contact',compact('condition', 'sections', 'language', 'logos'));
     }
 }

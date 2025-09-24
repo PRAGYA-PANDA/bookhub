@@ -670,7 +670,7 @@
 
     {{-- Login --}}
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <form id="loginForm" method="POST" action="{{ route('user.login') }}">
                     @csrf
@@ -703,7 +703,7 @@
     {{-- Register --}}
     <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <form id="registerForm" method="POST" action="{{ route('user.register') }}">
                     @csrf

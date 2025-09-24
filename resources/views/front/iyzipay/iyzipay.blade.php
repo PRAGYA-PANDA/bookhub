@@ -1,7 +1,7 @@
 {{-- This page is rendered by iyzipay() method inside Front/IyzipayController.php --}}
 
 
-@extends('front.layout.layout')
+@extends('front.layout.layout3')
 
 
 
@@ -19,7 +19,7 @@
         margin: 4px 2px;
         cursor: pointer;
         }
-        
+
         .button1 {background-color: #4CAF50;} /* Green */
         .button2 {background-color: #008CBA;} /* Blue */
     </style>
@@ -27,22 +27,20 @@
 
 
     <!-- Page Introduction Wrapper -->
-    <div class="page-style-a">
+
+    <div class="dz-bnr-inr overlay-secondary-dark dz-bnr-inr-sm" style="background-image:url(images/background/bg3.jpg);">
         <div class="container">
-            <div class="page-intro">
-                <h2>Cart</h2>
-                <ul class="bread-crumb">
-                    <li class="has-separator">
-                        <i class="ion ion-md-home"></i>
-                        <a href="index.html">Home</a>
-                    </li>
-                    <li class="is-marked">
-                        <a href="#">Proceed to Payment</a>
-                    </li>
-                </ul>
+            <div class="dz-bnr-inr-entry">
+                <h1>Payment</h1>
+                <nav aria-label="breadcrumb" class="breadcrumb-row">
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="#">Proceed to Payment</a></li>
+                    </ul>
+                </nav>
             </div>
         </div>
-    </div>
+    </div><br><br>
     <!-- Page Introduction Wrapper /- -->
     <!-- Cart-Page -->
     <div class="page-cart u-s-p-t-80">

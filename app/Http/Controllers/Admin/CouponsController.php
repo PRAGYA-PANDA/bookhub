@@ -13,13 +13,13 @@ use App\Models\Coupon;
 
 class CouponsController extends Controller
 {
-    // Render admin/coupons/coupons.blade.php page in the Admin Panel    
+    // Render admin/coupons/coupons.blade.php page in the Admin Panel
     public function coupons() {
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'coupons');
 
-        
-        // Get ONLY the coupons that BELONG TO the 'vendor' to show them up in (not ALL coupons show up) in coupons.blade.php, and also make sure that the 'vendor' account is active/enabled/approved (`status` is 1) before they can access the products page    
+
+        // Get ONLY the coupons that BELONG TO the 'vendor' to show them up in (not ALL coupons show up) in coupons.blade.php, and also make sure that the 'vendor' account is active/enabled/approved (`status` is 1) before they can access the products page
         $adminType = Auth::guard('admin')->user()->type;      // `type`      is the column in `admins` table    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Retrieving The Authenticated User and getting their `type`      column in `admins` table    // https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user
         $vendor_id = Auth::guard('admin')->user()->vendor_id; // `vendor_id` is the column in `admins` table    // Accessing Specific Guard Instances: https://laravel.com/docs/9.x/authentication#accessing-specific-guard-instances    // Retrieving The Authenticated User and getting their `vendor_id` column in `admins` table    // https://laravel.com/docs/9.x/authentication#retrieving-the-authenticated-user
 
@@ -41,7 +41,7 @@ class CouponsController extends Controller
         return view('admin.coupons.coupons')->with(compact('coupons'));
     }
 
-    // Update Coupon Status (active/inactive) via AJAX in admin/coupons/coupons.blade.php, check admin/js/custom.js    
+    // Update Coupon Status (active/inactive) via AJAX in admin/coupons/coupons.blade.php, check admin/js/custom.js
     public function updateCouponStatus(Request $request) {
         if ($request->ajax()) { // if the request is coming via an AJAX call
             $data = $request->all(); // Getting the name/value pairs array that are sent from the AJAX request (AJAX call)
@@ -64,17 +64,17 @@ class CouponsController extends Controller
         }
     }
 
-    // Delete a Coupon via AJAX in admin/coupons/coupons.blade.php, check admin/js/custom.js    
+    // Delete a Coupon via AJAX in admin/coupons/coupons.blade.php, check admin/js/custom.js
     public function deleteCoupon($id) {
         Coupon::where('id', $id)->delete();
-        
+
         $message = 'Coupon has been deleted successfully!';
-        
+
         return redirect()->back()->with('success_message', $message);
     }
 
-    // Render admin/coupons/add_edit_coupon.blade.php page with 'GET' request ('Edit/Upate the Coupon') if the {id?} Optional Parameter is passed, or if it's not passed, it's a GET request too to 'Add a Coupon', or it's a POST request for the HTML Form submission in the same page    
-    public function addEditCoupon(Request $request, $id = null) { // the slug (Route Parameter) {id?} is an Optional Parameter, so if it's passed, this means 'Edit/Update the Coupon', and if not passed, this means' Add a Coupon'    // GET request to render the add_edit_coupon.blade.php view (whether Add or Edit depending on passing or not passing the Optional Parameter {id?}), and POST request to submit the <form> in that same page    // {id?} Optional Parameters: https://laravel.com/docs/9.x/routing#parameters-optional-parameters    
+    // Render admin/coupons/add_edit_coupon.blade.php page with 'GET' request ('Edit/Upate the Coupon') if the {id?} Optional Parameter is passed, or if it's not passed, it's a GET request too to 'Add a Coupon', or it's a POST request for the HTML Form submission in the same page
+    public function addEditCoupon(Request $request, $id = null) { // the slug (Route Parameter) {id?} is an Optional Parameter, so if it's passed, this means 'Edit/Update the Coupon', and if not passed, this means' Add a Coupon'    // GET request to render the add_edit_coupon.blade.php view (whether Add or Edit depending on passing or not passing the Optional Parameter {id?}), and POST request to submit the <form> in that same page    // {id?} Optional Parameters: https://laravel.com/docs/9.x/routing#parameters-optional-parameters
         // Correcting issues in the Skydash Admin Panel Sidebar using Session
         Session::put('page', 'coupons');
 
@@ -86,7 +86,7 @@ class CouponsController extends Controller
             // dd($coupon);
 
             $selCats   = array();
-            $selBrands = array();
+            
             $selUsers  = array();
 
             $message = 'Coupon added successfully!';
@@ -98,7 +98,7 @@ class CouponsController extends Controller
             // dd($coupon);
 
             $selCats   = explode(',', $coupon['categories']); // selected categories
-            $selBrands = explode(',', $coupon['brands']);     // selected brands
+
             $selUsers  = explode(',', $coupon['users']);      // selected users
 
             $message = 'Coupon updated successfully!';
@@ -111,10 +111,9 @@ class CouponsController extends Controller
             // dd($data);
 
 
-            // Laravel's Validation    // Customizing Laravel's Validation Error Messages: https://laravel.com/docs/9.x/validation#customizing-the-error-messages    // Customizing Validation Rules: https://laravel.com/docs/9.x/validation#custom-validation-rules    
+            // Laravel's Validation    // Customizing Laravel's Validation Error Messages: https://laravel.com/docs/9.x/validation#customizing-the-error-messages    // Customizing Validation Rules: https://laravel.com/docs/9.x/validation#custom-validation-rules
             $rules = [
                 'categories'    => 'required',
-                'brands'        => 'required',
                 'coupon_option' => 'required',
                 'coupon_type'   => 'required',
                 'amount_type'   => 'required',
@@ -124,7 +123,6 @@ class CouponsController extends Controller
 
             $customMessages = [ // Specifying A Custom Message For A Given Attribute: https://laravel.com/docs/9.x/validation#specifying-a-custom-message-for-a-given-attribute
                 'categories.required'    => 'Select Categories',
-                'brands.required'        => 'Select Brands',
                 'coupon_option.required' => 'Select Coupon Option',
                 'coupon_type.required'   => 'Select Coupon Type',
                 'amount_type.required'   => 'Select Amount Type',
@@ -143,11 +141,6 @@ class CouponsController extends Controller
                 $categories = '';
             }
 
-            if (isset($data['brands'])) {
-                $brands = implode(',', $data['brands']);
-            } else {
-                $brands = '';
-            }
 
             if (isset($data['users'])) {
                 $users = implode(',', $data['users']);
@@ -180,7 +173,7 @@ class CouponsController extends Controller
             $coupon->coupon_option = $data['coupon_option'];
             $coupon->coupon_code   = $coupon_code;
             $coupon->categories    = $categories;
-            $coupon->brands        = $brands;
+
             $coupon->users         = $users;
             $coupon->coupon_type   = $data['coupon_type'];
             $coupon->amount_type   = $data['amount_type'];
@@ -196,20 +189,18 @@ class CouponsController extends Controller
 
 
 
-        // Get ALL the Sections with their Categories and Subcategories (Get all sections with its categories and subcategories)    // $categories are ALL the `sections` with their (parent) categories (if any (if exist)) and subcategories (if any (if exist))    
+        // Get ALL the Sections with their Categories and Subcategories (Get all sections with its categories and subcategories)    // $categories are ALL the `sections` with their (parent) categories (if any (if exist)) and subcategories (if any (if exist))
         $categories = \App\Models\Section::with('categories')->get()->toArray(); // with('categories') is the relationship method name in the Section.php Model
         // dd($categories);
 
-        // Get all brands
-        $brands = \App\Models\Brand::where('status', 1)->get()->toArray();
-        // dd($brands);
+
 
         // Get all users' emails
         $users = \App\Models\User::select('email')->where('status', 1)->get();
         // dd($users);
 
 
-        return view('admin.coupons.add_edit_coupon')->with(compact('title', 'coupon', 'categories', 'brands', 'users', 'selCats', 'selBrands', 'selUsers'));
+        return view('admin.coupons.add_edit_coupon')->with(compact('title', 'coupon', 'categories',  'users', 'selCats',  'selUsers'));
     }
 
 }

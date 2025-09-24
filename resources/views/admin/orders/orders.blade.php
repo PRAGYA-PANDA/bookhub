@@ -10,7 +10,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Orders</h4>
-                            
+
 
 
                             <div class="table-responsive pt-3">
@@ -36,13 +36,13 @@
                                         @foreach ($orders as $order)
                                             @if ($order['orders_products']) {{-- If the 'vendor' has ordered products (if a 'vendor' product has been ordered), show them. Check how we constrained the eager loads using a subquery in orders() method in Admin/OrderController.php inside the if condition --}}
                                                 <tr>
-                                                    <td>{{ $order['id'] }}</td>
+                                                    <td>{{ $loop->iteration }}</td>
                                                     <td>{{ date('Y-m-d h:i:s', strtotime($order['created_at'])) }}</td>
                                                     <td>{{ $order['name'] }}</td>
                                                     <td>{{ $order['email'] }}</td>
                                                     <td>
                                                         @foreach ($order['orders_products'] as $product)
-                                                            {{ $product['product_code'] }} ({{ $product['product_qty'] }})
+                                                           ({{ $product['product_qty'] }})
                                                             <br>
                                                         @endforeach
                                                     </td>
@@ -55,13 +55,13 @@
                                                         </a>
                                                         &nbsp;&nbsp;
 
-                                                        {{-- View HTML invoice --}} 
+                                                        {{-- View HTML invoice --}}
                                                         <a title="View Order Invoice" href="{{ url('admin/orders/invoice/' . $order['id']) }}" target="_blank">
                                                             <i style="font-size: 25px" class="mdi mdi-printer"></i> {{-- Icons from Skydash Admin Panel Template --}}
                                                         </a>
                                                         &nbsp;&nbsp;
 
-                                                        {{-- View PDF invoice --}} 
+                                                        {{-- View PDF invoice --}}
                                                         <a title="Print PDF Invoice" href="{{ url('admin/orders/invoice/pdf/' . $order['id']) }}" target="_blank">
                                                             <i style="font-size: 25px" class="mdi mdi-file-pdf"></i> {{-- Icons from Skydash Admin Panel Template --}}
                                                         </a>

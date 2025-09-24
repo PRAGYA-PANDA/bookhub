@@ -26,7 +26,7 @@
                                     <tbody>
                                         @foreach ($admins as $admin)
                                             <tr>
-                                                <td>{{ $admin['id'] }}</td>
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $admin['name'] }}</td>
                                                 <td>{{ $admin['type'] }}</td>
                                                 <td>{{ $admin['mobile'] }}</td>

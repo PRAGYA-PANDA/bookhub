@@ -1,5 +1,5 @@
 {{-- This page is rendered by the error() method inside Front/PaypalController.php (if making the order PayPal payment fails) --}}
-@extends('front.layout.layout')
+@extends('front.layout.layout3')
 
 
 @section('content')
@@ -37,7 +37,7 @@
 
 
 
-{{-- Forget/Remove some data in the Session after making the PayPal payment --}} 
+{{-- Forget/Remove some data in the Session after making the PayPal payment --}}
 @php
     use Illuminate\Support\Facades\Session;
 
